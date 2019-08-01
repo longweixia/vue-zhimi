@@ -1,54 +1,10 @@
 <template>
   <div>
-    <!-- <div class="zm-logo">
-        <img src="../../static/image/w-logo.jpg">
-  </div> -->
-    <Menu
-      mode="horizontal"
-      :theme="theme1"
-      active-name="1"
-    >
-      <!-- <img class="zm-logo" src="../../static/image/w-logo.jpg"> -->
-      <MenuItem name="1">
-      <Icon type="ios-paper" />
-      新建简历
-      </MenuItem>
-      <MenuItem name="2">
-      <Icon type="ios-people" />
-      优秀案例
-      </MenuItem>
-      <Submenu name="3">
-        <template slot="title">
-          <Icon type="ios-stats" />
-          模板中心
-        </template>
-        <MenuGroup title="使用">
-          <MenuItem name="3-1">新增和启动</MenuItem>
-          <MenuItem name="3-2">活跃分析</MenuItem>
-          <MenuItem name="3-3">时段分析</MenuItem>
-        </MenuGroup>
-        <MenuGroup title="留存">
-          <MenuItem name="3-4">用户留存</MenuItem>
-          <MenuItem name="3-5">流失用户</MenuItem>
-        </MenuGroup>
-
-      </Submenu>
-      <MenuItem name="4">
-      <Icon type="ios-construct" />
-      关于职秘
-      </MenuItem>
-      <MenuItem
-        name="5"
-        class="zm-login"
-      >
-      <Icon type="ios-construct" />
-      <span @click="modal1 = true">登录/注册</span>
-      </MenuItem>
-    </Menu>
-
+    <span v-if="isLogin">{{userName}}</span>
+    <Button @click="loginModal = true" v-if="!isLogin">登录/注册</Button>
     <Modal
       footer-hide
-      v-model="modal1"
+      v-model="loginModal"
       title="请登录"
       @on-ok="ok"
       @on-cancel="cancel"
@@ -67,18 +23,13 @@
         placeholder="Enter name"
         style="width: auto"
       />
-      <div> <Button
+      <div> 
+        <Button
           type="primary"
           @click="login"
         >登录</Button></div>
 
     </Modal>
-    <!-- <p>Change theme</p>
-    <RadioGroup v-model="theme1">
-        <Radio label="light"></Radio>
-        <Radio label="dark"></Radio>
-        <Radio label="primary"></Radio>
-    </RadioGroup> -->
   </div>
 </template>
 
@@ -87,30 +38,58 @@ export default {
   name: "NavHeader",
   data() {
     return {
-      theme1: "light", //导航栏主题
-      modal1: false, //默认不显示登录框
+      loginModal: false, //默认不显示登录框
+      isLogin:false,//默认未登录
       userName: "", //用户名
-      userPwd: "" //密码
+      userPwd: "", //密码
     };
   },
   methods: {
     ok() {},
     cancel() {},
-    login(){
-       this.axios.post('users/login',{
-          userName:this.userName,
-          userPwd:this.userPwd
-       })
-          .then((res) => {
-            console.log(res);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      },
-    
+    // 登录
+    login() {
+      this.axios
+        .post("users/login", {
+          userName: this.userName,
+          userPwd: this.userPwd
+        })
+        .then(res => {
+          if(res.data.status=="0"){
+          // 本地存储token
+          localStorage.setItem("token-zhimi", res.data.result);
+          // 关闭登录窗口
+          this.loginModal = false;
+          this.isLogin = true;
+          this.$Message.success("登录成功");
+          }
+        })
+        .catch(err => {
+          this.$Message.error("登录失败");
+          this.isLogin = false;
+        });
+    },
+    // 校验是否登录
+    checkLogin() {
+      this.axios
+        .post("users/checkLogin", {
+          token: localStorage.getItem("token-zhimi")
+        })
+        .then(res => {
+             if(res.data.status=="0"){
+          this.userName = res.data.result;
+          this.isLogin = true
+             }
+        })
+        .catch(err => {
+           this.isLogin = false
+          // 显示登录按钮
+        });
+    }
+  },
+  mounted() {
+    this.checkLogin();
   }
-
 };
 </script>
 
@@ -123,13 +102,5 @@ export default {
   border: none;
   position: absoulte;
   margin-left: -700px;
-  // float: left;
-  // z-index:100;
 }
-// .ivu-menu{
-//   padding-left: 200px;
-// }
-// .zm-login{
-//   width:300px;
-// }
 </style>
