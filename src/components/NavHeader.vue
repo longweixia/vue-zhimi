@@ -1,7 +1,57 @@
 <template>
   <div>
-    <span v-if="isLogin">{{userName}}</span>
-    <Button @click="loginModal = true" v-if="!isLogin">登录/注册</Button>
+    <Row class="zm-header">
+      <Col
+        span="2"
+        class="zm-header-column"
+        @click.native="goHome"
+      >首页</Col>
+      <Col
+        span="3"
+        class="zm-header-column"
+      >
+      <Dropdown>
+        <span>
+          在线制作
+          <Icon type="ios-arrow-down"></Icon>
+        </span>
+        <DropdownMenu slot="list">
+          <DropdownItem @click.native="WriteBaseInfo(1)">
+            方式1：填入信息，一键生成多主题简历
+          </DropdownItem>
+          <DropdownItem @click.native="WriteBaseInfo(2)">
+            方式2：直接编辑简历模板</DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
+      </Col>
+      <Col
+        span="2"
+        class="zm-header-column"
+      >模板商城</Col>
+      <Col
+        span="2"
+        class="zm-header-column"
+      >优秀简历</Col>
+      <Col
+        span="8"
+        class="zm-header-btn"
+      >
+      <span v-if="isLogin">{{userName}}</span>
+      <Button
+        @click="loginModal = true"
+        v-if="!isLogin"
+      >登录</Button>
+      <Button
+        @click="registerModal = true"
+        v-if="!isLogin"
+      >注册</Button>
+      <Button
+        @click="loginOut"
+        v-if="isLogin"
+      >退出</Button></Col>
+    </Row>
+
+    <!-- 登录 -->
     <Modal
       footer-hide
       v-model="loginModal"
@@ -23,11 +73,40 @@
         placeholder="Enter name"
         style="width: auto"
       />
-      <div> 
+      <div>
         <Button
           type="primary"
           @click="login"
         >登录</Button></div>
+
+    </Modal>
+    <!-- 注册 -->
+    <Modal
+      footer-hide
+      v-model="registerModal"
+      title="wellcome"
+      @on-ok="ok"
+      @on-cancel="cancel"
+    >
+      <div>账号：</div>
+      <Input
+        v-model="userName"
+        prefix="ios-contact"
+        placeholder="Enter name"
+        style="width: auto"
+      />
+      <div>密码：</div>
+      <Input
+        v-model="userPwd"
+        prefix="ios-contact"
+        placeholder="Enter name"
+        style="width: auto"
+      />
+      <div>
+        <Button
+          type="primary"
+          @click="register"
+        >注册</Button></div>
 
     </Modal>
   </div>
@@ -39,14 +118,40 @@ export default {
   data() {
     return {
       loginModal: false, //默认不显示登录框
-      isLogin:false,//默认未登录
+      registerModal: false, //默认不显示注册框
+      isLogin: false, //默认未登录
       userName: "", //用户名
-      userPwd: "", //密码
+      userPwd: "" //密码
     };
   },
   methods: {
     ok() {},
     cancel() {},
+    // 返回首页
+    goHome() {
+      this.$router.push({
+        name: "home"
+      });
+    },
+    // 进入简历编写页面
+    WriteBaseInfo(item) {
+      console.log(1111);
+      if (item == 1) {
+        this.$router.push({
+          name: "writeBaseInfo"
+          // params: {
+          //   id: id
+          // }
+        });
+      } else {
+        //   this.$router.push({
+        //   name: "WriteBaseInfo"
+        //   // params: {
+        //   //   id: id
+        //   // }
+        // });
+      }
+    },
     // 登录
     login() {
       this.axios
@@ -55,13 +160,13 @@ export default {
           userPwd: this.userPwd
         })
         .then(res => {
-          if(res.data.status=="0"){
-          // 本地存储token
-          localStorage.setItem("token-zhimi", res.data.result);
-          // 关闭登录窗口
-          this.loginModal = false;
-          this.isLogin = true;
-          this.$Message.success("登录成功");
+          if (res.data.status == "0") {
+            // 本地存储token
+            localStorage.setItem("token-zhimi", res.data.result);
+            // 关闭登录窗口
+            this.loginModal = false;
+            this.isLogin = true;
+            this.$Message.success("登录成功");
           }
         })
         .catch(err => {
@@ -76,14 +181,55 @@ export default {
           token: localStorage.getItem("token-zhimi")
         })
         .then(res => {
-             if(res.data.status=="0"){
-          this.userName = res.data.result;
-          this.isLogin = true
-             }
+          if (res.data.status == "0") {
+            this.userName = res.data.result;
+            this.isLogin = true;
+          }
         })
         .catch(err => {
-           this.isLogin = false
+          this.isLogin = false;
           // 显示登录按钮
+        });
+    },
+    // 退出登录
+    loginOut() {
+      this.axios
+        .post("users/loginOut", {
+          userName: this.userName
+        })
+        .then(res => {
+          if (res.data.status == "0") {
+            localStorage.removeItem("token-zhimi");
+            this.isLogin = false;
+          }
+        })
+        .catch(err => {
+          this.isLogin = true;
+          // 显示登录按钮
+        });
+    },
+    // 注册
+    register() {
+      this.axios
+        .post("users/register", {
+          userName: this.userName,
+          userPwd: this.userPwd
+        })
+        .then(res => {
+          if (res.data.status == "0") {
+            // 本地存储token
+            localStorage.setItem("token-zhimi", res.data.result);
+            // 关闭登录窗口
+            this.registerModal = false;
+            this.isLogin = true;
+            this.$Message.success("注册成功");
+          } else {
+            this.$Message.success(res.data.msg);
+          }
+        })
+        .catch(err => {
+          this.isLogin = false;
+          this.$Message.success("注册失败");
         });
     }
   },
@@ -95,12 +241,28 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
-.zm-logo {
-  width: 100px;
-  height: 100px;
-  display: inline-block;
-  border: none;
-  position: absoulte;
-  margin-left: -700px;
+.zm-header {
+  height: 110px;
+  margin: 0 0 0 600px;
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  .zm-header-column {
+    height: 34px;
+    line-height: 34px;
+    // text-align: center;
+    font-size: 14px;
+    color: #666;
+    margin-left: 15px;
+    padding-left: 4px;
+    margin-right: 15px;
+    cursor: pointer;
+  }
+  .zm-header-column:hover {
+    background: #fbb03b;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+  }
 }
 </style>
