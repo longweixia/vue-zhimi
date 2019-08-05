@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from '@/views/home/Home'
 import Login from '@/views/login/Login'
 import WriteBaseInfo from '@/views/resume1/WriteBaseInfo'
+import CompletionResume from '@/views/resume1/CompletionResume'
 
 Vue.use(Router)
 
@@ -27,6 +28,11 @@ export default new Router({
       path: '/writeBaseInfo',
       name: 'writeBaseInfo',
       component: WriteBaseInfo
+    },
+    {
+      path: '/completionResume',
+      name: 'completionResume',
+      component: CompletionResume
     }
   ]
 })

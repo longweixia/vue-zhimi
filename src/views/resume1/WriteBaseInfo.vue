@@ -18,7 +18,8 @@
             </Steps>
             <div
               class="zm-table-content"
-              v-if="step[0]">
+              v-if="step[0]"
+            >
               <Row>
                 <Col span="2"><span class="zm-table-tip">手机</span></Col>
                 <Col span="8"><Input></Input></Col>
@@ -43,21 +44,30 @@
             </div>
             <div
               class="zm-table-content"
-              v-if="step[1]" 
+              v-if="step[1]"
             >
-              <Row v-for="(item,index) in skillsList" :key="index">
+              <Row
+                v-for="(item,index) in skillsList"
+                :key="index"
+              >
                 <Col span="2"><span class="zm-table-tip">（{{item.num}}）</span></Col>
-                <Col span="8"><Input :placeholder="item.tip" v-model="item.InputModal"></Input></Col>
-                <Col span="2" v-if="item.num>4"><Button @click="reduceSkill(item.num)">-</Button></Col>
+                <Col span="8"><Input
+                  :placeholder="item.tip"
+                  v-model="item.InputModal"
+                ></Input></Col>
+                <Col
+                  span="2"
+                  v-if="item.num>4"
+                ><Button @click="reduceSkill(item.num)">-</Button></Col>
               </Row>
-             
+
               <Row>
-                <Col span="2"><span class="zm-table-tip"><Button type="info" @click="addSkill">+更多</Button></span></Col>
+                <Col span="2"><span class="zm-table-tip"><Button
+                    type="info"
+                    @click="addSkill"
+                  >+更多</Button></span></Col>
               </Row>
-        <div>
-                
-
-
+              <div>
 
               </div>
             </div>
@@ -85,7 +95,7 @@
                 <Col span="2"><span class="zm-table-tip">期望薪资</span></Col>
                 <Col span="8"><Input></Input></Col>
               </Row>
- 
+
             </div>
             <div
               class="zm-table-content"
@@ -163,7 +173,6 @@
                 <Col span="2"><span class="zm-table-tip">期望薪资</span></Col>
                 <Col span="8"><Input></Input></Col>
               </Row>
-     
 
             </div>
             <!-- <div
@@ -196,12 +205,20 @@
               class="zm-next-btn-pre"
               type="primary"
               @click="pre"
+              v-if="current>0"
             >上一步</Button>
             <Button
               class="zm-next-btn-next"
               type="primary"
               @click="next"
+              v-if="current<5"
             >下一步</Button>
+            <Button
+              class="zm-next-btn-next"
+              type="primary"
+              @click="complete"
+              v-if="current==5"
+            >完成</Button>
             <!-- <Tabs>
 
               <TabPane
@@ -246,13 +263,21 @@ export default {
       current: 0,
       step: [true, false, false, false, false, false],
       // 专业技能
-      skillsList:[
-        {num:1,tip:"Web开发： Javascript(精通)/xxx/xxxx/xxxxxx/xxxxx",InputModal:""},
-        {num:2,tip:"前端： HTML(5)/xxxxx/xxxxxx/xxxxxx/xxxxx/xxxxxxx",InputModal:""},
-        {num:3,tip:"数据库： MySQL/xxxx",InputModal:""},
-        {num:4,tip:"服务器相关： 熟悉Linux基本命令/xxxxx",InputModal:""}
+      skillsList: [
+        {
+          num: 1,
+          tip: "Web开发： Javascript(精通)/xxx/xxxx/xxxxxx/xxxxx",
+          InputModal: ""
+        },
+        {
+          num: 2,
+          tip: "前端： HTML(5)/xxxxx/xxxxxx/xxxxxx/xxxxx/xxxxxxx",
+          InputModal: ""
+        },
+        { num: 3, tip: "数据库： MySQL/xxxx", InputModal: "" },
+        { num: 4, tip: "服务器相关： 熟悉Linux基本命令/xxxxx", InputModal: "" }
       ],
-      skillNum:4,//加的输入框为第几个开始
+      skillNum: 4 //加的输入框为第几个开始
     };
   },
   components: {
@@ -260,12 +285,39 @@ export default {
     NavFooter
   },
   watch: {
-    current(newV,oldV) {
-     this.step=[false, false, false, false, false, false]
-     this.step[newV] = true
+    current(newV, oldV) {
+      this.step = [false, false, false, false, false, false];
+      this.step[newV] = true;
     }
   },
   methods: {
+    // 点击完成
+    complete() {
+      this.axios
+        .post("resumes/resumeInfo", {
+          userName: "long",//暂时写死，到时候用vuex
+          content: {
+            base: [], //基本信息
+            major: [], //专业技能
+            work: [], //专业技能
+            project: [], //项目经验
+            education: [], //教育背景
+            evaluate: [] //自我评价
+          }
+        })
+        .then(res => {
+          if (res.data.status == "0") {
+           this.$Message.success("提交成功");
+             this.$router.push({
+              name: "completionResume"
+        });
+          }
+        })
+        .catch(err => {
+          this.$Message.error("提交失败");
+
+        });
+    },
     next() {
       if (this.current == 5) {
         this.current = 0;
@@ -280,18 +332,22 @@ export default {
         this.current -= 1;
       }
     },
-    addSkill(){
+    addSkill() {
       this.skillNum++;
-      this.skillsList.push({num:this.skillNum,tip:"Web开发： Javascript(精通)/xxx/xxxx/xxxxxx/xxxxx",InputModal:""})
+      this.skillsList.push({
+        num: this.skillNum,
+        tip: "Web开发： Javascript(精通)/xxx/xxxx/xxxxxx/xxxxx",
+        InputModal: ""
+      });
     },
-    reduceSkill(val){
-      this.skillsList.map((item,index)=>{
-        if (val==item.num){
-          this.skillsList.splice(index,1)
+    reduceSkill(val) {
+      this.skillsList.map((item, index) => {
+        if (val == item.num) {
+          this.skillsList.splice(index, 1);
         }
-      })
-      if(this.skillsList.length==4){
-        this.skillNum=4
+      });
+      if (this.skillsList.length == 4) {
+        this.skillNum = 4;
       }
     }
   }

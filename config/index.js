@@ -14,6 +14,9 @@ module.exports = {
       // /users/**表示有三级路由
       '/users/**':{
         target:'http://localhost:3000'
+      },
+      '/resumes/**':{
+        target:'http://localhost:3000'
       }
     },
 
