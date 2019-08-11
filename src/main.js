@@ -7,7 +7,14 @@ import iView from 'iview';
 import 'iview/dist/styles/iview.css';
 // 引入axios
 import axios from 'axios'  
-// 挂载到vue原型链上
+// 引入vue-socket.io模块
+// import socket from 'socket.io-client'
+// // 连接到指定服务地址
+// Vue.use(new socket ({
+//     debug: true,
+//     connection: 'http://localhost:3000' //地址+端口，由后端提供
+// }));
+// 将axios挂载到vue原型链上
 Vue.prototype.axios = axios
 
 Vue.use(iView);

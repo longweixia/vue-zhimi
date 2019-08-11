@@ -4,8 +4,11 @@
       <Layout>
         <!-- <Header class="zm-header"> -->
         <NavHeader></NavHeader>
+        <!-- <Chart/> -->
+
+       <div @click="joinGroupChart">加入群聊</div>
         <!-- </Header> -->
-        <Content>
+        <Content v-if="false">
           <div class="zm-input-tips">
             <Row class="zm-input">
               <Col span="24">
@@ -46,6 +49,8 @@
 <script>
 import NavHeader from "@/components/NavHeader";
 import NavFooter from "@/components/NavFooter";
+import Chart from "./Chart";
+// import GroupChart from "@/views/GroupChart/GroupChart";
 export default {
   name: "Home",
   data() {
@@ -55,7 +60,17 @@ export default {
   },
   components: {
     NavHeader,
-    NavFooter
+    NavFooter,
+    Chart
+
+  },
+  methods:{
+      // 进入群聊
+    joinGroupChart(){
+      this.$router.push({
+        name: "groupChart"
+      });
+    }
   }
 };
 </script>
