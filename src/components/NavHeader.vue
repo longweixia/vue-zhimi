@@ -9,7 +9,7 @@
       <Col
         span="3"
         class="zm-header-column"
-      >
+      >22224244
       <Dropdown>
         <span>
           在线制作
@@ -163,6 +163,7 @@ export default {
           if (res.data.status == "0") {
             // 本地存储token
             localStorage.setItem("token-zhimi", res.data.result);
+            localStorage.setItem("userName", this.userName);
             // 关闭登录窗口
             this.loginModal = false;
             this.isLogin = true;
@@ -219,6 +220,7 @@ export default {
           if (res.data.status == "0") {
             // 本地存储token
             localStorage.setItem("token-zhimi", res.data.result);
+            localStorage.setItem("userName", this.userName);
             // 关闭登录窗口
             this.registerModal = false;
             this.isLogin = true;
