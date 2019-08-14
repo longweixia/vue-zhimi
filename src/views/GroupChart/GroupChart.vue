@@ -72,7 +72,7 @@
       <Sider hide-trigger class="zm-right-side">
          <!-- 显示群聊信息 -->
           <div class="zm-group-content">
-            <div>群友信息</div>
+            <div class="zm-grounp-msg">群友信息</div>
             <ul class="zm-msg">
               <li
                 v-for="(item,index) in userList"
@@ -211,18 +211,25 @@ export default {
 // 右侧群信息
 .zm-right-side{
   width: 200px;
-    height: 500px;
-    overflow-y: scroll;
-    background: #ddd;
+    height: 460px;
+    
+    background: #fff;
   // 显示群聊相关信息
   .zm-group-content {
     width: 100%;
+    height: 100%;
     position: absolute;
     top: 0;
     right: 0;
+    .zm-grounp-msg{
+      height: 20px;
+    }
     
     .zm-msg {
       width: 100%;
+      overflow-y: scroll;
+      height: 420px;
+      list-style: none;
       .zm-msg-detail {
         background: #fff;
         .zm-msg-log{
