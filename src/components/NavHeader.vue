@@ -1,11 +1,12 @@
 <template>
-  <div>
+  <div class="zm-header-content">
     <Row class="zm-header">
+      <img class="zm-logoImg" src="../../static/image/b-logo.jpg" />
       <Col
         span="2"
         class="zm-header-column"
         @click.native="goHome"
-      >首页</Col>
+      ><span class="zm-header-text">首页</span></Col>
       <Col
         span="3"
         class="zm-header-column"
@@ -27,13 +28,22 @@
       <Col
         span="2"
         class="zm-header-column"
-      >模板商城</Col>
+      ><span class="zm-header-text">模板商城</span></Col>
       <Col
         span="2"
         class="zm-header-column"
-      >优秀简历</Col>
+      ><span class="zm-header-text">优秀简历</span></Col>
       <Col
-        span="8"
+        span="2"
+        class="zm-header-column"
+      ><span class="zm-header-text">职觅社区</span></Col>
+      <Col
+        span="2"
+        class="zm-header-column"
+      ><span class="zm-header-text">个人中心</span></Col>
+      
+      <Col
+        span="4"
         class="zm-header-btn"
       >
       <span v-if="isLogin">{{userName}}</span>
@@ -243,9 +253,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
+.zm-header-content{
+box-sizing:border-box;
+  height: 69px;
+}
 .zm-header {
-  height: 110px;
-  margin: 0 0 0 600px;
+  
+  // margin: 0 0 0 600px;
   display: flex;
   justify-items: center;
   align-items: center;
@@ -260,11 +274,19 @@ export default {
     margin-right: 15px;
     cursor: pointer;
   }
-  .zm-header-column:hover {
+  .zm-header-text:hover {
     background: #fbb03b;
+    padding:5px;
     border: none;
     border-radius: 5px;
     color: #fff;
   }
+}
+// logo
+.zm-logoImg{
+width: 67px;
+height: 61px;
+padding:10px;
+margin-left:126px;
 }
 </style>

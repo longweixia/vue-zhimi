@@ -6,7 +6,7 @@ import router from './router'
 import iView from 'iview';
 import 'iview/dist/styles/iview.css';
 // 引入axios
-import axios from 'axios'  
+import axios from 'axios'
 // 引入vue-socket.io模块
 // import socket from 'socket.io-client'
 // // 连接到指定服务地址
@@ -26,14 +26,42 @@ Vue.use(iView);
 // Vue.component('Content', Content);
 // Vue.component('Footer', Footer);
 
-
+// 格式化简历base区信息
+Vue.filter('formatResumeBase', function(value, fmt) {
+    switch (value) {
+        case "name":
+            fmt = "姓名"
+            break;
+        case "tel":
+            fmt = "手机号"
+            break;
+        case "Email":
+            fmt = "邮箱"
+            break;
+        case "edu":
+            fmt = "学历"
+            break;
+        case "address":
+            fmt = "住址"
+            break;
+        case "salary":
+            fmt = "期望薪资"
+            break;
+        case "position":
+            fmt = "期望职位"
+            break;
+        default:
+            break;
+    }
+    return fmt
+})
 
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
-  router,
-  components: { App },
-  template: '<App/>'
+    el: '#app',
+    router,
+    components: { App },
+    template: '<App/>'
 })

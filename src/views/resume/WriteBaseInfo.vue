@@ -590,50 +590,66 @@ export default {
       // 组装入参
       //基本信息
       var base =[
-              { 姓名: this.formValidate.name},
-              { 手机号: this.formValidate.tel},
-              { Email: this.formValidate.email},
-              { 学历: this.formValidate.education},
-              { 当前住址: this.formValidate.address},
-              this.formValidate.salary?{ 期望薪资: this.formValidate.salary}:"",
-              this.formValidate.position?{ 期望职位: this.formValidate.position}:"",
+              { "name": this.formValidate.name},
+              { "tel": this.formValidate.tel},
+              { "Email": this.formValidate.email},
+              { "edu": this.formValidate.education},
+              { "address": this.formValidate.address},
+              this.formValidate.salary?{ "salary": this.formValidate.salary}:"",
+              this.formValidate.position?{ "position": this.formValidate.position}:"",
             ];
        //专业技能
       var major = [];
       this.skillsList.forEach((item,index)=>{
-        major.push(item.InputModal)
+        if(item.InputModal){
+major.push(item.InputModal)
+        }
+        
       }) ;
       // 教育背景
       var education=[];
        this.eduList.forEach((item,index)=>{
-         var educationObj={};  
+         if(item.InputTime && item.InputModal){
+ var educationObj={};  
         educationObj.time = item.InputTime
         educationObj.type = item.InputModal
         education.push(educationObj)
+         }
+        
       }) ;
        //工作经历
        var work=[];
        this.workList.forEach((item,index)=>{
+         if(item.companyModel && item.timeModel && item.techModel && item.projectName && item.projectModel){
+
+         
          var workObj={};  
          workObj.company=item.companyModel
          workObj.time=item.timeModel
          workObj.technologyStack=item.techModel
-         workObj.projectName=item.projectModel
+         workObj.projectName=item.projectName
          workObj.content=item.projectModel
         work.push(workObj)
+         }
       }) ;
       //开源或博客
       var project=[];
          this.projectList.forEach((item,index)=>{
-         var projectObj={};  
+           if(item.InputName && item.InputModal){
+              var projectObj={};  
         projectObj.projectName = item.InputName
         projectObj.content = item.InputModal
         project.push(projectObj)
+           }
+        
       }) ;
       //爱好、
       var evaluate =[];
         this.evaluateList.forEach((item,index)=>{
-        major.push(item.InputModal)
+          if(item.InputModal){
+ evaluate.push(item.InputModal)
+          }
+       
       }) ;
 
 
@@ -653,7 +669,7 @@ export default {
           if (res.data.status == "0") {
             this.$Message.success("提交成功");
             this.$router.push({
-              name: "completionResume"
+              name: "resumeTemplate1"
             });
           }
         })
