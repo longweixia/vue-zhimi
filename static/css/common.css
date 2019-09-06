@@ -1,0 +1,15 @@
+/* 对齐 */
+.jm-ct{
+    text-align: center;
+}
+.jm-rt{
+    text-align: right;
+}
+.jm-lt{
+    text-align: left;
+}
+
+/* 字体 */
+.jm-f16{
+font-size: 16px;
+}

@@ -119,8 +119,8 @@ export default {
 <style lang="less" scoped>
 .zm {
   max-width: 1920px;
-  padding-left: 51px;
-  padding-right: 51px;
+  padding-left: 2%;
+  padding-right: 2%;
   background: #f5f7f9;
 }
 .ivu-layout {

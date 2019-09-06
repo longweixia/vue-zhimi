@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import iView from 'iview';
 import 'iview/dist/styles/iview.css';
+import '../static/css/common.css';
 // 引入axios
 import axios from 'axios'
 // 引入vue-socket.io模块

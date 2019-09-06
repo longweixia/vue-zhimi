@@ -1,64 +1,49 @@
 <template>
   <div class="zm-header-content">
-    <Row class="zm-header">
-      <img class="zm-logoImg" src="../../static/image/b-logo.jpg" />
-      <Col
-        span="2"
-        class="zm-header-column"
-        @click.native="goHome"
-      ><span class="zm-header-text">首页</span></Col>
-      <Col
-        span="3"
-        class="zm-header-column"
-      >
-      <Dropdown>
-        <span>
-          在线制作
-          <Icon type="ios-arrow-down"></Icon>
-        </span>
-        <DropdownMenu slot="list">
-          <DropdownItem @click.native="WriteBaseInfo(1)">
-            方式1：填入信息，一键生成多主题简历
-          </DropdownItem>
-          <DropdownItem @click.native="WriteBaseInfo(2)">
-            方式2：直接编辑简历模板</DropdownItem>
-        </DropdownMenu>
-      </Dropdown>
+    <Row class="zm-header jm-f16">
+      <Col span="6" class="zm-header-column jm-rt">
+        <Col span="16">
+          <img class="zm-logoImg" src="../../static/image/b-logo.jpg"
+        /></Col>
+        <Col span="8" class="jm-ct">
+          <span @click.native="goHome" class="zm-header-text">首页</span>
+        </Col>
       </Col>
-      <Col
-        span="2"
-        class="zm-header-column"
-      ><span class="zm-header-text">模板商城</span></Col>
-      <Col
-        span="2"
-        class="zm-header-column"
-      ><span class="zm-header-text">优秀简历</span></Col>
-      <Col
-        span="2"
-        class="zm-header-column"
-      ><span class="zm-header-text">职觅社区</span></Col>
-      <Col
-        span="2"
-        class="zm-header-column"
-      ><span class="zm-header-text">个人中心</span></Col>
-      
-      <Col
-        span="4"
-        class="zm-header-btn"
+      <Col span="3" class="zm-header-column jm-ct">
+        <Dropdown>
+          <span>
+            在线制作
+            <Icon type="ios-arrow-down"></Icon>
+          </span>
+          <DropdownMenu slot="list">
+            <DropdownItem @click.native="WriteBaseInfo(1)">
+              方式1：填入信息，一键生成多主题简历
+            </DropdownItem>
+            <DropdownItem @click.native="WriteBaseInfo(2)">
+              方式2：直接编辑简历模板</DropdownItem
+            >
+          </DropdownMenu>
+        </Dropdown>
+      </Col>
+      <Col span="2" class="zm-header-column jm-ct"
+        ><span class="zm-header-text">模板商城</span></Col
       >
-      <span v-if="isLogin">{{userName}}</span>
-      <Button
-        @click="loginModal = true"
-        v-if="!isLogin"
-      >登录</Button>
-      <Button
-        @click="registerModal = true"
-        v-if="!isLogin"
-      >注册</Button>
-      <Button
-        @click="loginOut"
-        v-if="isLogin"
-      >退出</Button></Col>
+      <Col span="2" class="zm-header-column jm-ct"
+        ><span class="zm-header-text">优秀简历</span></Col
+      >
+      <Col span="2" class="zm-header-column jm-ct"
+        ><span class="zm-header-text">职觅社区</span></Col
+      >
+      <Col span="2" class="zm-header-column jm-ct"
+        ><span class="zm-header-text">个人中心</span></Col
+      >
+
+      <Col span="6" class="zm-header-btn jm-ct">
+        <span v-if="isLogin">{{ userName }}</span>
+        <Button @click="loginModal = true" v-if="!isLogin">登录</Button>
+        <Button @click="registerModal = true" v-if="!isLogin">注册</Button>
+        <Button @click="loginOut" v-if="isLogin">退出</Button></Col
+      >
     </Row>
 
     <!-- 登录 -->
@@ -84,11 +69,8 @@
         style="width: auto"
       />
       <div>
-        <Button
-          type="primary"
-          @click="login"
-        >登录</Button></div>
-
+        <Button type="primary" @click="login">登录</Button>
+      </div>
     </Modal>
     <!-- 注册 -->
     <Modal
@@ -113,11 +95,8 @@
         style="width: auto"
       />
       <div>
-        <Button
-          type="primary"
-          @click="register"
-        >注册</Button></div>
-
+        <Button type="primary" @click="register">注册</Button>
+      </div>
     </Modal>
   </div>
 </template>
@@ -253,40 +232,47 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
-.zm-header-content{
-box-sizing:border-box;
-  height: 69px;
-}
+// .zm-header-content{
+// box-sizing:border-box;
+//   height: 69px;
+// }
+// .zm-header {
+
+//   // margin: 0 0 0 600px;
+//   display: flex;
+//   justify-items: center;
+//   align-items: center;
+//   .zm-header-column {
+//     height: 34px;
+//     line-height: 34px;
+//     // text-align: center;
+//     font-size: 14px;
+//     color: #666;
+//     margin-left: 15px;
+//     padding-left: 4px;
+//     margin-right: 15px;
+//     cursor: pointer;
+//   }
+
+// }
+
 .zm-header {
-  
-  // margin: 0 0 0 600px;
-  display: flex;
-  justify-items: center;
-  align-items: center;
-  .zm-header-column {
-    height: 34px;
-    line-height: 34px;
-    // text-align: center;
-    font-size: 14px;
-    color: #666;
-    margin-left: 15px;
-    padding-left: 4px;
-    margin-right: 15px;
-    cursor: pointer;
-  }
+  height: 60px;
+  line-height: 60px;
   .zm-header-text:hover {
     background: #fbb03b;
-    padding:5px;
+    padding: 5px;
     border: none;
     border-radius: 5px;
     color: #fff;
+    cursor: pointer;
   }
 }
 // logo
-.zm-logoImg{
-width: 67px;
-height: 61px;
-padding:10px;
-margin-left:126px;
+.zm-logoImg {
+  width: 67px;
+  height: 61px;
+  padding: 10px;
+  // margin-left:126px;
 }
 </style>
