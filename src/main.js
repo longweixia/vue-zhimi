@@ -8,7 +8,7 @@ import 'iview/dist/styles/iview.css';
 import '../static/css/common.css';
 // 引入axios
 import axios from 'axios'
-// 引入vue-socket.io模块
+//引入vue-socket.io模块  把这块注释掉才不会报错EIO=3&transport=polling
 // import socket from 'socket.io-client'
 // // 连接到指定服务地址
 // Vue.use(new socket ({

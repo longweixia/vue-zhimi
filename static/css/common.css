@@ -13,3 +13,8 @@
 .jm-f16{
 font-size: 16px;
 }
+
+/* 列表 */
+.jm-li{
+    list-style: none;
+}
