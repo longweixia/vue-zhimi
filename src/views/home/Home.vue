@@ -12,7 +12,7 @@
         </ul>
         <ResumeTemplate1 v-if="resumeIndex[0].ry" />
         <ResumeTemplate2 v-if="resumeIndex[1].ry" /> -->
-        <Content>
+        <Content class="jm-content">
           <!-- banner -->
           <div class="zm-banner">
             <div class="swiper-container">
@@ -67,34 +67,164 @@
               <!-- 简历列表 -->
               <Row>
                 <Col>
-                  <ul class="jm-ul">
+                  <ul
+                    class="jm-ul"
+                    v-for="(item, index) in imgList"
+                    :key="index"
+                  >
                     <li class="jm-li">
-                      <img
-                        src="http://file.500d.me/upload/image/201811/01/34a66513-66fd-462a-971c-c883dcfafe7d.png"
-                        alt="JM0203"
-                      />
-                    </li>
-                    <li class="jm-li">
-                      <img
-                        src="http://file.500d.me/upload/image/201811/01/34a66513-66fd-462a-971c-c883dcfafe7d.png"
-                        alt="JM0203"
-                      />
-                    </li>
-                    <li class="jm-li">
-                      <img
-                        src="http://file.500d.me/upload/image/201811/01/34a66513-66fd-462a-971c-c883dcfafe7d.png"
-                        alt="JM0203"
-                      />
-                    </li>
-                    <li class="jm-li">
-                      <img
-                        src="http://file.500d.me/upload/image/201811/01/34a66513-66fd-462a-971c-c883dcfafe7d.png"
-                        alt="JM0203"
-                      />
+                      <img :src="'http://localhost:3000' + item" alt="JM0203" />
                     </li>
                   </ul>
                 </Col>
               </Row>
+            </Row>
+          </Row>
+          <!-- 更多模板 -->
+          <Row class="jm-more ">
+            <Col class="jm-ct">
+              <Button type="primary" class="jm-more-btn">更多模板</Button>
+            </Col>
+          </Row>
+          <!-- 分享 -->
+          <Row class="jm-share border-rd5">
+            <Row class="jm-share-title">加入简觅大家庭</Row>
+            <Row class="jm-share-line"></Row>
+            <Row class="jm-share-info"
+              >您的专属职场社区，分享，聆听，转变，让您的职场更轻松</Row
+            >
+            <!-- 分享的卡片 -->
+            <Row class="jm-share-card ">
+              <Row>
+                <!-- 卡片1 -->
+                <Col span="8" class="jm-messge">
+                  <Row class="jm-box border-rd5">
+                    <Row class="jm-text">
+                      "里面真的有人愿意倾听我的迷茫和焦虑，还有小伙伴给我指导，分享ta的经验，让我成功避雷，太感谢了。"
+                    </Row>
+                    <Row class="jm-tate">
+                      <Rate allow-half v-model="valueHalf" />
+                    </Row>
+                    <Row class="jm-name">
+                      <Col span="6">赵立</Col>
+                      <Col class="jm-rt" span="18">
+                        <img class="jm-headImg" src="static/image/user3.jpg" />
+                      </Col>
+                    </Row>
+                    <Row class="jm-job">
+                      市场营销
+                    </Row>
+                  </Row>
+                </Col>
+                <!-- 卡片1 -->
+                <Col span="8" class="jm-messge">
+                  <Row class="jm-box border-rd5">
+                    <Row class="jm-text">
+                      "里面真的有人愿意倾听我的迷茫和焦虑，还有小伙伴给我指导，分享ta的经验，让我成功避雷，太感谢了。"
+                    </Row>
+                    <Row class="jm-tate">
+                      <Rate allow-half v-model="valueHalf" />
+                    </Row>
+                    <Row class="jm-name">
+                      <Col span="6">赵立</Col>
+                      <Col class="jm-rt" span="18">
+                        <img class="jm-headImg" src="static/image/user3.jpg" />
+                      </Col>
+                    </Row>
+                    <Row class="jm-job">
+                      市场营销
+                    </Row>
+                  </Row>
+                </Col>
+                <!-- 卡片1 -->
+                <Col span="8" class="jm-messge">
+                  <Row class="jm-box border-rd5">
+                    <Row class="jm-text">
+                      "里面真的有人愿意倾听我的迷茫和焦虑，还有小伙伴给我指导，分享ta的经验，让我成功避雷，太感谢了。"
+                    </Row>
+                    <Row class="jm-tate">
+                      <Rate allow-half v-model="valueHalf" />
+                    </Row>
+                    <Row class="jm-name">
+                      <Col span="6">赵立</Col>
+                      <Col class="jm-rt" span="18">
+                        <img class="jm-headImg" src="static/image/user3.jpg" />
+                      </Col>
+                    </Row>
+                    <Row class="jm-job">
+                      市场营销
+                    </Row>
+                  </Row>
+                </Col>
+              </Row>
+              <!-- 更多分享 -->
+              <Row class="jm-more jm-more-share ">
+                <Col class="jm-ct">
+                  <Button type="primary" class="jm-more-btn">更多分享</Button>
+                </Col>
+              </Row>
+            </Row>
+          </Row>
+           <!-- 服务保障区 -->
+          <Row class="jm-share jm-service">
+            <Row class="jm-share-title jm-text">四大服务保障</Row>
+            <Row class="jm-share-line jm-text jm-line"></Row>
+            <Row class="jm-share-info jm-text"
+              >安全，免费，简单，高效，在求职路上祝您一臂之力</Row
+            >
+            <!-- 服务项目-->
+            <Row class="jm-share-card jm-service-card jm-ct border-rd5">
+              <Row>
+                <!-- 安全 -->
+                <Col span="6" class="jm-messge">
+                  <Row class="jm-box border-rd5">
+                      <Icon size="80" class="jm-safe-icon" type="ios-cloud" />
+                  </Row>
+                  <Row class="jm-box">
+                      保护隐私
+                  </Row>
+                  <Row class="jm-box jm-msg">
+                      保护隐私，未经用户许可，本站信息不提供给第三方网站。 保护隐私，未经用户许可，本站信息不提供给第三方网站。
+                  </Row>
+                </Col>
+                 <!-- 免费 -->
+                <Col span="6" class="jm-messge">
+                  <Row class="jm-box border-rd5">
+                      <Icon size="80" class="jm-free-icon" type="md-brush" />
+                  </Row>
+                  <Row class="jm-box">
+                      永久免费
+                  </Row>
+                  <Row class="jm-box jm-msg">
+                      保护隐私，未经用户许可，本站信息不提供给第三方网站。 保护隐私，未经用户许可，本站信息不提供给第三方网站。
+                  </Row>
+                </Col>
+                 <!-- 专业高效 -->
+                <Col span="6" class="jm-messge">
+                  <Row class="jm-box border-rd5">
+                      <Icon size="80" class="jm-major-icon" type="ios-thumbs-up" />
+                  </Row>
+                  <Row class="jm-box">
+                      专业高效
+                  </Row>
+                  <Row class="jm-box jm-msg">
+                      保护隐私，未经用户许可，本站信息不提供给第三方网站。 保护隐私，未经用户许可，本站信息不提供给第三方网站。
+                  </Row>
+                </Col>
+                 <!-- 跟踪反馈 -->
+                <Col span="6" class="jm-messge">
+                  <Row class="jm-box border-rd5">
+                      <Icon size="80" class="jm-feedback-icon" type="ios-notifications" />
+                  </Row>
+                  <Row class="jm-box">
+                      跟踪反馈
+                  </Row>
+                  <Row class="jm-box jm-msg">
+                      保护隐私，未经用户许可，本站信息不提供给第三方网站。 保护隐私，未经用户许可，本站信息不提供给第三方网站。
+                  </Row>
+                </Col>
+              </Row>
+          
             </Row>
           </Row>
           <!-- <div class="zm-input-tips">
@@ -127,9 +257,9 @@
             </Col>
           </Row> -->
         </Content>
-        <Footer>
-          <!-- <NavFooter></NavFooter> -->
-        </Footer>
+        
+          <NavFooter></NavFooter>
+     
       </Layout>
     </div>
   </div>
@@ -150,7 +280,9 @@ export default {
     return {
       resulist: [1, 2],
       resumeIndex: [{ ry: false }, { ry: false }],
-      value2: 0
+      value2: 0,
+      imgList: [], //首页图片列表
+      valueHalf: 4.5 //评分值
     };
   },
   components: {
@@ -176,15 +308,15 @@ export default {
     },
     // 获取图片列表
     getImgList() {
-        this.axios
-        .get("resumesImgs/resumeImgList",{headers:{"Content-Type":'application/x-www-form-urlencoded; charset=UTF-8'}})
+      this.axios
+        .post("resumes/resumeImgList", { flag: "all" })
         .then(res => {
-         
+          this.imgList = res.data.url;
+          console.log(this.imgList);
         })
         .catch(err => {
-          console.log("err",err)
+          console.log("err", err);
         });
-     
     }
   },
   mounted() {
@@ -198,7 +330,6 @@ export default {
         el: ".swiper-pagination"
       }
     });
-    
   }
 };
 </script>
@@ -207,14 +338,17 @@ export default {
 <style lang="less" scoped>
 .zm {
   max-width: 1920px;
-  padding-left: 2%;
-  padding-right: 2%;
+  // padding-left: 2%;
+  // padding-right: 2%;
   background: #f5f7f9;
 }
 .ivu-layout {
   background: #fff;
 }
-
+.jm-content{
+  padding-left: 2%;
+  padding-right: 2%;
+}
 // banner
 .zm-banner {
   img {
@@ -264,5 +398,111 @@ export default {
     width: 100%;
     height: 350px;
   }
+}
+// 更多模板
+.jm-more {
+  background: #f5f7f9;
+  .jm-more-btn {
+    width: 25%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+}
+//分享社区
+.jm-share {
+  background: #6bb2d0;
+  .jm-share-title {
+    color: #fff;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 50px;
+  }
+  .jm-share-line {
+    height: 2px;
+    width: 20%;
+    margin-left: 40%;
+    margin-right: 40%;
+    background: #fff;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+  .jm-share-info {
+    text-align: center;
+    color: #fff;
+    margin-bottom: 50px;
+  }
+  // 分享卡片
+  .jm-share-card {
+    background: #6bb2d0;
+    .jm-messge {
+      padding: 20px;
+      
+      .jm-box {
+        padding: 20px;
+        background: #fff;
+        
+        .jm-text {
+        }
+        .jm-tate {
+          margin-bottom: 30px;
+        }
+        .jm-name {
+          .jm-headImg {
+            position: absolute;
+            top: -10px;
+            right: 0;
+            display: inline-block;
+            width: 60px;
+            height: 60px;
+          }
+        }
+        .jm-job {
+          margin-top: 10px;
+        }
+      }
+    }
+    .jm-more-share{
+      background: #6bb2d0;
+      margin-bottom: 30px;
+    }
+  }
+}
+//服务与保障区
+.jm-service{
+  background: #f5f7f9;
+  .jm-text{
+    color:#000;
+  }
+  .jm-line{
+    background: #000;
+  }
+  .jm-service-card{
+    background: #f5f7f9;
+    .jm-messge{
+      .jm-box{
+        background: #f5f7f9;
+        padding:10px;
+        .jm-safe-icon{
+          color:#1cb52b;
+        }
+        .jm-free-icon{
+          color:rgb(25, 128, 229);
+        }
+        .jm-major-icon{
+          color:rgb(251, 225, 128);
+        }
+        .jm-feedback-icon{
+          color:rgb(78, 22, 202);
+        }
+      }
+      .jm-msg{
+        text-align: left;
+      }
+    }
+  }
+}
+.border-rd5{
+  border-radius: 5px;
 }
 </style>
