@@ -6,7 +6,7 @@
           <img class="zm-logoImg" src="../../static/image/b-logo.jpg"
         /></Col>
         <Col span="8" class="jm-ct">
-          <span @click.native="goHome" class="zm-header-text">首页</span>
+          <span @click="goHome" class="zm-header-text">首页</span>
         </Col>
       </Col>
       <Col span="3" class="zm-header-column jm-ct">
@@ -26,7 +26,9 @@
         </Dropdown>
       </Col>
       <Col span="2" class="zm-header-column jm-ct"
-        ><span class="zm-header-text">模板商城</span></Col
+        ><span @click="goTemplateMall" class="zm-header-text"
+          >模板商城</span
+        ></Col
       >
       <Col span="2" class="zm-header-column jm-ct"
         ><span class="zm-header-text">优秀简历</span></Col
@@ -120,6 +122,12 @@ export default {
     goHome() {
       this.$router.push({
         name: "home"
+      });
+    },
+    // 进入模板商城
+    goTemplateMall() {
+      this.$router.push({
+        name: "templateMall"
       });
     },
     // 进入简历编写页面

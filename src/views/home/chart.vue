@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- 聊天页面 -->
     <div class="all">
       <div
         class="name"

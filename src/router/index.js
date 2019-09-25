@@ -5,6 +5,13 @@ import GroupChart from '@/views/GroupChart/GroupChart'
 import Login from '@/views/login/Login'
 import WriteBaseInfo from '@/views/resume/WriteBaseInfo'
 import ResumeTemplate1 from '@/views/resume/ResumeTemplate/ResumeTemplate1'
+import TemplateMall from '@/views/templateMall/TemplateMall'   
+import WriteResumeIde from '@/views/resume/WriteResumeIde'   
+import WriteIdeHeader from '@/views/resume/ResumeTemplateCommon/WriteIdeHeader'   
+import WriteIdeSiderLeft from '@/views/resume/ResumeTemplateCommon/WriteIdeSiderLeft'   
+import WriteResumeTemplate1 from '@/views/resume/WriteResumeTemplate/WriteResumeTemplate1'
+import WriteResumeTemplate2 from '@/views/resume/WriteResumeTemplate/WriteResumeTemplate2'
+
 
 Vue.use(Router)
 
@@ -38,6 +45,41 @@ export default new Router({
             path: '/groupChart',
             name: 'groupChart',
             component: GroupChart
+        },
+        {
+            path: '/templateMall',
+            name: 'templateMall',
+            component: TemplateMall
+        },
+        {
+            path: '/writeResumeIde',
+            name: 'writeResumeIde',
+            component: WriteResumeIde
+        },
+        {
+            path: '/writeIdeHeader',
+            name: 'writeIdeHeader',
+            component: WriteIdeHeader
+        },
+        {
+            path: '/writeIdeSiderLeft',
+            name: 'writeIdeSiderLeft',
+            component: WriteIdeSiderLeft
+        },
+        {
+            path: '/writeIdeSiderLeft',
+            name: 'writeIdeSiderLeft',
+            component: WriteIdeSiderLeft
+        },
+        {
+            path: '/writeResumeTemplate1',
+            name: 'writeResumeTemplate1',
+            component: WriteResumeTemplate1
+        },
+        {
+            path: '/writeResumeTemplate2',
+            name: 'writeResumeTemplate2',
+            component: WriteResumeTemplate2
         }
     ]
 })

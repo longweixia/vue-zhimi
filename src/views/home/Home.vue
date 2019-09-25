@@ -1,4 +1,5 @@
 <template>
+<!-- 主页 -->
   <div class="zm">
     <div class="layout">
       <Layout>
@@ -58,10 +59,16 @@
             <Row class="zm-table-tag">
               <Row>
                 <Col>
-                  <Tag checkable color="primary">前端</Tag>
-                  <Tag checkable color="primary">后端</Tag>
-                  <Tag checkable color="primary">ui设计</Tag>
-                  <Tag checkable color="primary">测试</Tag>
+                  <Tag class="jm-tag" :checked="false" checkable color="geekblue">前端</Tag>
+                  <Tag class="jm-tag" :checked="false" checkable color="geekblue">后端</Tag>
+                  <Tag class="jm-tag" :checked="false" checkable color="geekblue">ui设计</Tag>
+                  <Tag class="jm-tag" :checked="false" checkable color="geekblue">测试</Tag>
+                </Col>
+              </Row>
+              <Row class="zm-table-title">
+                <Col span="6" @click.native="goTemplateMall">
+                 <span class="zm-table-b">更多模板，</span>
+                 <span class="zm-table-s">进入模板商城</span>
                 </Col>
               </Row>
               <!-- 简历列表 -->
@@ -74,6 +81,31 @@
                   >
                     <li class="jm-li">
                       <img :src="'http://localhost:3000' + item" alt="JM0203" />
+
+                      <!-- 遮罩层 -->
+                      <div
+                        @mouseenter="enter(index)"
+                        @mouseleave="leave(index)"
+                        class="jm-mask"
+                        :class="current == index ? jmMaskOpacity : ''"
+                      >
+                        <Icon
+                          size="35"
+                          class="jm-bigger"
+                          type="ios-add-circle-outline"
+                          @mouseenter.native="enterIcon(index)"
+                          @mouseleave.native="leaveIcon(index)"
+                        />
+                        <Button class="jm-btn" shape="circle" icon="ios-search"
+                          >编辑简历</Button
+                        >
+                      </div>
+                      <div  class="jm-preview" v-show="currentIcon==index">
+                        <img :class="isRightImg?'rightPreview':'leftPreview'"
+                          :src="'http://localhost:3000' + item"
+                          alt="JM0203"
+                        />
+                      </div>
                     </li>
                   </ul>
                 </Col>
@@ -165,7 +197,7 @@
               </Row>
             </Row>
           </Row>
-           <!-- 服务保障区 -->
+          <!-- 服务保障区 -->
           <Row class="jm-share jm-service">
             <Row class="jm-share-title jm-text">四大服务保障</Row>
             <Row class="jm-share-line jm-text jm-line"></Row>
@@ -178,53 +210,64 @@
                 <!-- 安全 -->
                 <Col span="6" class="jm-messge">
                   <Row class="jm-box border-rd5">
-                      <Icon size="80" class="jm-safe-icon" type="ios-cloud" />
+                    <Icon size="80" class="jm-safe-icon" type="ios-cloud" />
                   </Row>
                   <Row class="jm-box">
-                      保护隐私
+                    保护隐私
                   </Row>
                   <Row class="jm-box jm-msg">
-                      保护隐私，未经用户许可，本站信息不提供给第三方网站。 保护隐私，未经用户许可，本站信息不提供给第三方网站。
+                    保护隐私，未经用户许可，本站信息不提供给第三方网站。
+                    保护隐私，未经用户许可，本站信息不提供给第三方网站。
                   </Row>
                 </Col>
-                 <!-- 免费 -->
+                <!-- 免费 -->
                 <Col span="6" class="jm-messge">
                   <Row class="jm-box border-rd5">
-                      <Icon size="80" class="jm-free-icon" type="md-brush" />
+                    <Icon size="80" class="jm-free-icon" type="md-brush" />
                   </Row>
                   <Row class="jm-box">
-                      永久免费
+                    永久免费
                   </Row>
                   <Row class="jm-box jm-msg">
-                      保护隐私，未经用户许可，本站信息不提供给第三方网站。 保护隐私，未经用户许可，本站信息不提供给第三方网站。
+                    保护隐私，未经用户许可，本站信息不提供给第三方网站。
+                    保护隐私，未经用户许可，本站信息不提供给第三方网站。
                   </Row>
                 </Col>
-                 <!-- 专业高效 -->
+                <!-- 专业高效 -->
                 <Col span="6" class="jm-messge">
                   <Row class="jm-box border-rd5">
-                      <Icon size="80" class="jm-major-icon" type="ios-thumbs-up" />
+                    <Icon
+                      size="80"
+                      class="jm-major-icon"
+                      type="ios-thumbs-up"
+                    />
                   </Row>
                   <Row class="jm-box">
-                      专业高效
+                    专业高效
                   </Row>
                   <Row class="jm-box jm-msg">
-                      保护隐私，未经用户许可，本站信息不提供给第三方网站。 保护隐私，未经用户许可，本站信息不提供给第三方网站。
+                    保护隐私，未经用户许可，本站信息不提供给第三方网站。
+                    保护隐私，未经用户许可，本站信息不提供给第三方网站。
                   </Row>
                 </Col>
-                 <!-- 跟踪反馈 -->
+                <!-- 跟踪反馈 -->
                 <Col span="6" class="jm-messge">
                   <Row class="jm-box border-rd5">
-                      <Icon size="80" class="jm-feedback-icon" type="ios-notifications" />
+                    <Icon
+                      size="80"
+                      class="jm-feedback-icon"
+                      type="ios-notifications"
+                    />
                   </Row>
                   <Row class="jm-box">
-                      跟踪反馈
+                    跟踪反馈
                   </Row>
                   <Row class="jm-box jm-msg">
-                      保护隐私，未经用户许可，本站信息不提供给第三方网站。 保护隐私，未经用户许可，本站信息不提供给第三方网站。
+                    保护隐私，未经用户许可，本站信息不提供给第三方网站。
+                    保护隐私，未经用户许可，本站信息不提供给第三方网站。
                   </Row>
                 </Col>
               </Row>
-          
             </Row>
           </Row>
           <!-- <div class="zm-input-tips">
@@ -257,9 +300,8 @@
             </Col>
           </Row> -->
         </Content>
-        
-          <NavFooter></NavFooter>
-     
+
+        <NavFooter></NavFooter>
       </Layout>
     </div>
   </div>
@@ -282,7 +324,11 @@ export default {
       resumeIndex: [{ ry: false }, { ry: false }],
       value2: 0,
       imgList: [], //首页图片列表
-      valueHalf: 4.5 //评分值
+      valueHalf: 4.5, //评分值
+      jmMaskOpacity: "", //图片列表遮罩层的透明度
+      current: 0, //当前悬浮图片的位置
+      currentIcon: -1, //当前悬浮预览图标
+      isRightImg:false,//是否是右边图
     };
   },
   components: {
@@ -293,6 +339,34 @@ export default {
     ResumeTemplate2
   },
   methods: {
+     // 进入模板商城
+    goTemplateMall() {
+      this.$router.push({
+        name: "templateMall"
+      });
+    },
+    // 鼠标悬浮图片
+    enter(index) {
+      this.current = index;
+      this.jmMaskOpacity = "jmMaskOpacity";
+    },
+    //鼠标离开图片
+    leave(index) {
+      this.current = index;
+      this.jmMaskOpacity = "";
+    },
+    // 鼠标悬浮预览图标
+    enterIcon(index) {
+      this.isRightImg = index==(parseInt(index/4))*4+2 || index==(parseInt(index/4))*4+3
+      console.log("行===",this.isRightImg)
+      console.log("位置===",index)
+      this.currentIcon = index;
+    },
+    //鼠标离开预览图标
+    leaveIcon(index) {
+      this.currentIcon = -1;
+    },
+
     // 进入简历
     gotoResume(item) {
       this.resumeIndex.forEach((items, indexs) => {
@@ -345,7 +419,7 @@ export default {
 .ivu-layout {
   background: #fff;
 }
-.jm-content{
+.jm-content {
   padding-left: 2%;
   padding-right: 2%;
 }
@@ -375,6 +449,7 @@ export default {
 .zm-table-text {
   text-align: center;
   margin-top: 30px;
+  padding-top:20px;
   line-height: 25px;
   background: rgb(246, 249, 251);
   .ivu-divider-horizontal {
@@ -385,6 +460,26 @@ export default {
   }
   .zm-table-tag {
     margin-top: 20px;
+    .jm-tag{
+      margin: 0 10px; 
+    }
+
+    
+    .zm-table-title{
+      text-align: left;
+      margin-top:20px;
+      .zm-table-b{
+        font-size: 22px;
+        margin-left:20px;
+      }
+      .zm-table-s{
+        font-size: 16px;
+      }
+    }
+    .zm-table-title :hover{
+      color:#2d8cf0;
+      cursor:pointer;
+    }
   }
 }
 // 列表
@@ -398,6 +493,57 @@ export default {
     width: 100%;
     height: 350px;
   }
+  // 遮罩层
+  .jm-mask {
+    position: relative;
+    text-align: center;
+    height: 350px;
+    margin-top: -360px;
+    float: left;
+    background-color: rgba(0, 192, 145, 0.5);
+    opacity: 0;
+    width: 100%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    // z-index: 1;
+    .jm-btn {
+      position: relative;
+      top: 50%;
+      font-size: 20px;
+      // left: 50%;
+      transform: translate(0, -50%);
+    }
+    .jm-bigger {
+      position: absolute;
+      right: 0;
+      color: #fff;
+    }
+  }
+  // 预览图片
+  .jm-preview {
+    position: absolute;
+    z-index: 100;
+    img {
+     background: #ddd;
+     padding: 20px;   
+      width: 500px;
+      height: 730px;
+      top: -500px;
+    }
+  }
+  .leftPreview{
+    position: relative;
+     margin-left:300px;
+  }
+  .rightPreview{
+    position: absolute;
+    margin-left:-530px;
+  }
+}
+.jm-li {
+  content: "";
+  overflow: hidden;
 }
 // 更多模板
 .jm-more {
@@ -437,11 +583,11 @@ export default {
     background: #6bb2d0;
     .jm-messge {
       padding: 20px;
-      
+
       .jm-box {
         padding: 20px;
         background: #fff;
-        
+
         .jm-text {
         }
         .jm-tate {
@@ -462,47 +608,50 @@ export default {
         }
       }
     }
-    .jm-more-share{
+    .jm-more-share {
       background: #6bb2d0;
       margin-bottom: 30px;
     }
   }
 }
 //服务与保障区
-.jm-service{
+.jm-service {
   background: #f5f7f9;
-  .jm-text{
-    color:#000;
+  .jm-text {
+    color: #000;
   }
-  .jm-line{
+  .jm-line {
     background: #000;
   }
-  .jm-service-card{
+  .jm-service-card {
     background: #f5f7f9;
-    .jm-messge{
-      .jm-box{
+    .jm-messge {
+      .jm-box {
         background: #f5f7f9;
-        padding:10px;
-        .jm-safe-icon{
-          color:#1cb52b;
+        padding: 10px;
+        .jm-safe-icon {
+          color: #1cb52b;
         }
-        .jm-free-icon{
-          color:rgb(25, 128, 229);
+        .jm-free-icon {
+          color: rgb(25, 128, 229);
         }
-        .jm-major-icon{
-          color:rgb(251, 225, 128);
+        .jm-major-icon {
+          color: rgb(251, 225, 128);
         }
-        .jm-feedback-icon{
-          color:rgb(78, 22, 202);
+        .jm-feedback-icon {
+          color: rgb(78, 22, 202);
         }
       }
-      .jm-msg{
+      .jm-msg {
         text-align: left;
       }
     }
   }
 }
-.border-rd5{
+.border-rd5 {
   border-radius: 5px;
+}
+.jmMaskOpacity {
+  opacity: 0.8 !important;
 }
 </style>

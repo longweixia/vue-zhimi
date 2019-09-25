@@ -24,4 +24,16 @@ npm run unit
 npm test
 ```
 
+``` bash
+背景颜色：
+灰色：#f5f7f9
+左侧工具栏绿色：#11a480 
+中间绿色背景：#00c091
+
+字体颜色：
+二级灰色标题：    color: #525867;
+正文：color:#a4aab9;
+
+        
+
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
