@@ -60,6 +60,7 @@ export default {
 .jm-sider{
   // position: fixed;
   // width: 70px;
+  
   background: #11a480;
   .jm-ul{
         padding: 20px 0;

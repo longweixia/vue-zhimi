@@ -1,18 +1,21 @@
 <template>
   <div class="jm-container">
-    <WriteResumeTemplate3/>
+    <!-- <WriteResumeTemplate3/> -->
+    <WriteResumeTemplate4/>
   </div>
 </template>
 
 <script>
 import WriteResumeTemplate3 from "@/views/resume/WriteResumeTemplate/WriteResumeTemplate3";
+import WriteResumeTemplate4 from "@/views/resume/WriteResumeTemplate/WriteResumeTemplate4";
 export default {
   name: "WriteIdeContent",
   data() {
     return {};
   },
   components: {
-      WriteResumeTemplate3
+      WriteResumeTemplate3,
+      WriteResumeTemplate4
   },
   watch: {},
 

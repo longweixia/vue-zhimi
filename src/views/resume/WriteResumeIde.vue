@@ -56,9 +56,10 @@ export default {
     flex: 0 0!important;
     background: #00c091;
 }
-.ivu-layout-header{
-    height: 50px;
-}
+/deep/.ivu-layout-header{
+      height: 50px;
+      line-height: 50px;
+    }
 .jm-content{
     background: #00c091;
 }

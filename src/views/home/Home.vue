@@ -73,12 +73,9 @@
               </Row>
               <!-- 简历列表 -->
               <Row>
-                <Col>
-                  <ul
-                    class="jm-ul"
-                    v-for="(item, index) in imgList"
-                    :key="index"
-                  >
+                <Col class="jm-ul" v-for="(item, index) in imgList"
+                    :key="index">
+                  <ul>
                     <li class="jm-li">
                       <img :src="'http://localhost:3000' + item" alt="JM0203" />
 
