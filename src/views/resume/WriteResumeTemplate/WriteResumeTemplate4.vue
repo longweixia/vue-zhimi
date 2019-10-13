@@ -107,6 +107,9 @@
           </Row>
           <Row class="jm-work-content">
             <Input
+             @on-focus="focusInput" 
+             @on-blur="blurInput"
+             :class="inFocus?'':'hasFocus'"
               style="margin-bottom:'10px'"
               v-model="eduText"
               type="textarea"
@@ -130,7 +133,7 @@
             <Col :span="8" :class="jmDate">
               <DatePicker
                 confirm
-               v-model="workDate"
+                v-model="workDate"
                 @on-ok="confirmDate"
                 type="daterange"
                 placeholder="日期"
@@ -155,6 +158,9 @@
           <Row class="jm-work-content">
             <Input
               style="margin-bottom:'10px'"
+               @on-focus="focusInput" 
+             @on-blur="blurInput"
+             :class="inFocus?'':'hasFocus'"
               v-model="workText"
               type="textarea"
               :autosize="{ minRows: 2, maxRows: 5 }"
@@ -175,6 +181,9 @@
         <Row class="jm-like-work">
           <Row class="jm-work-content">
             <Input
+             @on-focus="focusInput" 
+             @on-blur="blurInput"
+             :class="inFocus?'':'hasFocus'"
               style="margin-bottom:'10px'"
               v-model="textWork1"
               type="textarea"
@@ -194,9 +203,11 @@
       </div>
       <div class="jm-like-content">
         <Row class="jm-like-work">
-          
           <Row class="jm-work-content">
             <Input
+             @on-focus="focusInput" 
+             @on-blur="blurInput"
+             :class="inFocus?'':'hasFocus'"
               style="margin-bottom:'10px'"
               v-model="project"
               type="textarea"
@@ -216,9 +227,11 @@
       </div>
       <div class="jm-like-content">
         <Row class="jm-like-work">
-          
           <Row class="jm-work-content">
             <Input
+             @on-focus="focusInput" 
+             @on-blur="blurInput"
+             :class="inFocus?'':'hasFocus'"
               style="margin-bottom:'10px'"
               v-model="selfEvaluation"
               type="textarea"
@@ -234,11 +247,12 @@
 
 <script>
 import jmUploadImg from "@/components/UploadImg";
+import Bus from "@/assets/event-bus.js";
 export default {
   name: "WriteResumeTemplate4",
   data() {
     return {
-      textWork1:"",
+      textWork1: "",
       isBaseLine: false, //是否基本信息编辑框
       name: "",
       introduce: "",
@@ -248,17 +262,16 @@ export default {
       age: "",
       eduText: "",
       jmDate: "jm-date", //是否显示日期选择框的笑图标
-      eduDate:"",
-      eduschool:"",
-      eduMajor:"",
-      workDate:"",
-      workName:"",
-      workMajor:"",
-      workText:"",
-      project:"",//项目
-      selfEvaluation:"",//自我评价
-
-
+      eduDate: "",
+      eduschool: "",
+      eduMajor: "",
+      workDate: "",
+      workName: "",
+      workMajor: "",
+      workText: "",
+      project: "", //项目
+      selfEvaluation: "", //自我评价
+      inFocus:false,//textarea是否在聚焦
     };
   },
   components: {
@@ -277,15 +290,44 @@ export default {
     //鼠标离开头像
     leaveBase() {
       this.isBaseLine = false;
+    },
+    // 输入域聚焦
+    focusInput() {
+      console.log(0)
+      this.inFocus = true;
+    },
+    //输入域失去焦点
+    blurInput() {
+      console.log(1)
+      this.inFocus = false;
     }
   },
-  mounted() {},
+  mounted() {
+    //  Bus.$on('BsaveMsg', content => {
+    //       console.log(content)
+    //     });
+    Bus.$on("BsaveMsg", () => {
+      console.log(2)
+      this.axios
+        .post("resumes/resumeTemplate", { flag: "all" })
+        .then(res => {
+        var imgList = res.data.url;
+          console.log(imgList);
+        })
+        .catch(err => {
+          console.log("err", err);
+        });
+    });
+  },
   created() {}
 };
 </script>
 
 <style lang="less" scoped>
-.jm-template{
+.hasFocus /deep/textarea{
+  resize: none;
+} 
+.jm-template {
   margin-bottom: 40px;
 }
 .jm-head-icon {

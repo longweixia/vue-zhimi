@@ -32,7 +32,9 @@ export default {
   },
   watch: {},
 
-  mounted() {},
+  mounted() {
+      
+  },
   created() {
 
   }

@@ -156,11 +156,17 @@ export default {
   methods: {
     // 进入简历模板
     gotoResumeTemplate(index){
-      console.log(index)
+      console.log(index+1,"进入模板")
       this.$router.push({
         // name: "writeResumeTemplate"+(index+1)
-        name: "writeResumeIde"
+        name: "writeResumeIde",
+        query:{
+          id:index+1
+        }
+ 
       });
+      // 解决模板引入需要刷新才改变视图的问题
+       window.location.reload();
     },
     // 鼠标悬浮图片
     enter(index) {

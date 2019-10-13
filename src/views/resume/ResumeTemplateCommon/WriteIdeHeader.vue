@@ -8,14 +8,15 @@
     龙伟的简历
     </Col>
     <Col :span="8">
-    下载
+    <span @click="saveMsg">保存</span>
+    <span>下载</span>
     </Col>
   </Row>
 </div>
 </template>
 
 <script>
-
+import Bus from '@/assets/event-bus.js'
 export default {
   name: "WriteIdeHeader",
   data() {
@@ -25,6 +26,12 @@ export default {
   },
   components: {
 
+  },
+  methods:{
+    saveMsg(){
+      //  Bus.$emit('BsaveMsg', 120)
+       Bus.$emit('BsaveMsg')
+    }
   },
   watch: {},
 
