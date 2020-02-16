@@ -1,8 +1,9 @@
 <template>
   <div class="jm-template">
     <Row>
+      <!-- {{modalSkill}} -->
       <!-- 左侧区域 -->
-      <skillModal/>
+      <skillModal :modalSkills="modalSkill"/>
       <Col class="resume-left" span="8">
         <!-- 头像 -->
         <Row class="jm-headImg">
@@ -56,7 +57,7 @@
             @mouseenter="enterSkill"
             @mouseleave="leaveSkill"
           >
-            <Icon
+            <Icon @click="displaySkillModel"
               v-show="isSkill"
               class="jm-head-icon"
               size="20"
@@ -98,11 +99,18 @@
 <script>
 import jmUploadImg from "@/components/UploadImg";
 import skillModal from "./SkillModal";
+import baseInfoModel from "./BaseInfoModel";
 export default {
   name: "WriteResumeTemplate3",
+  components: {
+    jmUploadImg,
+    skillModal,
+    baseInfoModel
+  },
   data() {
     return {
       isHeadImg: false, //是否显示头像编辑框
+      modalSkill:false,//默认技能弹窗不显示
       baseInfoList: [
         //基本信息
         {
@@ -131,10 +139,6 @@ export default {
       jmName:"龙伟",//简历名字
     };
   },
-  components: {
-    jmUploadImg,
-    skillModal
-  },
   watch: {},
   methods: {
     // 鼠标悬浮头像
@@ -160,6 +164,13 @@ export default {
     //鼠标离开技能特长
     leaveSkill() {
       this.isSkill = false;
+    },
+    // 显示技能弹窗
+    displaySkillModel(){
+      
+      this.modalSkill = !this.modalSkill;
+      console.log(this.modalSkill)
+
     }
   },
   mounted() {},

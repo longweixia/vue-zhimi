@@ -43,8 +43,25 @@ export default {
   // vue怎么用同一个组件标签表示不同的组件
   components: { TemplateNames: modules[templateName] },
   watch: {},
+  methods:{
+  // 获取简历信息
+    getResumeInfo() {
+      this.axios
+        .post("resumes/getResumeInfo", {
+          userName: "long" //暂时写死，到时候用vuex
+        })
+        .then(res => {
+          if (res.data.status == "0") {
+            // this.resumeList = res.data.result.resumeContent;
+          }
+        })
+        .catch(err => {});
+    }
+  },
 
-  mounted() {},
+  mounted() {
+    this.getResumeInfo();
+  },
   beforeCreate(){
   },
   created() {}

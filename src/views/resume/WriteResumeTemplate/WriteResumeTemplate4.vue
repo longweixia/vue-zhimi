@@ -4,7 +4,8 @@
     <div class="jm-base-name">
       <div
         style="position: relative;"
-        :class="isBaseLine ? 'jm-base-linehover' : ''"
+        class="jm-defult-line"
+        :class="isBaseLine ? 'jm-base-linehover0' : ''"
         @mouseenter="enterBase"
         @mouseleave="leaveBase"
       >
@@ -345,6 +346,13 @@ export default {
   padding-bottom: 15px;
   background: #6b4b24;
   color: #fff;
+  .jm-defult-line{
+      border: 1px dashed transparent;
+  }
+  .jm-base-linehover0 {
+  border: 1px dashed #00c091;
+}
+
   /deep/.ivu-input {
     border: none;
     color: #fff;

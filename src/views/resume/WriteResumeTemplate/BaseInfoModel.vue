@@ -1,8 +1,7 @@
 <template>
   <div>
-    {{ modalSkills1 }}
-    <!-- <Button @click="modalSkills1 = true">编辑技能特长</Button> -->
-    <Modal class="jm-skill-modal" v-model="modalSkills1">
+    <Button @click="modalSkills = true">编辑基本信息</Button>
+    <Modal class="jm-skill-modal" v-model="modalSkills">
       <p class="jm-title" slot="header" style="text-align:left">
         <span>编辑技能特长</span>
       </p>
@@ -15,8 +14,7 @@
             style="width: 465px"
           />
           <Button
-            style="background:#00c091;color:#fff;width:80px;margin-left:10px;"
-            @click="addSkills"
+            style="background:#00c091;color:#fff;width:80px;margin-left:10px;" @click="addSkills"
             >添加</Button
           >
         </Row>
@@ -47,15 +45,10 @@
             <Row
               class="jm-recom-line"
               v-for="(item, index) in hasSkillList"
-              :key="index"
+              :key="index" 
             >
               <Col v-if="item.isChecked" span="8" style="text-align: left;">
-                <Icon
-                  @click="deleteSkills(index)"
-                  class="jm-recom-icon"
-                  size="20"
-                  type="md-close-circle"
-                />
+                <Icon @click="deleteSkills(index)" class="jm-recom-icon" size="20" type="md-close-circle" />
                 <span class="jm-recom-text">{{ item.name }}</span>
               </Col>
               <Col v-if="item.isChecked" span="12">
@@ -65,39 +58,32 @@
                   :tip-format="format"
                 ></Slider>
               </Col>
-              <Col
-                v-if="item.isChecked"
-                span="4"
-                class="jm-recom-tag"
-                style="text-align: right;"
+              <Col v-if="item.isChecked" span="4" class="jm-recom-tag" style="text-align: right;"
                 >精通</Col
               >
+           
             </Row>
           </div>
         </Row>
       </div>
       <div class="jm-footer" slot="footer">
         <Button class="jm-save-btn" size="large">保存</Button>
-        <Button @click="cancelModel" class="jm-cancle-btn" size="large"
-          >取消</Button
-        >
+        <Button @click="cancelMpdel" class="jm-cancle-btn" size="large">取消</Button>
       </div>
     </Modal>
   </div>
 </template>
 <script>
 export default {
-  name: "skillModal",
-  props: 
-    ["modalSkills"],//技能的弹窗标识
+  name: "baseInfoModel",
   data() {
     return {
-      modalSkills1: this.modalSkills,
+      modalSkills: false, //技能的弹窗标识
       customSkiVal: "", //自定义技能输入框
       valRecom: 66, //自定义技能滑块的值
       showTipText: "熟练", //滚动条上方显示的文字
       hasSkillList: [
-        { name: "商务", isChecked: false },
+         { name: "商务", isChecked: false },
         { name: "BD拓展", isChecked: false },
         { name: "行业分析", isChecked: false },
         { name: "商业策划", isChecked: false }
@@ -131,13 +117,9 @@ export default {
           if (newValue[i].isChecked) {
             // obj.name = newValue[i].name;
             // this.hasSkillList.push(newValue);
-            this.hasSkillList.find(
-              item => item.name === newValue[i].name
-            ).isChecked = true;
-          } else {
-            this.hasSkillList.find(
-              item => item.name === newValue[i].name
-            ).isChecked = false;
+            this.hasSkillList.find(item => item.name === newValue[i].name).isChecked = true
+          }else{
+            this.hasSkillList.find(item => item.name === newValue[i].name).isChecked = false
           }
         }
       },
@@ -158,37 +140,31 @@ export default {
       //                   })
     },
     // 添加技能
-    addSkills() {
+    addSkills(){
       // 如果添加的技能已经存在，拒绝添加
-      if (this.customSkiVal === "") {
-        this.$Message.warning("请输入您的技能");
-        return;
-      } else if (
-        JSON.stringify(this.hasSkillList).indexOf(this.customSkiVal) != -1
-      ) {
-        this.$Message.warning("已有该技能，请输入其它内容");
-        return;
+      if(this.customSkiVal === ""){
+        this.$Message.warning('请输入您的技能');
+         return;
+      }else if(JSON.stringify(this.hasSkillList).indexOf(this.customSkiVal)!=-1){
+         this.$Message.warning('已有该技能，请输入其它内容');
+         return;
       }
-
-      let addSkillContent = { name: this.customSkiVal, isChecked: true };
-      this.hasSkillList.push(addSkillContent);
+      
+      let addSkillContent = {name:this.customSkiVal,isChecked:true}
+     this.hasSkillList.push(addSkillContent)
     },
     // 删除单行已选技能
-    deleteSkills(i) {
-      this.hasSkillList[i].isChecked = false;
+    deleteSkills(i){
+      this.hasSkillList[i].isChecked = false
       // 如果删除项在推荐技能数组中，就要去改变skillList对应项的状态
-      if (
-        JSON.stringify(this.skillList).indexOf(this.hasSkillList[i].name) != -1
-      ) {
-        // 让已选的tag同步状态
-        this.skillList.find(
-          item => item.name === this.hasSkillList[i].name
-        ).isChecked = false;
+      if(JSON.stringify(this.skillList).indexOf(this.hasSkillList[i].name)!=-1){
+         // 让已选的tag同步状态
+       this.skillList.find(item => item.name === this.hasSkillList[i].name).isChecked = false;
       }
     },
     // 点击取消
-    cancelModel() {
-      this.modalSkills1 = false;
+    cancelMpdel(){
+      this.modalSkills = false
     }
   }
 };

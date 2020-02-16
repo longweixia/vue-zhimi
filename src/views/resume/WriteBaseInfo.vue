@@ -656,6 +656,7 @@ major.push(item.InputModal)
       this.axios
         .post("resumes/resumeInfo", {
           userName: "long", //暂时写死，到时候用vuex
+          hasCommonResume:true,//提交龙基础信息的标志
           content: {
            base,
             major,
