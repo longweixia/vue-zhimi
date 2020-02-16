@@ -1,8 +1,6 @@
 <template>
   <div>
-    {{ modalSkills1 }}
-    <!-- <Button @click="modalSkills1 = true">编辑技能特长</Button> -->
-    <Modal class="jm-skill-modal" v-model="modalSkills1">
+    <Modal class="jm-skill-modal" v-model="modalSkills">
       <p class="jm-title" slot="header" style="text-align:left">
         <span>编辑技能特长</span>
       </p>
@@ -92,7 +90,7 @@ export default {
     ["modalSkills"],//技能的弹窗标识
   data() {
     return {
-      modalSkills1: this.modalSkills,
+      // modalSkills1: this.modalSkills,
       customSkiVal: "", //自定义技能输入框
       valRecom: 66, //自定义技能滑块的值
       showTipText: "熟练", //滚动条上方显示的文字
@@ -188,7 +186,8 @@ export default {
     },
     // 点击取消
     cancelModel() {
-      this.modalSkills1 = false;
+      this.$emit("changeSkillModel", false);
+      // this.modalSkills1 = false;
     }
   }
 };

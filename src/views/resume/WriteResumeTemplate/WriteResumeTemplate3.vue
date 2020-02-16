@@ -3,7 +3,7 @@
     <Row>
       <!-- {{modalSkill}} -->
       <!-- 左侧区域 -->
-      <skillModal :modalSkills="modalSkill"/>
+      <skillModal :modalSkills="modalSkill"  v-on:changeSkillModel="changeSkillModel" />
       <Col class="resume-left" span="8">
         <!-- 头像 -->
         <Row class="jm-headImg">
@@ -167,10 +167,10 @@ export default {
     },
     // 显示技能弹窗
     displaySkillModel(){
-      
-      this.modalSkill = !this.modalSkill;
-      console.log(this.modalSkill)
-
+      this.modalSkill = true;
+    },
+    changeSkillModel(data) {
+      this.modalSkill = false;
     }
   },
   mounted() {},
