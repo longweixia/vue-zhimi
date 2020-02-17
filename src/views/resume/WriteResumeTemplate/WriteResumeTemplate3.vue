@@ -4,6 +4,7 @@
       <!-- {{modalSkill}} -->
       <!-- 左侧区域 -->
       <skillModal :modalSkills="modalSkill"  v-on:changeSkillModel="changeSkillModel" />
+      <baseInfoModel :modalSkills="modalBaseInfo"  v-on:changeSkillModel="changeSkillModel" />
       <Col class="resume-left" span="8">
         <!-- 头像 -->
         <Row class="jm-headImg">
@@ -32,7 +33,8 @@
             @mouseenter="enterBase"
             @mouseleave="leaveBase"
           >
-            <Icon
+            <Icon 
+            @click="displaybaseModel"
               v-show="isBase"
               class="jm-head-icon"
               size="20"
@@ -111,6 +113,7 @@ export default {
     return {
       isHeadImg: false, //是否显示头像编辑框
       modalSkill:false,//默认技能弹窗不显示
+      modalBaseInfo:false,//默认基本信息弹窗不显示
       baseInfoList: [
         //基本信息
         {
@@ -169,8 +172,14 @@ export default {
     displaySkillModel(){
       this.modalSkill = true;
     },
+    // 显示基本信息弹窗
+    displaybaseModel(){
+      this.modalBaseInfo = true;
+    },
+    // 关闭技能弹窗，基本信息弹窗
     changeSkillModel(data) {
       this.modalSkill = false;
+      this.modalBaseInfo = false;
     }
   },
   mounted() {},

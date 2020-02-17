@@ -1,4 +1,6 @@
+
 <template>
+  <!-- 技能弹窗页面 -->
   <div>
     <Modal class="jm-skill-modal" v-model="modalSkills">
       <p class="jm-title" slot="header" style="text-align:left">
@@ -58,7 +60,7 @@
               </Col>
               <Col v-if="item.isChecked" span="12">
                 <Slider
-                  v-model="valRecom"
+                  v-model="item.skillNumber"
                   :step="33"
                   :tip-format="format"
                 ></Slider>
@@ -68,7 +70,7 @@
                 span="4"
                 class="jm-recom-tag"
                 style="text-align: right;"
-                >精通</Col
+                >{{ item.skillNumber | ConversionNumber }}</Col
               >
             </Row>
           </div>
@@ -86,41 +88,43 @@
 <script>
 export default {
   name: "skillModal",
-  props: 
-    ["modalSkills"],//技能的弹窗标识
+  props: ["modalSkills"], //技能的弹窗标识
+  filters: {
+    ConversionNumber: function(val) {
+      //根据滑块的来显示滑块提示文字
+      if (val == 0) {
+        return "一般";
+      } else if (val == 33) {
+        return "熟悉";
+      } else if (val == 66) {
+        return "熟练";
+      } else if (val == 99) {
+        return "精通";
+      }
+    }
+  },
+
   data() {
     return {
-      // modalSkills1: this.modalSkills,
       customSkiVal: "", //自定义技能输入框
       valRecom: 66, //自定义技能滑块的值
       showTipText: "熟练", //滚动条上方显示的文字
+      sliderText: "", //滑块后面的文字
       hasSkillList: [
-        { name: "商务", isChecked: false },
-        { name: "BD拓展", isChecked: false },
-        { name: "行业分析", isChecked: false },
-        { name: "商业策划", isChecked: false }
+        { name: "商务", isChecked: false, skillNumber: 66 },
+        { name: "BD拓展", isChecked: false, skillNumber: 66 },
+        { name: "行业分析", isChecked: false, skillNumber: 66 },
+        { name: "商业策划", isChecked: false, skillNumber: 66 }
       ], //已添加技能列表
       skillList: [
-        { name: "商务", isChecked: false },
-        { name: "BD拓展", isChecked: false },
-        { name: "行业分析", isChecked: false },
-        { name: "商业策划", isChecked: false }
+        { name: "商务", isChecked: false, skillNumber: 66 },
+        { name: "BD拓展", isChecked: false, skillNumber: 66 },
+        { name: "行业分析", isChecked: false, skillNumber: 66 },
+        { name: "商业策划", isChecked: false, skillNumber: 66 }
       ] //技能列表
     };
   },
   watch: {
-    // 根据滑块的来显示滑块提示文字
-    valRecom(val) {
-      if (val == 0) {
-        this.showTipText = "一般";
-      } else if (val == 33) {
-        this.showTipText = "熟悉";
-      } else if (val == 66) {
-        this.showTipText = "熟练";
-      } else if (val == 99) {
-        this.showTipText = "精通";
-      }
-    },
     // 对象深度监听
     skillList: {
       handler(newValue, oldValue) {
@@ -145,30 +149,51 @@ export default {
   methods: {
     //格式化滑条显示文字
     format(val) {
-      return this.showTipText;
+      if (val == 0) {
+        return "一般";
+      } else if (val == 33) {
+        return "熟悉";
+      } else if (val == 66) {
+        return "熟练";
+      } else if (val == 99) {
+        return "精通";
+      }
     },
     changeTag(isChecked, name) {
       // js数组中含有多个对象，已知某个对象的属性值，找到这个对象其它的属性
       this.skillList.find(item => item.name === name).isChecked = !isChecked;
-      // var obj={ }
-      //     this.skillList.forEach((item,index)=>{
-      //                  item.isChecked?this.hasSkillList.push()
-      //                   })
     },
     // 添加技能
     addSkills() {
-      // 如果添加的技能已经存在，拒绝添加
       if (this.customSkiVal === "") {
         this.$Message.warning("请输入您的技能");
         return;
       } else if (
+        // 如果添加的技能已经存在,要分两种情况：状态为true，拒绝添加，如果状态为false，改成true即可
         JSON.stringify(this.hasSkillList).indexOf(this.customSkiVal) != -1
       ) {
-        this.$Message.warning("已有该技能，请输入其它内容");
-        return;
+        if (
+          this.hasSkillList.find(item => item.name === this.customSkiVal)
+            .isChecked
+        ) {
+          this.$Message.warning("已有该技能，请输入其它内容");
+          return;
+        } else {
+          this.hasSkillList.find(
+            item => item.name === this.customSkiVal
+          ).isChecked = true;
+          this.hasSkillList.find(
+            item => item.name === this.customSkiVal
+          ).skillNumber = 66;
+          return;
+        }
       }
 
-      let addSkillContent = { name: this.customSkiVal, isChecked: true };
+      let addSkillContent = {
+        name: this.customSkiVal,
+        isChecked: true,
+        skillNumber: 66
+      };
       this.hasSkillList.push(addSkillContent);
     },
     // 删除单行已选技能
@@ -182,12 +207,17 @@ export default {
         this.skillList.find(
           item => item.name === this.hasSkillList[i].name
         ).isChecked = false;
+        // 恢复未选择技能的数值
+        this.hasSkillList[i].skillNumber = 66;
       }
     },
     // 点击取消
     cancelModel() {
       this.$emit("changeSkillModel", false);
-      // this.modalSkills1 = false;
+    },
+    // 改变滑块的值
+    chageSlider(data) {
+      console.log(data);
     }
   }
 };
