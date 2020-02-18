@@ -9,43 +9,44 @@
         <!-- 表单区 -->
         <Form
           class="jm-form"
-          :model="formLeft"
+          :model="formData"
           label-position="left"
           :label-width="100"
         >
           <FormItem class="jm-Row" label="你的姓名">
             <Input
-              v-model="formLeft.input1"
+              v-model="formData.name"
               placeholder="请输入您的名称"
             ></Input>
           </FormItem>
           <FormItem class="jm-Row" label="出生日期">
+            <!-- iview提供的value不能进行双向绑定，这里用v-model -->
             <DatePicker
-              :value="formLeft.input2"
+              v-model="formData.birthday"
               format="yyyy年MM月dd日"
               type="date"
               placeholder="选择日期"
             ></DatePicker>
           </FormItem>
           <FormItem class="jm-Row" label="工作年限">
-            <Select v-model="work" clearable placeholder="选择工作年限">
+            <Select v-model="formData.work" clearable placeholder="选择工作年限">
               <Option v-for="item in workYearList" :value="item" :key="item">{{
                 item
               }}</Option>
             </Select>
           </FormItem>
           <FormItem class="jm-Row" label="头像设置">
-            <Select v-model="headPic">
+            <Select v-model="formData.headPic">
               <Option v-for="item in headPicList" :value="item" :key="item">{{
                 item
               }}</Option>
             </Select>
           </FormItem>
           <FormItem class="jm-Row" label="电话号码">
-            <Input v-model="formLeft.input3" placeholder="请输入电话"></Input>
+            <Input v-model="formData.tel" placeholder="请输入电话"></Input>
           </FormItem>
           <FormItem class="jm-Row" label="联系邮箱">
-            <Input v-model="formLeft.input4" placeholder="请输入邮箱"></Input>
+            <Input v-model="formData.mail" placeholder="请输入邮箱"></Input>
           </FormItem>
         </Form>
         <!-- 一句话描述 -->
@@ -63,15 +64,15 @@
             </Row>
             <Row>
               <Col>
-              <Input v-model="wordDescribe" placeholder=" 例如：3年产品经验，熟悉互联网行业，成功主导产品01过程。"></Input>
+              <Input v-model="formData.wordDescribe" placeholder=" 例如：3年产品经验，熟悉互联网行业，成功主导产品01过程。"></Input>
               </Col>
             </Row>
           </Row>
      
       </div>
       <div class="jm-footer" slot="footer">
-        <Button class="jm-save-btn" size="large">保存</Button>
-        <Button @click="cancelMpdel" class="jm-cancle-btn" size="large"
+        <Button @click="save" class="jm-save-btn" size="large">保存</Button>
+        <Button @click="cancelModel" class="jm-cancle-btn" size="large"
           >取消</Button
         >
       </div>
@@ -85,27 +86,38 @@ export default {
   data() {
     return {
       // 表单输入框的值
-      formLeft: {
-        input1: "",
-        input2: "",
-        input3: "",
-        input4: "",
+      formData: {
+        name: "",
+        birthday: "",
+        age: 0,//年龄
+        tel: "",
+        mail: "",
+        work: "",//工作年限
+        headPic: "",//是否显示头像
+        wordDescribe:""//一句话描述
+
       },
       // 工作年限数组
       workYearList: ["1年", "2年", "3年"],
-      work: "", //工作年限
+
       // 头像状态数组
       headPicList: ["显示", "隐藏"],
-      headPic: "显示", //头像状态
-      wordDescribe:"",//一句话描述自己
+
     };
   },
   watch: {},
   methods: {
 
     // 点击取消
-    cancelMpdel() {
+    cancelModel() {
       this.$emit("changeSkillModel", false);
+    },
+    // 点击保存
+    save(){
+      this.cancelModel();
+    //  通过生日算出年龄
+    this.formData.age = new Date().getFullYear() - this.formData.birthday.getFullYear()
+      this.$emit("saveBaseInfo",this.formData)
     }
   }
 };

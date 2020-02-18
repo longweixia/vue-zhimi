@@ -3,16 +3,24 @@
     <Row>
       <!-- {{modalSkill}} -->
       <!-- 左侧区域 -->
-      <skillModal :modalSkills="modalSkill"  v-on:changeSkillModel="changeSkillModel" />
-      <baseInfoModel :modalSkills="modalBaseInfo"  v-on:changeSkillModel="changeSkillModel" />
+      <skillModal
+        :modalSkills="modalSkill"
+        v-on:changeSkillModel="changeSkillModel"
+        v-on:saveSkill="saveSkill"
+      />
+      <baseInfoModel
+        :modalSkills="modalBaseInfo"
+        v-on:changeSkillModel="changeSkillModel"
+        v-on:saveBaseInfo="saveBaseInfo"
+      />
       <Col class="resume-left" span="8">
         <!-- 头像 -->
         <Row class="jm-headImg">
           <div
             :class="isHeadImg ? 'jm-headImg-lineIs' : ''"
             class="jm-headImg-line"
-            @mouseenter="enter"
-            @mouseleave="leave"
+            @mouseenter="enter('headImg')"
+            @mouseleave="leave('headImg')"
           >
             <div class="jm-upload-padding">
               <Icon
@@ -30,11 +38,11 @@
           <div
             class="jm-baseInfo"
             :class="isBase ? 'jm-headImg-lineIs' : ''"
-            @mouseenter="enterBase"
-            @mouseleave="leaveBase"
+            @mouseenter="enter('base')"
+            @mouseleave="leave('base')"
           >
-            <Icon 
-            @click="displaybaseModel"
+            <Icon
+              @click="displayModelBase"
               v-show="isBase"
               class="jm-head-icon"
               size="20"
@@ -47,6 +55,7 @@
             >
               <Icon :type="item.type" />
               <span class="jm-baseText">{{ item.baseText }}</span>
+              ：<span class="jm-baseText">{{ item.inputText }}</span>
             </Row>
           </div>
         </Row>
@@ -56,10 +65,11 @@
           <div
             class="jm-baseInfo"
             :class="isSkill ? 'jm-headImg-lineIs' : ''"
-            @mouseenter="enterSkill"
-            @mouseleave="leaveSkill"
+            @mouseenter="enter('skill')"
+            @mouseleave="leave('skill')"
           >
-            <Icon @click="displaySkillModel"
+            <Icon
+              @click="displaySkillModel"
               v-show="isSkill"
               class="jm-head-icon"
               size="20"
@@ -67,32 +77,66 @@
             />
             <Row class="jm-skill-title">
               <Icon size="25" type="md-checkbox-outline" />
-              <span>技能特长</span></Row
-            >
-            <Row
-              class="jm-age"
-              v-for="(item, index) in baseInfoList"
-              :key="index"
-            >
-              <Icon :type="item.type" />
-              <span class="jm-baseText">{{ item.baseText }}</span>
+              <span>技能特长</span>
+            </Row>
+
+            <Row class="jm-skill-content">
+              <i-Circle
+                 :size="70" 
+                v-for="(item, index) in hasSkillList"
+                :key="index"
+                class="jm-circle"
+                :percent="item.skillNumber"
+              >
+                <span class="demo-Circle-inner" style="font-size:24px">{{
+                  item.skillNumber
+                }}</span>
+                <span class="jm-circle-text">{{ item.name }}</span>
+              </i-Circle>
             </Row>
           </div>
         </Row>
       </Col>
       <!-- 右侧区域 -->
-      <Col span="16" class="resume-right"> 
-      <!-- 名字和介绍 -->
-      <Row>
-        <!-- 名字 -->
-        <Row>
-        <Input class="jm-input" size="large" v-model="jmName" placeholder="请输入你的大名" clearable style="width: 200px" />
-      </Row>
-      <!-- 介绍 -->
-      <Row>
-        
-      </Row>
-      </Row>
+      <Col span="16" class="resume-right">
+        <!-- 名字和介绍 -->
+        <Row class="jm-base-name">
+          <!-- 名字 -->
+          <div
+            style="position: relative;"
+            class="jm-defult-line"
+            :class="isBaseLine ? 'jm-base-linehover0' : ''"
+            @mouseenter="enter('baseRight')"
+            @mouseleave="leave('baseRight')"
+          >
+            <Icon
+              v-show="isBaseLine"
+              @click="displayModelBase"
+              class="jm-head-icon"
+              size="20"
+              type="md-settings"
+            />
+            <div class="jm-name">
+              <Input
+                v-model="formData.name"
+                placeholder="你的名字"
+                clearable
+                style="width:94%;margin:5px 3%;font-size: 30px;"
+              />
+            </div>
+            <div class="jm-name-introduce">
+              <Input
+                v-model="formData.wordDescribe"
+                placeholder="一句话介绍自己，告诉HR为什么选择你而不是别人"
+                clearable
+                style="width:94%;margin:5px 3%"
+              />
+            </div>
+          </div>
+
+          <!-- 介绍 -->
+          <Row> </Row>
+        </Row>
       </Col>
     </Row>
   </div>
@@ -112,8 +156,14 @@ export default {
   data() {
     return {
       isHeadImg: false, //是否显示头像编辑框
-      modalSkill:false,//默认技能弹窗不显示
-      modalBaseInfo:false,//默认基本信息弹窗不显示
+      modalSkill: false, //默认技能弹窗不显示
+      modalBaseInfo: false, //默认基本信息弹窗不显示
+      isBase: false, //是否显示base编辑框
+      isSkill: false, //是否显示技能编辑框
+      isBaseLine: false, //右边是否显示基本信息编辑框
+      // isBaseLine: false, //悬浮显示基本信息
+      formData: {}, //基本信息弹窗传过来的数据
+      hasSkillList: [], //传过来的技能数组
       baseInfoList: [
         //基本信息
         {
@@ -136,21 +186,44 @@ export default {
           baseText: "电子邮箱",
           inputText: ""
         }
-      ],
-      isBase: false, //是否显示base编辑框
-      isSkill: false, //是否显示base编辑框
-      jmName:"龙伟",//简历名字
+      ]
     };
   },
   watch: {},
   methods: {
-    // 鼠标悬浮头像
-    enter() {
-      this.isHeadImg = true;
+    // 鼠标悬浮
+    enter(flag) {
+      switch (flag) {
+        case "headImg":
+          this.isHeadImg = true;
+          break;
+        case "base":
+          this.isBase = true;
+          break;
+        case "skill":
+          this.isSkill = true;
+          break;
+        case "baseRight":
+          this.isBaseLine = true;
+          break;
+      }
     },
-    //鼠标离开头像
-    leave() {
-      this.isHeadImg = false;
+    //鼠标离开
+    leave(flag) {
+      switch (flag) {
+        case "headImg":
+          this.isHeadImg = false;
+          break;
+        case "base":
+          this.isBase = false;
+          break;
+        case "skill":
+          this.isSkill = false;
+          break;
+        case "baseRight":
+          this.isBaseRight = false;
+          break;
+      }
     },
     // 鼠标悬浮基本信息
     enterBase() {
@@ -169,17 +242,33 @@ export default {
       this.isSkill = false;
     },
     // 显示技能弹窗
-    displaySkillModel(){
+    displaySkillModel() {
       this.modalSkill = true;
     },
     // 显示基本信息弹窗
-    displaybaseModel(){
+    displayModelBase() {
       this.modalBaseInfo = true;
     },
     // 关闭技能弹窗，基本信息弹窗
     changeSkillModel(data) {
       this.modalSkill = false;
       this.modalBaseInfo = false;
+    },
+    // 点击基本信息保存
+    saveBaseInfo(data) {
+      for (let item in data) {
+        switch (item) {
+          case "birthday":
+            this.baseInfoList.find(item => item.baseText == "年龄").inputText =
+              data.age + "岁";
+            break;
+        }
+        this.formData = data;
+      }
+    },
+    // 点击技能保存
+    saveSkill(data) {
+      this.hasSkillList = data;
     }
   },
   mounted() {},
@@ -189,9 +278,9 @@ export default {
 
 
 <style lang="less" scoped>
- /deep/.ivu-input{
-      border: none!important;
-    }
+/deep/.ivu-input {
+  border: none !important;
+}
 // 悬浮显示头像图片编辑框
 .jm-headImg-lineIs {
   border: 1px dashed #00c091 !important;
@@ -244,18 +333,56 @@ body {
     }
   }
   // 技能
-  .jm-skill-title{
-    font-size: 20px; 
+  .jm-skill-title {
+    font-size: 20px;
     font-weight: bold;
+  }
+  .jm-skill-content {
+    .jm-circle {
+      width: 80px;
+      margin: 20px 10px 30px 10px;
+      .jm-circle-text {
+        top: 60px;
+        left: 10px;
+        position: absolute;
+      }
+    }
   }
 }
 // 右侧信息
-.resume-right{
-  padding:10px 30px; 
-  .ivu-input{
-      border: none!important;
-    }
-
+.resume-right {
+  padding: 10px 30px;
+  .ivu-input {
+    border: none !important;
+  }
 }
+.jm-base-name {
+  position: relative;
+  /* border: 1px solid #254665;*/
+  padding: 20px;
+  padding-bottom: 15px;
+  // background: #6b4b24;
+  // color: #fff;
+  .jm-defult-line {
+    border: 1px dashed transparent;
+  }
+  .jm-base-linehover0 {
+    border: 1px dashed #00c091;
+  }
 
+  /deep/.ivu-input {
+    border: none;
+    // color: #fff;
+    // background: #6b4b24;
+  }
+  .jm-name {
+    /deep/.ivu-input {
+      // color: #fff;
+      font-size: 30px;
+    }
+  }
+}
+.jm-base-linehover {
+  border: 1px dashed #00c091;
+}
 </style>

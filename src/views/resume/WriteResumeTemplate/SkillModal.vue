@@ -77,7 +77,7 @@
         </Row>
       </div>
       <div class="jm-footer" slot="footer">
-        <Button class="jm-save-btn" size="large">保存</Button>
+        <Button @click="save" class="jm-save-btn" size="large">保存</Button>
         <Button @click="cancelModel" class="jm-cancle-btn" size="large"
           >取消</Button
         >
@@ -215,9 +215,17 @@ export default {
     cancelModel() {
       this.$emit("changeSkillModel", false);
     },
-    // 改变滑块的值
-    chageSlider(data) {
-      console.log(data);
+    // 保存基本信息数据
+    save(){
+      this.cancelModel();
+      // 传过去的时候处理下数据，状态为fasle的不用传
+      let choseSkillList = [];
+      this.hasSkillList.forEach((item,index)=>{
+        if(item.isChecked){
+          choseSkillList.push(item)
+        }
+      })
+      this.$emit("saveSkill",choseSkillList)
     }
   }
 };
