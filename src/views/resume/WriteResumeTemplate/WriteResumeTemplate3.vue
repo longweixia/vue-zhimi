@@ -54,8 +54,8 @@
               :key="index"
             >
               <Icon :type="item.type" />
-              <span class="jm-baseText">{{ item.baseText }}</span>
-              ：<span class="jm-baseText">{{ item.inputText }}</span>
+              <span class="jm-baseText">{{ item.baseText }}</span> 
+              <span class="jm-baseText">{{ item.inputText }}</span>
             </Row>
           </div>
         </Row>
@@ -124,7 +124,7 @@
                 style="width:94%;margin:5px 3%;font-size: 30px;"
               />
             </div>
-            <div class="jm-name-introduce">
+            <div v-if="formData.showDescribe" class="jm-name-introduce">
               <Input
                 v-model="formData.wordDescribe"
                 placeholder="一句话介绍自己，告诉HR为什么选择你而不是别人"
@@ -135,7 +135,17 @@
           </div>
 
           <!-- 介绍 -->
-          <Row> </Row>
+          <Row> 
+            <!-- 求职意向 -->
+            <rightContent title="求职意向">
+              <div slot="jobIntention">
+                <Row class="jobList" v-for="(item,index) in jobIntentionList" :key="index">
+                  <Icon :size="20" class="jobIcon" :type="item.type" />
+                  <span class="jobText">{{item.baseText}}</span>
+                </Row>
+              </div>
+            </rightContent>
+          </Row>
         </Row>
       </Col>
     </Row>
@@ -146,12 +156,14 @@
 import jmUploadImg from "@/components/UploadImg";
 import skillModal from "./SkillModal";
 import baseInfoModel from "./BaseInfoModel";
+import rightContent from "./RightContent";
 export default {
   name: "WriteResumeTemplate3",
   components: {
     jmUploadImg,
     skillModal,
-    baseInfoModel
+    baseInfoModel,
+    rightContent
   },
   data() {
     return {
@@ -173,17 +185,40 @@ export default {
         },
         {
           type: "md-briefcase",
-          baseText: "工作年限",
+          baseText: "工作经验",
           inputText: ""
         },
         {
           type: "ios-call",
-          baseText: "联系电话",
+          baseText: "电话",
           inputText: ""
         },
         {
           type: "ios-mail",
-          baseText: "电子邮箱",
+          baseText: "邮箱",
+          inputText: ""
+        }
+      ],
+       jobIntentionList: [
+        //求职意向项
+        {
+          type: "ios-contact",
+          baseText: "意向岗位",
+          inputText: ""
+        },
+        {
+          type: "md-briefcase",
+          baseText: "意向城市",
+          inputText: ""
+        },
+        {
+          type: "ios-call",
+          baseText: "薪资要求",
+          inputText: ""
+        },
+        {
+          type: "ios-mail",
+          baseText: "入职时间",
           inputText: ""
         }
       ]
@@ -221,7 +256,7 @@ export default {
           this.isSkill = false;
           break;
         case "baseRight":
-          this.isBaseRight = false;
+          this.isBaseLine = false;
           break;
       }
     },
@@ -261,6 +296,18 @@ export default {
           case "birthday":
             this.baseInfoList.find(item => item.baseText == "年龄").inputText =
               data.age + "岁";
+            break;
+          case "work":
+            this.baseInfoList.find(item => item.baseText == "工作经验").inputText =
+              data.work;
+            break;
+          case "tel":
+            this.baseInfoList.find(item => item.baseText == "电话").inputText =
+              data.tel;
+            break;
+          case "mail":
+            this.baseInfoList.find(item => item.baseText == "邮箱").inputText =
+              data.mail;
             break;
         }
         this.formData = data;
@@ -384,5 +431,19 @@ body {
 }
 .jm-base-linehover {
   border: 1px dashed #00c091;
+}
+// 求职意向
+.jobList{
+  width:25%;
+  display: inline-block;
+  padding: 20px 5px;
+  .jobIcon{
+    color: #747474;
+    margin-top: -2.5px;
+  }
+  .jobText{
+    color: #747474;
+    font-size: 14px;
+  }
 }
 </style>

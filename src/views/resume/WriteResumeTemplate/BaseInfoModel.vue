@@ -56,7 +56,7 @@
             <Col span="8">一句话描述</Col>
             <Col span="8" offset="8"
               >是否隐藏描述
-              <i-Switch class="jm-switch">
+              <i-Switch class="jm-switch" @on-change="changeSwitch">
                 <span slot="open">开</span>
                 <span slot="close">关</span>
               </i-Switch>
@@ -94,8 +94,8 @@ export default {
         mail: "",
         work: "",//工作年限
         headPic: "",//是否显示头像
-        wordDescribe:""//一句话描述
-
+        wordDescribe:"",//一句话描述
+        showDescribe:true,//是否开启隐藏按钮
       },
       // 工作年限数组
       workYearList: ["1年", "2年", "3年"],
@@ -116,8 +116,12 @@ export default {
     save(){
       this.cancelModel();
     //  通过生日算出年龄
-    this.formData.age = new Date().getFullYear() - this.formData.birthday.getFullYear()
+    this.formData.age = this.formData.birthday ? new Date().getFullYear() - this.formData.birthday.getFullYear() : 0
       this.$emit("saveBaseInfo",this.formData)
+    },
+    // 切换隐藏按钮
+    changeSwitch(status){
+      status ? this.formData.showDescribe = false : this.formData.showDescribe = true
     }
   }
 };
