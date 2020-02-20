@@ -37,6 +37,7 @@ export default {
     // 点击保存
     save(){
       this.cancelModel();
+      this.$emit("savaMsg")
     },
 
   }
@@ -71,11 +72,7 @@ export default {
         width: 48%;
       }
     }
-    .wordDescribe{
-      .jm-switch{
-       
-      }
-    }
+ 
   }
   // 底部按钮
   .jm-footer {

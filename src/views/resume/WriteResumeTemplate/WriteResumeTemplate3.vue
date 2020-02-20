@@ -137,11 +137,38 @@
           <!-- 介绍 -->
           <Row> 
             <!-- 求职意向 -->
-            <rightContent title="求职意向">
+            <rightContent v-on:savaJobIntention="savaJobIntention" title="求职意向">
               <div slot="jobIntention">
                 <Row class="jobList" v-for="(item,index) in jobIntentionList" :key="index">
                   <Icon :size="20" class="jobIcon" :type="item.type" />
                   <span class="jobText">{{item.baseText}}</span>
+                </Row>
+              </div>
+            </rightContent>
+            <!-- 教育背景 -->
+            <rightContent name="edu" v-on:addEdus="addEdus" title="教育背景">
+              <div slot="eduction">
+                <Row v-for="(item,index) in eduList" :key="index">
+
+                  <Row>
+                    <Col :span="12" class="jm-edu-col">
+                    <Input v-model="item.eduDate" placeholder="请填写时间如:2016/08-2017/09" />
+                    </Col>
+                    <Col :span="12" class="jm-edu-col">
+                    <Input v-model="item.schooName" placeholder="学校名字" />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col :span="18" class="jm-edu-col">
+                    <Input v-model="item.majorName" placeholder="请填写专业" />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col :span="18" class="jm-edu-col">
+                    <Input v-model="item.eduContent" type="textarea" :autosize="{minRows:2,maxRows:5}" placeholder="请填写内容" />
+                    </Col>
+                  </Row>
+
                 </Row>
               </div>
             </rightContent>
@@ -204,22 +231,31 @@ export default {
         {
           type: "ios-contact",
           baseText: "意向岗位",
-          inputText: ""
+          name: "choseJob"
         },
         {
           type: "md-briefcase",
           baseText: "意向城市",
-          inputText: ""
-        },
-        {
-          type: "ios-call",
-          baseText: "薪资要求",
-          inputText: ""
+          name: "city"
         },
         {
           type: "ios-mail",
           baseText: "入职时间",
-          inputText: ""
+          name: "entryTime"
+        },
+        {
+          type: "ios-call",
+          baseText: "薪资要求",
+          name: "salary"
+        }
+      ],
+      // 教育背景数据
+      eduList:[
+        {
+          eduDate:"",
+          schooName:"",
+          majorName:"",
+          eduContent:""
         }
       ]
     };
@@ -316,6 +352,25 @@ export default {
     // 点击技能保存
     saveSkill(data) {
       this.hasSkillList = data;
+    },
+    // 意向职位传过去的事件
+    savaJobIntention(val){
+      this.jobIntentionList.find(item=>item.name=="choseJob").baseText = val.choseJob
+      this.jobIntentionList.find(item=>item.name=="city").baseText = val.city
+      this.jobIntentionList.find(item=>item.name=="entryTime").baseText = val.entryTime
+      this.jobIntentionList.find(item=>item.name=="salary").baseText = val.salary0+
+      10+"k ~ "+(val.salary1+10)+"k"
+      console.log(this.jobIntentionList)
+    },
+    // 点击教育添加按钮
+    addEdus(){
+      var obj = {
+          eduDate:"",
+          schooName:"",
+          majorName:"",
+          eduContent:""
+        }
+        this.eduList.push(obj)
     }
   },
   mounted() {},
