@@ -46,16 +46,16 @@ export default {
   methods:{
   // 获取简历信息
     getResumeInfo() {
-      this.axios
-        .post("resumes/getResumeInfo", {
-          userName: "long" //暂时写死，到时候用vuex
-        })
-        .then(res => {
-          if (res.data.status == "0") {
-            // this.resumeList = res.data.result.resumeContent;
-          }
-        })
-        .catch(err => {});
+      // this.axios
+      //   .post("resumes/getResumeInfo", {
+      //     userName: "long" //暂时写死，到时候用vuex
+      //   })
+      //   .then(res => {
+      //     if (res.data.status == "0") {
+      //       // this.resumeList = res.data.result.resumeContent;
+      //     }
+      //   })
+      //   .catch(err => {});
     }
   },
 
@@ -72,6 +72,8 @@ export default {
 .jm-container {
   // position: fixed;
   // width: 70px;
+      // height: 3480px;
+    min-height: 1160px;
   background: #fff;
   margin-right: 5px;
   margin-left:100px;

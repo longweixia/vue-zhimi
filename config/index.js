@@ -16,6 +16,9 @@ module.exports = {
       },
       '/resumes/**':{
         target:'http://localhost:3000'
+      },
+      '/resumeTemplates/**':{
+        target:'http://localhost:3000'
       }
     },
 

@@ -54,7 +54,7 @@
               :key="index"
             >
               <Icon :type="item.type" />
-              <span class="jm-baseText">{{ item.baseText }}</span> 
+              <span class="jm-baseText">{{ item.baseText }}</span>
               <span class="jm-baseText">{{ item.inputText }}</span>
             </Row>
           </div>
@@ -82,7 +82,7 @@
 
             <Row class="jm-skill-content">
               <i-Circle
-                 :size="70" 
+                :size="70"
                 v-for="(item, index) in hasSkillList"
                 :key="index"
                 class="jm-circle"
@@ -135,40 +135,115 @@
           </div>
 
           <!-- 介绍 -->
-          <Row> 
+          <Row>
             <!-- 求职意向 -->
-            <rightContent v-on:savaJobIntention="savaJobIntention" title="求职意向">
-              <div slot="jobIntention">
-                <Row class="jobList" v-for="(item,index) in jobIntentionList" :key="index">
+            <rightContent
+              v-on:savaJobIntention="savaJobIntention"
+              title="求职意向"
+            >
+              <div slot="slotRight">
+                <Row
+                  class="jobList"
+                  v-for="(item, index) in jobIntentionList"
+                  :key="index"
+                >
                   <Icon :size="20" class="jobIcon" :type="item.type" />
-                  <span class="jobText">{{item.baseText}}</span>
+                  <span class="jobText">{{ item.baseText }}</span>
                 </Row>
               </div>
             </rightContent>
             <!-- 教育背景 -->
-            <rightContent name="edu" v-on:addEdus="addEdus" title="教育背景">
-              <div slot="eduction">
-                <Row v-for="(item,index) in eduList" :key="index">
-
+            <rightContent
+              name="edu"
+              v-on:addEdus="addEdus('edu')"
+              title="教育背景"
+            >
+              <div slot="slotRight">
+                <Row v-for="(item, index) in eduList" :key="index">
                   <Row>
                     <Col :span="12" class="jm-edu-col">
-                    <Input v-model="item.eduDate" placeholder="请填写时间如:2016/08-2017/09" />
+                      <Input
+                        v-model="item.eduDate"
+                        placeholder="请填写时间如:2016/08-2017/09"
+                      />
                     </Col>
                     <Col :span="12" class="jm-edu-col">
-                    <Input v-model="item.schooName" placeholder="学校名字" />
+                      <Input v-model="item.schooName" placeholder="学校名字" />
                     </Col>
                   </Row>
                   <Row>
                     <Col :span="18" class="jm-edu-col">
-                    <Input v-model="item.majorName" placeholder="请填写专业" />
+                      <Input
+                        v-model="item.majorName"
+                        placeholder="请填写专业"
+                      />
                     </Col>
                   </Row>
                   <Row>
                     <Col :span="18" class="jm-edu-col">
-                    <Input v-model="item.eduContent" type="textarea" :autosize="{minRows:2,maxRows:5}" placeholder="请填写内容" />
+                      <Input
+                        v-model="item.eduContent"
+                        type="textarea"
+                        :autosize="{ minRows: 2, maxRows: 5 }"
+                        placeholder="请填写内容"
+                      />
                     </Col>
                   </Row>
-
+                </Row>
+              </div>
+            </rightContent>
+            <!-- 工作经验 -->
+            <rightContent
+              name="edu"
+              v-on:addEdus="addEdus('experience')"
+              title="工作经验"
+            >
+              <div slot="slotRight">
+                <Row v-for="(item, index) in experienceList" :key="index">
+                  <Row>
+                    <Col :span="12" class="jm-edu-col">
+                      <Input
+                        v-model="item.date"
+                        placeholder="请填写时间如:2016/08-2017/09"
+                      />
+                    </Col>
+                    <Col :span="12" class="jm-edu-col">
+                      <Input v-model="item.name" placeholder="公司名字" />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col :span="18" class="jm-edu-col">
+                      <Input
+                        v-model="item.positionName"
+                        placeholder="请填写职位"
+                      />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col :span="18" class="jm-edu-col">
+                      <Input
+                        v-model="item.content"
+                        type="textarea"
+                        :autosize="{ minRows: 2, maxRows: 5 }"
+                        placeholder="请填写内容"
+                      />
+                    </Col>
+                  </Row>
+                </Row>
+              </div>
+            </rightContent>
+            <!-- 自我评价 -->
+            <rightContent name="edu" title="自我评价">
+              <div slot="slotRight">
+                <Row>
+                  <Col class="jm-edu-col">
+                    <Input
+                      v-model="selfEvaluation"
+                      type="textarea"
+                      :autosize="{ minRows: 2, maxRows: 5 }"
+                      placeholder="请填写内容"
+                    />
+                  </Col>
                 </Row>
               </div>
             </rightContent>
@@ -184,6 +259,7 @@ import jmUploadImg from "@/components/UploadImg";
 import skillModal from "./SkillModal";
 import baseInfoModel from "./BaseInfoModel";
 import rightContent from "./RightContent";
+import Bus from "@/assets/event-bus.js";
 export default {
   name: "WriteResumeTemplate3",
   components: {
@@ -201,7 +277,9 @@ export default {
       isSkill: false, //是否显示技能编辑框
       isBaseLine: false, //右边是否显示基本信息编辑框
       // isBaseLine: false, //悬浮显示基本信息
-      formData: {}, //基本信息弹窗传过来的数据
+      formData: {
+        showDescribe: true //默认显示描述
+      }, //基本信息弹窗传过来的数据
       hasSkillList: [], //传过来的技能数组
       baseInfoList: [
         //基本信息
@@ -226,7 +304,7 @@ export default {
           inputText: ""
         }
       ],
-       jobIntentionList: [
+      jobIntentionList: [
         //求职意向项
         {
           type: "ios-contact",
@@ -250,14 +328,25 @@ export default {
         }
       ],
       // 教育背景数据
-      eduList:[
+      eduList: [
         {
-          eduDate:"",
-          schooName:"",
-          majorName:"",
-          eduContent:""
+          eduDate: "",
+          schooName: "",
+          majorName: "",
+          eduContent: ""
         }
-      ]
+      ],
+      // 工作经验数据
+      experienceList: [
+        {
+          date: "",
+          dame: "",
+          positionName: "",
+          content: ""
+        }
+      ],
+      // 自我评价
+      selfEvaluation: ""
     };
   },
   watch: {},
@@ -334,8 +423,9 @@ export default {
               data.age + "岁";
             break;
           case "work":
-            this.baseInfoList.find(item => item.baseText == "工作经验").inputText =
-              data.work;
+            this.baseInfoList.find(
+              item => item.baseText == "工作经验"
+            ).inputText = data.work;
             break;
           case "tel":
             this.baseInfoList.find(item => item.baseText == "电话").inputText =
@@ -354,26 +444,74 @@ export default {
       this.hasSkillList = data;
     },
     // 意向职位传过去的事件
-    savaJobIntention(val){
-      this.jobIntentionList.find(item=>item.name=="choseJob").baseText = val.choseJob
-      this.jobIntentionList.find(item=>item.name=="city").baseText = val.city
-      this.jobIntentionList.find(item=>item.name=="entryTime").baseText = val.entryTime
-      this.jobIntentionList.find(item=>item.name=="salary").baseText = val.salary0+
-      10+"k ~ "+(val.salary1+10)+"k"
-      console.log(this.jobIntentionList)
+    savaJobIntention(val) {
+      this.jobIntentionList.find(item => item.name == "choseJob").baseText =
+        val.choseJob;
+      this.jobIntentionList.find(item => item.name == "city").baseText =
+        val.city;
+      this.jobIntentionList.find(item => item.name == "entryTime").baseText =
+        val.entryTime;
+      this.jobIntentionList.find(item => item.name == "salary").baseText =
+        val.salary0 + 10 + "k ~ " + (val.salary1 + 10) + "k";
+      console.log(this.jobIntentionList);
     },
     // 点击教育添加按钮
-    addEdus(){
-      var obj = {
-          eduDate:"",
-          schooName:"",
-          majorName:"",
-          eduContent:""
-        }
-        this.eduList.push(obj)
+    addEdus(name) {
+      if (name == "edu") {
+        var objEdu = {
+          eduDate: "",
+          schooName: "",
+          majorName: "",
+          eduContent: ""
+        };
+        this.eduList.push(objEdu);
+      }
+      if (name == "experience") {
+        var objExperience = {
+          date: "",
+          dame: "",
+          positionName: "",
+          content: ""
+        };
+        this.experienceList.push(objExperience);
+      }
     }
   },
-  mounted() {},
+  mounted() {
+    // 保存填写好的简历
+    Bus.$on("saveContents", () => {
+      console.log(this.formData, "====");
+      // 组装要提交的信息
+      var content = {
+        userName: this.formData.name, //简历名称
+        hasCommonResume: false, //是否有基础简历的信息
+        resumeTemplate: [
+          //模板简历
+          {
+            TemplateId: 3, //模板ID
+            resumeContent: {
+              //简历内容
+              baseInfoList: this.formData, //基本信息
+              SkillList: this.hasSkillList, //技能特长
+              jobIntentionList: this.jobIntentionList, //求职意向
+              eduList: this.eduList, //教育背景
+              experienceList: this.experienceList, //工作经验
+              selfEvaluation: this.selfEvaluation //自我评价
+            }
+          }
+        ]
+      };
+
+      this.axios
+        .post("resumeTemplates/resumeTemplates", {content:content})
+        .then(res => {
+          
+        })
+        .catch(err => {
+          console.log("err", err);
+        });
+    });
+  },
   created() {}
 };
 </script>
@@ -399,6 +537,8 @@ body {
 }
 .jm-template {
   .resume-left {
+    // height: 3480px;
+    min-height: 1160px;
     width: 270px;
     background: #254665;
     padding: 10px 30px;
@@ -488,15 +628,15 @@ body {
   border: 1px dashed #00c091;
 }
 // 求职意向
-.jobList{
-  width:25%;
+.jobList {
+  width: 25%;
   display: inline-block;
   padding: 20px 5px;
-  .jobIcon{
+  .jobIcon {
     color: #747474;
     margin-top: -2.5px;
   }
-  .jobText{
+  .jobText {
     color: #747474;
     font-size: 14px;
   }

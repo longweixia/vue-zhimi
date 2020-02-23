@@ -8,7 +8,7 @@
     龙伟的简历
     </Col>
     <Col :span="8">
-    <span @click="saveMsg">保存</span>
+    <span @click="saveContent">保存</span>
     <span>下载</span>
     </Col>
   </Row>
@@ -28,9 +28,9 @@ export default {
 
   },
   methods:{
-    saveMsg(){
+    saveContent(){
       //  Bus.$emit('BsaveMsg', 120)
-       Bus.$emit('BsaveMsg')
+       Bus.$emit('saveContents')
     }
   },
   watch: {},

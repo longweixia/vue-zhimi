@@ -307,7 +307,7 @@ export default {
     //  Bus.$on('BsaveMsg', content => {
     //       console.log(content)
     //     });
-    Bus.$on("BsaveMsg", () => {
+    Bus.$on("saveContents", () => {
       console.log(2)
       this.axios
         .post("resumes/resumeTemplate", { flag: "all" })

@@ -23,14 +23,20 @@
     />
     <Row>
       <Col>
-        <Icon style="margin-top:-5px;" size="25" type="md-list-box" />
-        <div class="title">{{ title }}</div>
+        <Icon style="margin-top:3px;" size="25" type="md-list-box" />
+        <div class="title">
+          <Input class="title-row" v-model="title" />
+        </div>
       </Col>
     </Row>
     <!-- 求职意向模块 -->
-    <slot name="jobIntention"></slot>
+    <slot name="slotRight"></slot>
     <!-- 教育背景模块 -->
-    <slot name="eduction"></slot>
+    <!-- <slot name="eduction"></slot> -->
+    <!-- 教育背景模块 -->
+    <!-- <slot name="experience"></slot> -->
+    <!-- 教育背景模块 -->
+    <!-- <slot name="selfEvaluation"></slot> -->
     <!-- 求职意向弹窗 -->
     <modal3
       :modalSkills="modalSkills"
@@ -187,7 +193,7 @@ export default {
   watch: {},
   methods: {
     // modal3传过来的，点击取消
-    changeSkillModel(value){
+    changeSkillModel(value) {
       this.modalSkills = false;
     },
     // 点击取消
@@ -201,14 +207,14 @@ export default {
     // 通过传过来的name标志来显示不同的按钮
     enter(name) {
       this.isBaseLine = true;
-      if(name == "edu"){
-        this.isIconAdd = true
+      if (name == "edu") {
+        this.isIconAdd = true;
       }
     },
     leave(name) {
       this.isBaseLine = false;
-      if(name == "edu"){
-        this.isIconAdd = false
+      if (name == "edu") {
+        this.isIconAdd = false;
       }
     },
     // 显示编辑框
@@ -217,17 +223,18 @@ export default {
     },
     // 改变薪资
     choseSalarys() {
-      this.salaryList1 = this.salaryList0.slice(this.JobIntentionList.salary0 + 1);
+      this.salaryList1 = this.salaryList0.slice(
+        this.JobIntentionList.salary0 + 1
+      );
     },
     // 保存求职意向信息,传递给WriteResumeTemplate3.vue
-    savaMsg(){
-      this.$emit("savaJobIntention",this.JobIntentionList)
+    savaMsg() {
+      this.$emit("savaJobIntention", this.JobIntentionList);
     },
     // 点击教育背景的添加按钮
-    addEdu(){
-      this.$emit("addEdus")
+    addEdu() {
+      this.$emit("addEdus");
     }
-
   }
 };
 </script>
@@ -259,11 +266,15 @@ export default {
   }
   .title {
     width: 400px;
-    color: #254665;
-    font-size: 20px;
-    font-weight: bold;
-    border-bottom: 1px solid #254665;
     display: inline-block;
+    .title-row {
+      border-bottom: 1px solid #254665;
+      /deep/ .ivu-input {
+        color: #254665;
+        font-size: 20px;
+        font-weight: bold;
+      }
+    }
   }
 }
 .jm-base-linehover0 {
