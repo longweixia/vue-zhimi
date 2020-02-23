@@ -6,7 +6,7 @@
 </template>
 
 <script>
-  
+import Bus from '@/assets/event-bus.js' 
 // 拿到url中的模板id
 var urlPath = window.location.href;
 if (urlPath.indexOf("?") != -1) {
@@ -45,22 +45,32 @@ export default {
   watch: {},
   methods:{
   // 获取简历信息
-    getResumeInfo() {
-      // this.axios
-      //   .post("resumes/getResumeInfo", {
-      //     userName: "long" //暂时写死，到时候用vuex
-      //   })
-      //   .then(res => {
-      //     if (res.data.status == "0") {
-      //       // this.resumeList = res.data.result.resumeContent;
-      //     }
-      //   })
-      //   .catch(err => {});
+    // 调用接口，判断获取该模板中是否已经填写过内容，如果是，直接将数据回填
+    getTemplatesResume(){
+      this.axios
+        .get("resumeTemplates/getTemplatesResume", {
+          params: {
+         userName: "龙伟" //暂时写死，到时候用vuex
+        }
+        // ,
+        //   headers:{
+        //     token:"jack"
+        //   }
+        })
+        .then(res => {
+          if (res.data.status == "0") {
+           var resumeTemplateObj = res.data.result;
+          //  将数据获取后传递到各个模板简历上
+           Bus.$emit('getTemplatesResume',resumeTemplateObj)
+          //  console.log(resumeList)
+          }
+        })
+        .catch(err => {});
     }
   },
 
   mounted() {
-    this.getResumeInfo();
+    this.getTemplatesResume();
   },
   beforeCreate(){
   },

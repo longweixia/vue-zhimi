@@ -270,6 +270,8 @@ export default {
   },
   data() {
     return {
+      // resumeTemplateObj: {}, //当该模板之前有提交过时，
+      // wirteIdeContent.vue会将之前的值传过来传递过来
       isHeadImg: false, //是否显示头像编辑框
       modalSkill: false, //默认技能弹窗不显示
       modalBaseInfo: false, //默认基本信息弹窗不显示
@@ -478,7 +480,36 @@ export default {
     }
   },
   mounted() {
-    // 保存填写好的简历
+    Bus.$on("getTemplatesResume", resumeTemplateObj => {
+      var resumeTemplateObj = resumeTemplateObj.resumeTemplate[0].resumeContent
+      console.log(resumeTemplateObj,"====")
+      this.baseInfoList = [
+        //基本信息
+        {
+          type: "ios-contact",
+          baseText: "年龄",
+          inputText: resumeTemplateObj.baseInfoList.age || ""
+        },
+        {
+          type: "md-briefcase",
+          baseText: "工作经验",
+          inputText: resumeTemplateObj.baseInfoList.work || ""
+        },
+        {
+          type: "ios-call",
+          baseText: "电话",
+          inputText: resumeTemplateObj.baseInfoList.tel || ""
+        },
+        {
+          type: "ios-mail",
+          baseText: "邮箱",
+          inputText: resumeTemplateObj.baseInfoList.mail || ""
+        }
+      ]
+      
+      
+    });
+    // 点击保存按钮，提交填写好的简历
     Bus.$on("saveContents", () => {
       console.log(this.formData, "====");
       // 组装要提交的信息
@@ -503,9 +534,11 @@ export default {
       };
 
       this.axios
-        .post("resumeTemplates/resumeTemplates", {content:content})
+        .post("resumeTemplates/resumeTemplates", { content: content })
         .then(res => {
-          
+          if (res.data.status == "0") {
+            this.$Message.success("保存成功");
+          }
         })
         .catch(err => {
           console.log("err", err);

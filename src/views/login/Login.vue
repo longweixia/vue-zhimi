@@ -1,4 +1,5 @@
 <template>
+<!-- 这个文件没用上 -->
   <div>
     <div>
         用户名：
@@ -24,6 +25,7 @@ export default {
   },
   methods:{
     login(){
+      alert(11)
         this.axios.get('/login')
           .then((res) => {
             console.log(res);
