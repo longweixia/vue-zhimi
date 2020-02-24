@@ -82,7 +82,7 @@
 <script>
 export default {
   name: "baseInfoModel",
-  props: ["modalSkills"], //基本信息的弹窗标识
+  props: ["modalSkills","baseObjC"], //基本信息的弹窗标识
   data() {
     return {
       // 表单输入框的值
@@ -105,7 +105,24 @@ export default {
 
     };
   },
-  watch: {},
+  watch: {
+    // 解决父子组件，父向子传参不实时更新
+    baseObjC:{
+      handler(newValue,oldValue){
+        this.formData.name = this.baseObjC.name;
+        this.formData.birthday = this.baseObjC.birthday;
+        this.formData.age = this.baseObjC.age;
+        this.formData.tel = this.baseObjC.tel;
+        this.formData.mail = this.baseObjC.mail;
+        this.formData.work = this.baseObjC.work;
+        this.formData.mail = this.baseObjC.mail;
+        this.formData.headPic = this.baseObjC.headPic;
+        this.formData.wordDescribe = this.baseObjC.wordDescribe;
+        this.formData.showDescribe = this.baseObjC.showDescribe;
+      },
+      deep:true
+    }
+  },
   methods: {
 
     // 点击取消

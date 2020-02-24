@@ -9,7 +9,9 @@
         v-on:saveSkill="saveSkill"
       />
       <baseInfoModel
-        :modalSkills="modalBaseInfo"
+        :modalSkills="modalBaseInfo" 
+        :baseInfoList="baseInfoList"
+        :baseObjC="baseObjC"
         v-on:changeSkillModel="changeSkillModel"
         v-on:saveBaseInfo="saveBaseInfo"
       />
@@ -270,6 +272,7 @@ export default {
   },
   data() {
     return {
+      baseObjC:{},//传递获取接口的数据到基本数据弹窗的数据
       // resumeTemplateObj: {}, //当该模板之前有提交过时，
       // wirteIdeContent.vue会将之前的值传过来传递过来
       isHeadImg: false, //是否显示头像编辑框
@@ -418,6 +421,7 @@ export default {
     },
     // 点击基本信息保存
     saveBaseInfo(data) {
+      console.log(data,"data=====")
       for (let item in data) {
         switch (item) {
           case "birthday":
@@ -483,6 +487,19 @@ export default {
     Bus.$on("getTemplatesResume", resumeTemplateObj => {
       var resumeTemplateObj = resumeTemplateObj.resumeTemplate[0].resumeContent
       console.log(resumeTemplateObj,"====")
+      // 组装基本数据，传递到基本数据弹窗
+       this.baseObjC = {
+        name: resumeTemplateObj.baseInfoList.name,
+        birthday: resumeTemplateObj.baseInfoList.birthday,
+        age:resumeTemplateObj.baseInfoList.age,//年龄
+        tel: resumeTemplateObj.baseInfoList.tel,
+        mail: resumeTemplateObj.baseInfoList.mail,
+        work: resumeTemplateObj.baseInfoList.work,//工作年限
+        headPic:resumeTemplateObj.baseInfoList.headPic,//是否显示头像
+        wordDescribe:resumeTemplateObj.baseInfoList.wordDescribe,//一句话描述
+        showDescribe:resumeTemplateObj.baseInfoList.showDescribe,//是否开启隐藏按钮
+      }
+      // 获取数据，回填到表单
       this.baseInfoList = [
         //基本信息
         {
@@ -505,7 +522,9 @@ export default {
           baseText: "邮箱",
           inputText: resumeTemplateObj.baseInfoList.mail || ""
         }
-      ]
+      ],
+      this.formData = resumeTemplateObj.baseInfoList
+      this.jobIntentionList = resumeTemplateObj.jobIntentionList
       
       
     });
@@ -514,7 +533,7 @@ export default {
       console.log(this.formData, "====");
       // 组装要提交的信息
       var content = {
-        userName: this.formData.name, //简历名称
+        userName: localStorage.getItem("userName"), //简历名称
         hasCommonResume: false, //是否有基础简历的信息
         resumeTemplate: [
           //模板简历

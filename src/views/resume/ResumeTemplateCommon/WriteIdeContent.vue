@@ -50,7 +50,7 @@ export default {
       this.axios
         .get("resumeTemplates/getTemplatesResume", {
           params: {
-         userName: "龙伟" //暂时写死，到时候用vuex
+         userName: localStorage.getItem("userName") //暂时写死，到时候用vuex
         }
         // ,
         //   headers:{
@@ -60,6 +60,10 @@ export default {
         .then(res => {
           if (res.data.status == "0") {
            var resumeTemplateObj = res.data.result;
+          //  如果获取不到数据，就不执行，防止后面获取属性值：null.xxx报错
+           if(!resumeTemplateObj){
+             return
+           }
           //  将数据获取后传递到各个模板简历上
            Bus.$emit('getTemplatesResume',resumeTemplateObj)
           //  console.log(resumeList)
