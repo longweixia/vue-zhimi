@@ -115,7 +115,7 @@
 import modal3 from "./Modal3";
 export default {
   name: "rightContent",
-  props: ["name", "title"], //基本信息的弹窗标识
+  props: ["name", "title","jobIntentionLists"], //基本信息的弹窗标识
   components: {
     modal3
   },
@@ -125,17 +125,17 @@ export default {
       isBaseLine: false, //右边编辑框是否显示
       isIconAdd: false, //是否显示教育背景悬浮后的添加按钮
       modalSkills: false, //是否显示编辑框
-      formData: {
-        name: "",
-        birthday: "",
-        age: 0, //年龄
-        tel: "",
-        mail: "",
-        work: "", //工作年限
-        headPic: "", //是否显示头像
-        wordDescribe: "", //一句话描述
-        showDescribe: true //是否开启隐藏按钮
-      },
+      // formData: {
+      //   name: "",
+      //   birthday: "",
+      //   age: 0, //年龄
+      //   tel: "",
+      //   mail: "",
+      //   work: "", //工作年限
+      //   headPic: "", //是否显示头像
+      //   wordDescribe: "", //一句话描述
+      //   showDescribe: true //是否开启隐藏按钮
+      // },
       choseJobList: [
         {
           value: "qd",
@@ -183,14 +183,46 @@ export default {
         salary0: "",
         salary1: ""
       },
-      salaryList1: [],
+      salaryList1: [
+        { value: 0, label: "10k" },
+        { value: 1, label: "11k" },
+        { value: 2, label: "12k" },
+        { value: 3, label: "13k" },
+        { value: 4, label: "14k" },
+        { value: 5, label: "15k" },
+        { value: 6, label: "16k" },
+        { value: 7, label: "17k" },
+        { value: 8, label: "18k" },
+        { value: 9, label: "19k" },
+        { value: 10, label: "20k" },
+        { value: 11, label: "21k" },
+        { value: 12, label: "22k" },
+        { value: 13, label: "23k" },
+        { value: 14, label: "24k" },
+        { value: 15, label: "25k" }
+      ],
       // 工作年限数组
       workYearList: ["1年", "2年", "3年"],
       // 头像状态数组
       headPicList: ["显示", "隐藏"]
     };
   },
-  watch: {},
+  watch: {
+    jobIntentionLists:{
+      handler(newVal,oldVal){
+        if(newVal!==oldVal){
+          this.JobIntentionList.choseJob = this.jobIntentionLists[0].baseText;
+          this.JobIntentionList.city = this.jobIntentionLists[1].baseText;
+          this.JobIntentionList.entryTime = this.jobIntentionLists[2].baseText;
+          // 拿到薪资中的数字，拆分成数组
+          var numArr = this.jobIntentionLists[3].baseText.match(/\d+/g)
+          this.JobIntentionList.salary0 = Number(numArr[0])-10
+          this.JobIntentionList.salary1 = Number(numArr[1])-10
+        }
+      },
+      deep:true
+    }
+  },
   methods: {
     // modal3传过来的，点击取消
     changeSkillModel(value) {
@@ -224,7 +256,7 @@ export default {
     // 改变薪资
     choseSalarys() {
       this.salaryList1 = this.salaryList0.slice(
-        this.JobIntentionList.salary0 + 1
+        this.JobIntentionList.salary0
       );
     },
     // 保存求职意向信息,传递给WriteResumeTemplate3.vue

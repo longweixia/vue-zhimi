@@ -5,6 +5,7 @@
       <!-- 左侧区域 -->
       <skillModal
         :modalSkills="modalSkill"
+        :hasSkillLists="hasSkillList"
         v-on:changeSkillModel="changeSkillModel"
         v-on:saveSkill="saveSkill"
       />
@@ -140,6 +141,7 @@
           <Row>
             <!-- 求职意向 -->
             <rightContent
+            :jobIntentionLists="jobIntentionList"
               v-on:savaJobIntention="savaJobIntention"
               title="求职意向"
             >
@@ -524,7 +526,11 @@ export default {
         }
       ],
       this.formData = resumeTemplateObj.baseInfoList
+      this.hasSkillList = resumeTemplateObj.SkillList
       this.jobIntentionList = resumeTemplateObj.jobIntentionList
+      this.eduList = resumeTemplateObj.eduList
+      this.experienceList = resumeTemplateObj.experienceList
+      this.selfEvaluation = resumeTemplateObj.selfEvaluation
       
       
     });

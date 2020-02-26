@@ -88,7 +88,7 @@
 <script>
 export default {
   name: "skillModal",
-  props: ["modalSkills"], //技能的弹窗标识
+  props: ["modalSkills","hasSkillLists"], //技能的弹窗标识
   filters: {
     ConversionNumber: function(val) {
       //根据滑块的来显示滑块提示文字
@@ -144,7 +144,15 @@ export default {
         }
       },
       deep: true
-    }
+    },
+     hasSkillLists: {
+      handler(newValue, oldValue) {
+        console.log(this.hasSkillLists,"++++")
+        this.hasSkillList = this.hasSkillLists.concat(this.skillList)
+      },
+      deep: true
+     }
+
   },
   methods: {
     //格式化滑条显示文字
