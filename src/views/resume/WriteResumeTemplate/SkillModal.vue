@@ -147,8 +147,19 @@ export default {
     },
      hasSkillLists: {
       handler(newValue, oldValue) {
-        console.log(this.hasSkillLists,"++++")
-        this.hasSkillList = this.hasSkillLists.concat(this.skillList)
+        // this.hasSkillList = this.hasSkillLists.concat(this.skillList)
+        this.hasSkillList = this.hasSkillLists
+        
+            // this.SkillList.find(item => item.name == "商务").isChecked = 
+            // this.hasSkillList.find(item => item.name == "商务").isChecked
+            // this.SkillList.find(item => item.name == "BD拓展").isChecked = 
+            // this.hasSkillList.find(item => item.name == "BD拓展").isChecked
+            // this.SkillList.find(item => item.name == "行业分析").isChecked = 
+            // this.hasSkillLists.find(item => item.name == "行业分析").isChecked
+            // this.SkillList.find(item => item.name == "商业策划").isChecked = 
+            // this.hasSkillList.find(item => item.name == "商业策划").isChecked
+          
+        
       },
       deep: true
      }
@@ -170,6 +181,16 @@ export default {
     changeTag(isChecked, name) {
       // js数组中含有多个对象，已知某个对象的属性值，找到这个对象其它的属性
       this.skillList.find(item => item.name === name).isChecked = !isChecked;
+      this.hasSkillList.find(item => item.name === name).isChecked = !isChecked;
+      if(JSON.stringify(this.hasSkillList).indexOf(name) != -1){
+        
+      let addSkillContent = {
+        name: name,
+        isChecked: true,
+        skillNumber: 66
+      };
+      this.hasSkillList.push(addSkillContent);
+      }
     },
     // 添加技能
     addSkills() {

@@ -208,6 +208,7 @@ export default {
     };
   },
   watch: {
+    // 如果父元素传递过来的数组不实时更新，就加个监听
     jobIntentionLists:{
       handler(newVal,oldVal){
         if(newVal!==oldVal){
