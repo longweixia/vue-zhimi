@@ -1,7 +1,7 @@
 <template>
   <!-- 求职意向，动态弹窗，slot插入 -->
   <div>
-    <Modal class="jm-skill-modal" v-model="modalSkills">
+    <Modal class="jm-skill-modal" v-model="modalShow">
       <p class="jm-title" slot="header" style="text-align:left">
         <span>{{title}}</span>
       </p>
@@ -10,8 +10,8 @@
         <slot name="jobModal"></slot>
       </div>
       <div class="jm-footer" slot="footer">
-        <Button @click="save" class="jm-save-btn" size="large">保存</Button>
-        <Button @click="cancelModel" class="jm-cancle-btn" size="large"
+        <Button @click="save(flag)" class="jm-save-btn" size="large">保存</Button>
+        <Button @click="cancelModel(flag)" class="jm-cancle-btn" size="large"
           >取消</Button
         >
       </div>
@@ -21,7 +21,7 @@
 <script>
 export default {
   name: "modal3",
-  props: ["modalSkills","title"],
+  props: ["modalShow","title","flag"],
   data() {
     return {
 
@@ -31,8 +31,8 @@ export default {
   methods: {
 
     // 点击取消
-    cancelModel() {
-      this.$emit("changeSkillModel", false);
+    cancelModel(flag) {
+     this.$emit("closeModel", flag);
     },
     // 点击保存
     save(){

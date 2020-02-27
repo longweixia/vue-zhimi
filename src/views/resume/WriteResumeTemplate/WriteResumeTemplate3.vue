@@ -143,8 +143,7 @@
             <rightContent
             :jobIntentionLists="jobIntentionList"
               v-on:savaJobIntention="savaJobIntention"
-              title="求职意向"
-            >
+              title="求职意向">
               <div slot="slotRight">
                 <Row
                   class="jobList"
@@ -160,8 +159,7 @@
             <rightContent
               name="edu"
               v-on:addEdus="addEdus('edu')"
-              title="教育背景"
-            >
+              title="教育背景">
               <div slot="slotRight">
                 <Row v-for="(item, index) in eduList" :key="index">
                   <Row>
@@ -200,8 +198,7 @@
             <rightContent
               name="edu"
               v-on:addEdus="addEdus('experience')"
-              title="工作经验"
-            >
+              title="工作经验">
               <div slot="slotRight">
                 <Row v-for="(item, index) in experienceList" :key="index">
                   <Row>

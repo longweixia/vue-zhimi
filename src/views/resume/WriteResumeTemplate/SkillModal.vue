@@ -31,9 +31,9 @@
               checkable
               :checked="item.isChecked"
               :name="item.name"
-              @on-change="changeTag(item.isChecked, item.name)"
+              @on-change="changeTag(item.isChecked, item.name, index)"
               color="success"
-              >{{ item.name }}{{ item.isChecked }}</Tag
+              >{{ item.name }}</Tag
             >
           </div>
         </Row>
@@ -43,7 +43,6 @@
             <span class="jm-ski-info">（还可以添加8项技能）</span>
           </div>
           <div class="jm-recom-list">
-            {{ hasSkillList }}
             <Row
               class="jm-recom-line"
               v-for="(item, index) in hasSkillList"
@@ -88,7 +87,7 @@
 <script>
 export default {
   name: "skillModal",
-  props: ["modalSkills","hasSkillLists"], //技能的弹窗标识
+  props: ["modalSkills", "hasSkillLists"], //技能的弹窗标识
   filters: {
     ConversionNumber: function(val) {
       //根据滑块的来显示滑块提示文字
@@ -126,44 +125,39 @@ export default {
   },
   watch: {
     // 对象深度监听
-    skillList: {
+    // skillList: {
+    //   handler(newValue, oldValue) {
+    //     // var obj = { name: "" };
+    //     for (var i in newValue) {
+    //       if (newValue[i].isChecked) {
+    //         // obj.name = newValue[i].name;
+    //         // this.hasSkillList.push(newValue);
+    //         this.hasSkillList.find(
+    //           item => item.name === newValue[i].name
+    //         ).isChecked = true;
+    //       } else {
+    //         this.hasSkillList.find(
+    //           item => item.name === newValue[i].name
+    //         ).isChecked = false;
+    //       }
+    //     }
+    //   },
+    //   deep: true
+    // },
+    hasSkillLists: {
       handler(newValue, oldValue) {
-        // var obj = { name: "" };
-        for (var i in newValue) {
-          if (newValue[i].isChecked) {
-            // obj.name = newValue[i].name;
-            // this.hasSkillList.push(newValue);
-            this.hasSkillList.find(
-              item => item.name === newValue[i].name
-            ).isChecked = true;
-          } else {
-            this.hasSkillList.find(
-              item => item.name === newValue[i].name
-            ).isChecked = false;
-          }
-        }
+        this.hasSkillList = this.hasSkillLists;
+        var that = this;
+        this.hasSkillList.forEach((item, index) => {
+          that.skillList.forEach((item1, index1) => {
+            if (item.name == item1.name) {
+              that.skillList[index1].isChecked = item.isChecked;
+            }
+          });
+        });
       },
       deep: true
-    },
-     hasSkillLists: {
-      handler(newValue, oldValue) {
-        // this.hasSkillList = this.hasSkillLists.concat(this.skillList)
-        this.hasSkillList = this.hasSkillLists
-        
-            // this.SkillList.find(item => item.name == "商务").isChecked = 
-            // this.hasSkillList.find(item => item.name == "商务").isChecked
-            // this.SkillList.find(item => item.name == "BD拓展").isChecked = 
-            // this.hasSkillList.find(item => item.name == "BD拓展").isChecked
-            // this.SkillList.find(item => item.name == "行业分析").isChecked = 
-            // this.hasSkillLists.find(item => item.name == "行业分析").isChecked
-            // this.SkillList.find(item => item.name == "商业策划").isChecked = 
-            // this.hasSkillList.find(item => item.name == "商业策划").isChecked
-          
-        
-      },
-      deep: true
-     }
-
+    }
   },
   methods: {
     //格式化滑条显示文字
@@ -178,19 +172,22 @@ export default {
         return "精通";
       }
     },
-    changeTag(isChecked, name) {
-      // js数组中含有多个对象，已知某个对象的属性值，找到这个对象其它的属性
-      this.skillList.find(item => item.name === name).isChecked = !isChecked;
-      this.hasSkillList.find(item => item.name === name).isChecked = !isChecked;
-      if(JSON.stringify(this.hasSkillList).indexOf(name) != -1){
-        
-      let addSkillContent = {
-        name: name,
-        isChecked: true,
-        skillNumber: 66
-      };
-      this.hasSkillList.push(addSkillContent);
+    changeTag(isChecked, name, index) {
+      var that = this;
+      var slength = this.hasSkillList.length;
+      for (var i = 0; i < slength; i++) {
+        if (this.hasSkillList[i].name == name) {
+          this.skillList[index].isChecked = !isChecked;
+          this.hasSkillList[i].isChecked = !isChecked;
+          return;
+        }
       }
+      let addSkillContent = {
+            name: name,
+            isChecked: true,
+            skillNumber: 66
+          };
+          this.hasSkillList.push(addSkillContent);
     },
     // 添加技能
     addSkills() {
@@ -245,16 +242,16 @@ export default {
       this.$emit("changeSkillModel", false);
     },
     // 保存基本信息数据
-    save(){
+    save() {
       this.cancelModel();
       // 传过去的时候处理下数据，状态为fasle的不用传
       let choseSkillList = [];
-      this.hasSkillList.forEach((item,index)=>{
-        if(item.isChecked){
-          choseSkillList.push(item)
+      this.hasSkillList.forEach((item, index) => {
+        if (item.isChecked) {
+          choseSkillList.push(item);
         }
-      })
-      this.$emit("saveSkill",choseSkillList)
+      });
+      this.$emit("saveSkill", choseSkillList);
     }
   }
 };

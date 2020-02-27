@@ -13,6 +13,14 @@
       size="20"
       type="md-settings"
     />
+    <!-- 主题按钮 -->
+    <Icon
+      v-show="isBaseLine"
+      @click="changeTheme"
+      class="jm-theme-icon"
+      size="20"
+      type="ios-color-fill"
+    />
     <!-- 教育背景的按钮-->
     <Icon
       v-show="isIconAdd"
@@ -21,6 +29,7 @@
       size="20"
       type="ios-add-circle-outline"
     />
+
     <Row>
       <Col>
         <Icon style="margin-top:3px;" size="25" type="md-list-box" />
@@ -29,21 +38,15 @@
         </div>
       </Col>
     </Row>
-    <!-- 求职意向模块 -->
+    <!-- WriteResumeTemplate3的插槽 -->
     <slot name="slotRight"></slot>
-    <!-- 教育背景模块 -->
-    <!-- <slot name="eduction"></slot> -->
-    <!-- 教育背景模块 -->
-    <!-- <slot name="experience"></slot> -->
-    <!-- 教育背景模块 -->
-    <!-- <slot name="selfEvaluation"></slot> -->
     <!-- 求职意向弹窗 -->
     <modal3
-      :modalSkills="modalSkills"
+      :modalShow="modalJob"
+      flag="jobIntention"
       v-on:savaMsg="savaMsg"
-      v-on:changeSkillModel="changeSkillModel"
-      title="编辑求职意向"
-    >
+      v-on:closeModel="closeModel"
+      title="编辑求职意向">
       <div class="jm-job" slot="jobModal">
         <Row class="jm-row">
           <Row>意向职位</Row>
@@ -109,33 +112,41 @@
         </Row>
       </div>
     </modal3>
+    <!-- 换肤主题弹窗 -->
+    <modal3
+      :modalShow="modalTheme"
+      flag="theme"
+      v-on:savaMsg="savaMsg"
+      v-on:closeModel="closeModel"
+      title="更换样式">
+      <div class="jm-job" slot="jobModal">
+        <Row class="jm-row">
+       <theme3>
+
+       </theme3>
+         
+        </Row>
+      </div>
+    </modal3>
   </div>
 </template>
 <script>
 import modal3 from "./Modal3";
+import theme3 from "./Template3/Theme3";
 export default {
   name: "rightContent",
-  props: ["name", "title","jobIntentionLists"], //基本信息的弹窗标识
+  props: ["name", "title", "jobIntentionLists"], //基本信息的弹窗标识
   components: {
-    modal3
+    modal3,
+    theme3
   },
   data() {
     return {
       // 表单输入框的值
       isBaseLine: false, //右边编辑框是否显示
       isIconAdd: false, //是否显示教育背景悬浮后的添加按钮
-      modalSkills: false, //是否显示编辑框
-      // formData: {
-      //   name: "",
-      //   birthday: "",
-      //   age: 0, //年龄
-      //   tel: "",
-      //   mail: "",
-      //   work: "", //工作年限
-      //   headPic: "", //是否显示头像
-      //   wordDescribe: "", //一句话描述
-      //   showDescribe: true //是否开启隐藏按钮
-      // },
+      modalJob: false, //是否求职意向弹窗
+      modalTheme: false, //是否显示主题换肤弹窗
       choseJobList: [
         {
           value: "qd",
@@ -209,29 +220,33 @@ export default {
   },
   watch: {
     // 如果父元素传递过来的数组不实时更新，就加个监听
-    jobIntentionLists:{
-      handler(newVal,oldVal){
-        if(newVal!==oldVal){
+    jobIntentionLists: {
+      handler(newVal, oldVal) {
+        if (newVal !== oldVal) {
           this.JobIntentionList.choseJob = this.jobIntentionLists[0].baseText;
           this.JobIntentionList.city = this.jobIntentionLists[1].baseText;
           this.JobIntentionList.entryTime = this.jobIntentionLists[2].baseText;
           // 拿到薪资中的数字，拆分成数组
-          var numArr = this.jobIntentionLists[3].baseText.match(/\d+/g)
-          this.JobIntentionList.salary0 = Number(numArr[0])-10
-          this.JobIntentionList.salary1 = Number(numArr[1])-10
+          var numArr = this.jobIntentionLists[3].baseText.match(/\d+/g);
+          this.JobIntentionList.salary0 = Number(numArr[0]) - 10;
+          this.JobIntentionList.salary1 = Number(numArr[1]) - 10;
         }
       },
-      deep:true
+      deep: true
     }
   },
   methods: {
     // modal3传过来的，点击取消
-    changeSkillModel(value) {
-      this.modalSkills = false;
+    closeModel(value) {
+      if (value == "jobIntention") {
+        this.modalJob = false;
+      } else if (value == "theme") {
+        this.modalTheme = false;
+      }
     },
     // 点击取消
     cancelModel() {
-      this.$emit("changeSkillModel", false);
+      this.$emit("closeModel", false);
     },
     // 点击保存
     save() {
@@ -252,13 +267,11 @@ export default {
     },
     // 显示编辑框
     displayModelBase() {
-      this.modalSkills = true;
+      this.modalJob = true;
     },
     // 改变薪资
     choseSalarys() {
-      this.salaryList1 = this.salaryList0.slice(
-        this.JobIntentionList.salary0
-      );
+      this.salaryList1 = this.salaryList0.slice(this.JobIntentionList.salary0);
     },
     // 保存求职意向信息,传递给WriteResumeTemplate3.vue
     savaMsg() {
@@ -267,6 +280,10 @@ export default {
     // 点击教育背景的添加按钮
     addEdu() {
       this.$emit("addEdus");
+    },
+    // 点击换肤按钮，切换主题
+    changeTheme() {
+      this.modalTheme = true;
     }
   }
 };
@@ -278,10 +295,11 @@ export default {
   padding: 20px 5px;
   .jm-row {
     display: inline-block;
-    width: 200px;
+    // width: 200px;
     margin-left: 40px;
     padding-bottom: 20px;
   }
+  // 右侧悬浮时的小按钮
   .jm-head-icon {
     position: absolute;
     top: 0;
@@ -290,6 +308,14 @@ export default {
     background: #00c091;
   }
   .jm-add-icon {
+    position: absolute;
+    top: 0;
+    right: 60px;
+    color: #fff;
+    background: #00c091;
+    border-radius: 10px;
+  }
+  .jm-theme-icon {
     position: absolute;
     top: 0;
     right: 30px;
