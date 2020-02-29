@@ -10,7 +10,7 @@
         v-on:saveSkill="saveSkill"
       />
       <baseInfoModel
-        :modalSkills="modalBaseInfo" 
+        :modalSkills="modalBaseInfo"
         :baseInfoList="baseInfoList"
         :baseObjC="baseObjC"
         v-on:changeSkillModel="changeSkillModel"
@@ -140,114 +140,122 @@
           <!-- 介绍 -->
           <Row>
             <!-- 求职意向 -->
-            <rightContent
-            :jobIntentionLists="jobIntentionList"
-              v-on:savaJobIntention="savaJobIntention"
-              title="求职意向">
-              <div slot="slotRight">
-                <Row
-                  class="jobList"
-                  v-for="(item, index) in jobIntentionList"
-                  :key="index"
-                >
-                  <Icon :size="20" class="jobIcon" :type="item.type" />
-                  <span class="jobText">{{ item.baseText }}</span>
-                </Row>
-              </div>
-            </rightContent>
-            <!-- 教育背景 -->
-            <rightContent
-              name="edu"
-              v-on:addEdus="addEdus('edu')"
-              title="教育背景">
-              <div slot="slotRight">
-                <Row v-for="(item, index) in eduList" :key="index">
-                  <Row>
-                    <Col :span="12" class="jm-edu-col">
-                      <Input
-                        v-model="item.eduDate"
-                        placeholder="请填写时间如:2016/08-2017/09"
-                      />
-                    </Col>
-                    <Col :span="12" class="jm-edu-col">
-                      <Input v-model="item.schooName" placeholder="学校名字" />
-                    </Col>
+            <vuedraggable class="wrapper">
+              <rightContent
+                key="1"
+                :jobIntentionLists="jobIntentionList"
+                v-on:savaJobIntention="savaJobIntention"
+                title="求职意向">
+                <div slot="slotRight">
+                  <Row
+                    class="jobList"
+                    v-for="(item, index) in jobIntentionList"
+                    :key="index"
+                  >
+                    <Icon :size="20" class="jobIcon" :type="item.type" />
+                    <span class="jobText">{{ item.baseText }}</span>
                   </Row>
-                  <Row>
-                    <Col :span="18" class="jm-edu-col">
-                      <Input
-                        v-model="item.majorName"
-                        placeholder="请填写专业"
-                      />
-                    </Col>
+                </div>
+              </rightContent>
+              <!-- 教育背景 -->
+              <rightContent
+                :key="2"
+                name="edu"
+                v-on:addEdus="addEdus('edu')"
+                title="教育背景">
+                <div slot="slotRight">
+                  <Row v-for="(item, index) in eduList" :key="index">
+                    <Row>
+                      <Col :span="12" class="jm-edu-col">
+                        <Input
+                          v-model="item.eduDate"
+                          placeholder="请填写时间如:2016/08-2017/09"
+                        />
+                      </Col>
+                      <Col :span="12" class="jm-edu-col">
+                        <Input
+                          v-model="item.schooName"
+                          placeholder="学校名字"
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col :span="18" class="jm-edu-col">
+                        <Input
+                          v-model="item.majorName"
+                          placeholder="请填写专业"
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col :span="18" class="jm-edu-col">
+                        <Input
+                          v-model="item.eduContent"
+                          type="textarea"
+                          :autosize="{ minRows: 2, maxRows: 5 }"
+                          placeholder="请填写内容"
+                        />
+                      </Col>
+                    </Row>
                   </Row>
+                </div>
+              </rightContent>
+              <!-- 工作经验 -->
+              <rightContent
+                key="3"
+                name="edu"
+                v-on:addEdus="addEdus('experience')"
+                title="工作经验">
+                <div slot="slotRight">
+                  <Row v-for="(item, index) in experienceList" :key="index">
+                    <Row>
+                      <Col :span="12" class="jm-edu-col">
+                        <Input
+                          v-model="item.date"
+                          placeholder="请填写时间如:2016/08-2017/09"
+                        />
+                      </Col>
+                      <Col :span="12" class="jm-edu-col">
+                        <Input v-model="item.name" placeholder="公司名字" />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col :span="18" class="jm-edu-col">
+                        <Input
+                          v-model="item.positionName"
+                          placeholder="请填写职位"
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col :span="18" class="jm-edu-col">
+                        <Input
+                          v-model="item.content"
+                          type="textarea"
+                          :autosize="{ minRows: 2, maxRows: 5 }"
+                          placeholder="请填写内容"
+                        />
+                      </Col>
+                    </Row>
+                  </Row>
+                </div>
+              </rightContent>
+              <!-- 自我评价 -->
+              <rightContent key="4" name="edu" title="自我评价">
+                <div slot="slotRight">
                   <Row>
-                    <Col :span="18" class="jm-edu-col">
+                    <Col class="jm-edu-col">
                       <Input
-                        v-model="item.eduContent"
+                        v-model="selfEvaluation"
                         type="textarea"
                         :autosize="{ minRows: 2, maxRows: 5 }"
                         placeholder="请填写内容"
                       />
                     </Col>
                   </Row>
-                </Row>
-              </div>
-            </rightContent>
-            <!-- 工作经验 -->
-            <rightContent
-              name="edu"
-              v-on:addEdus="addEdus('experience')"
-              title="工作经验">
-              <div slot="slotRight">
-                <Row v-for="(item, index) in experienceList" :key="index">
-                  <Row>
-                    <Col :span="12" class="jm-edu-col">
-                      <Input
-                        v-model="item.date"
-                        placeholder="请填写时间如:2016/08-2017/09"
-                      />
-                    </Col>
-                    <Col :span="12" class="jm-edu-col">
-                      <Input v-model="item.name" placeholder="公司名字" />
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col :span="18" class="jm-edu-col">
-                      <Input
-                        v-model="item.positionName"
-                        placeholder="请填写职位"
-                      />
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col :span="18" class="jm-edu-col">
-                      <Input
-                        v-model="item.content"
-                        type="textarea"
-                        :autosize="{ minRows: 2, maxRows: 5 }"
-                        placeholder="请填写内容"
-                      />
-                    </Col>
-                  </Row>
-                </Row>
-              </div>
-            </rightContent>
-            <!-- 自我评价 -->
-            <rightContent name="edu" title="自我评价">
-              <div slot="slotRight">
-                <Row>
-                  <Col class="jm-edu-col">
-                    <Input
-                      v-model="selfEvaluation"
-                      type="textarea"
-                      :autosize="{ minRows: 2, maxRows: 5 }"
-                      placeholder="请填写内容"
-                    />
-                  </Col>
-                </Row>
-              </div>
-            </rightContent>
+                </div>
+              </rightContent>
+            </vuedraggable>
           </Row>
         </Row>
       </Col>
@@ -261,17 +269,19 @@ import skillModal from "./SkillModal";
 import baseInfoModel from "./BaseInfoModel";
 import rightContent from "./RightContent";
 import Bus from "@/assets/event-bus.js";
+import vuedraggable from "vuedraggable";
 export default {
   name: "WriteResumeTemplate3",
   components: {
     jmUploadImg,
     skillModal,
     baseInfoModel,
-    rightContent
+    rightContent,
+    vuedraggable
   },
   data() {
     return {
-      baseObjC:{},//传递获取接口的数据到基本数据弹窗的数据
+      baseObjC: {}, //传递获取接口的数据到基本数据弹窗的数据
       // resumeTemplateObj: {}, //当该模板之前有提交过时，
       // wirteIdeContent.vue会将之前的值传过来传递过来
       isHeadImg: false, //是否显示头像编辑框
@@ -420,7 +430,7 @@ export default {
     },
     // 点击基本信息保存
     saveBaseInfo(data) {
-      console.log(data,"data=====")
+      console.log(data, "data=====");
       for (let item in data) {
         switch (item) {
           case "birthday":
@@ -484,22 +494,22 @@ export default {
   },
   mounted() {
     Bus.$on("getTemplatesResume", resumeTemplateObj => {
-      var resumeTemplateObj = resumeTemplateObj.resumeTemplate[0].resumeContent
-      console.log(resumeTemplateObj,"====")
+      var resumeTemplateObj = resumeTemplateObj.resumeTemplate[0].resumeContent;
+      console.log(resumeTemplateObj, "====");
       // 组装基本数据，传递到基本数据弹窗
-       this.baseObjC = {
+      this.baseObjC = {
         name: resumeTemplateObj.baseInfoList.name,
         birthday: resumeTemplateObj.baseInfoList.birthday,
-        age:resumeTemplateObj.baseInfoList.age,//年龄
+        age: resumeTemplateObj.baseInfoList.age, //年龄
         tel: resumeTemplateObj.baseInfoList.tel,
         mail: resumeTemplateObj.baseInfoList.mail,
-        work: resumeTemplateObj.baseInfoList.work,//工作年限
-        headPic:resumeTemplateObj.baseInfoList.headPic,//是否显示头像
-        wordDescribe:resumeTemplateObj.baseInfoList.wordDescribe,//一句话描述
-        showDescribe:resumeTemplateObj.baseInfoList.showDescribe,//是否开启隐藏按钮
-      }
+        work: resumeTemplateObj.baseInfoList.work, //工作年限
+        headPic: resumeTemplateObj.baseInfoList.headPic, //是否显示头像
+        wordDescribe: resumeTemplateObj.baseInfoList.wordDescribe, //一句话描述
+        showDescribe: resumeTemplateObj.baseInfoList.showDescribe //是否开启隐藏按钮
+      };
       // 获取数据，回填到表单
-      this.baseInfoList = [
+      (this.baseInfoList = [
         //基本信息
         {
           type: "ios-contact",
@@ -521,15 +531,13 @@ export default {
           baseText: "邮箱",
           inputText: resumeTemplateObj.baseInfoList.mail || ""
         }
-      ],
-      this.formData = resumeTemplateObj.baseInfoList
-      this.hasSkillList = resumeTemplateObj.SkillList
-      this.jobIntentionList = resumeTemplateObj.jobIntentionList
-      this.eduList = resumeTemplateObj.eduList
-      this.experienceList = resumeTemplateObj.experienceList
-      this.selfEvaluation = resumeTemplateObj.selfEvaluation
-      
-      
+      ]),
+        (this.formData = resumeTemplateObj.baseInfoList);
+      this.hasSkillList = resumeTemplateObj.SkillList;
+      this.jobIntentionList = resumeTemplateObj.jobIntentionList;
+      this.eduList = resumeTemplateObj.eduList;
+      this.experienceList = resumeTemplateObj.experienceList;
+      this.selfEvaluation = resumeTemplateObj.selfEvaluation;
     });
     // 点击保存按钮，提交填写好的简历
     Bus.$on("saveContents", () => {
