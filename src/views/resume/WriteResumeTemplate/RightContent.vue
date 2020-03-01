@@ -120,17 +120,18 @@
       v-on:closeModel="closeModel"
       title="更换样式">
       <div class="jm-job" slot="jobModal">
-        <Row class="jm-row">
+        <!-- <Row class="jm-row"> -->
        <theme3>
 
        </theme3>
          
-        </Row>
+        <!-- </Row> -->
       </div>
     </modal3>
   </div>
 </template>
 <script>
+import Bus from "@/assets/event-bus.js";
 import modal3 from "./Modal3";
 import theme3 from "./Template3/Theme3";
 export default {
@@ -285,14 +286,25 @@ export default {
     changeTheme() {
       this.modalTheme = true;
     }
+  },
+  mounted(){
+    // 解决父组件多次传值的问题
+    Bus.$off("saveTheme")
+    Bus.$on("saveTheme", (themeList) => {
+      console.log(themeList,"子")
+    })
+  },
+  
+  beforeDestroy(){
+    Bus.$off("saveTheme")
   }
 };
 </script>
- <style lang="less" scoped>
+<style lang="less" scoped>
 .jm-job {
   position: relative;
   border: 1px solid transparent;
-  padding: 20px 5px;
+  // padding: 20px 5px;
   .jm-row {
     display: inline-block;
     // width: 200px;
@@ -301,6 +313,7 @@ export default {
   }
   // 右侧悬浮时的小按钮
   .jm-head-icon {
+    z-index:100;
     position: absolute;
     top: 0;
     right: 0;
@@ -308,6 +321,7 @@ export default {
     background: #00c091;
   }
   .jm-add-icon {
+    z-index:100;
     position: absolute;
     top: 0;
     right: 60px;
@@ -317,6 +331,7 @@ export default {
   }
   .jm-theme-icon {
     position: absolute;
+    z-index:100;
     top: 0;
     right: 30px;
     color: #fff;
@@ -329,6 +344,7 @@ export default {
     .title-row {
       border-bottom: 1px solid #254665;
       /deep/ .ivu-input {
+        width:100px;
         color: #254665;
         font-size: 20px;
         font-weight: bold;
