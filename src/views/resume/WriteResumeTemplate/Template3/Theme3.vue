@@ -121,8 +121,11 @@ export default {
       this.indexZ = index
     },
     save(index){
-      console.log(index,this.list[index],"父亲")
+
+      // console.log(index,this.list[index],"父亲")
+      
        Bus.$emit('saveTheme',this.list[index])
+       Bus.$emit('closeTheme')
     }
   }
 };

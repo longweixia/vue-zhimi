@@ -31,12 +31,38 @@
     />
 
     <Row>
-      <Col>
+       <div class="title">
+              <!-- <Icon type="ios-wine" size="32"/> -->
+              <div class="jm-title-top" :class="[themeList.textDirection]">
+                <!-- 标题图标 -->
+                <Icon size="30" style="display:inline-block" :type="themeList.icon" v-if="themeList.isIcon" />
+                <!-- 标题前线 -->
+                <span v-if="themeList.lineIcon" :class="themeList.lineLeft"></span>
+               <!-- 标题前图标 -->
+                <span v-if="themeList.lineIcon" class="line-icon-sides-left">
+                     <Icon type="md-wine" />
+                </span>
+             <!-- 标题 -->
+              <Input
+                class="title-row"
+                :class="themeList.lineIcon"
+                v-model="title"
+              />
+              <!-- 标题后图标 -->
+              <span v-if="themeList.lineIcon" class="line-icon-sides-right">
+                     <Icon type="md-wine" />
+              </span>
+              <!-- 标题线 -->
+               <span v-if="themeList.lineIcon"  :class="themeList.lineRight"></span>
+              </div>
+              <!-- <Icon type="ios-wine" /> -->
+            </div>
+      <!-- <Col>
         <Icon style="margin-top:3px;" size="25" type="md-list-box" />
         <div class="title">
-          <Input class="title-row" v-model="title" />
+          <Input class="title-row" v-model="title" />222
         </div>
-      </Col>
+      </Col> -->
     </Row>
     <!-- WriteResumeTemplate3的插槽 -->
     <slot name="slotRight"></slot>
@@ -143,6 +169,7 @@ export default {
   },
   data() {
     return {
+      themeList:{},//主题数据
       // 表单输入框的值
       isBaseLine: false, //右边编辑框是否显示
       isIconAdd: false, //是否显示教育背景悬浮后的添加按钮
@@ -288,16 +315,24 @@ export default {
     }
   },
   mounted(){
-    // 解决父组件多次传值的问题
+    this.closeModel("theme")
+    // var that = this
+    Bus.$on("closeTheme", () => {
+      this.modalTheme = false
+    })
+       // 解决父组件多次传值的问题
     Bus.$off("saveTheme")
+    // 点击主题的保存，传递过来主题数据
     Bus.$on("saveTheme", (themeList) => {
       console.log(themeList,"子")
+      this.themeList = themeList
     })
+      
   },
   
-  beforeDestroy(){
-    Bus.$off("saveTheme")
-  }
+  // beforeDestroy(){
+  //   Bus.$off("saveTheme")
+  // }
 };
 </script>
 <style lang="less" scoped>
@@ -338,21 +373,159 @@ export default {
     background: #00c091;
     border-radius: 10px;
   }
-  .title {
-    width: 400px;
+  // .title {
+  //   width: 400px;
+  //   display: inline-block;
+  //   .title-row {
+  //     border-bottom: 1px solid #254665;
+  //     /deep/ .ivu-input {
+  //       width:100px;
+  //       color: #254665;
+  //       font-size: 20px;
+  //       font-weight: bold;
+  //     }
+  //   }
+  // }
+}
+.jm-base-linehover0 {
+  border: 1px dashed #00c091;
+}
+
+
+
+
+
+ .title {
+    width: 524px;
+    // margin-top:-30px;
+    // margin-left:30px;
     display: inline-block;
-    .title-row {
+    .jm-title-top{
+      display:inline-block;
+      width:524px;
+      position: relative;
+    }
+    // 标题下面的线，长线
+    .line-bottom {
       border-bottom: 1px solid #254665;
+    }
+    // 标题下面的线，短线
+    .line-bottom-sort {
+      border-bottom: 1px solid #254665;
+    }
+  
+    // input,标题文字
+    .title-row {
+      width: 100px;
+      display: inline-block;
+      
+      // margin-left:212px;
+      position: relative;
       /deep/ .ivu-input {
-        width:100px;
         color: #254665;
         font-size: 20px;
         font-weight: bold;
       }
     }
+    // 文字方向
+    .center {
+     
+        text-align: center;
+      
+    }
+    .right {
+        text-align: right;
+    }
+    .left {
+        text-align: left;
+    }
   }
+  // 标题前后的线
+  .both-sides-left{
+    width:167px;
+    display: inline-block;
+    content: "";
+    border-color: #254665;
+    position: absolute;
+    z-index: 100;
+    // left: 0;
+    // right: 172px;
+    top: 50%;
+    margin-top: -1px;
+    border-bottom: 1px solid;
+  }
+  .both-sides-right{
+    width:167px;
+    display: inline-block;
+    content: "";
+    border-color: #254665;
+    position: absolute;
+    z-index: 100;
+    // left: 0;
+    right: 0;
+    top: 50%;
+    margin-top: -1px;
+    border-bottom: 1px solid;
+  }
+  // .both-sides-left::after {
+  //   width:172px;
+  //   content: "";
+  //   border-color: #254665;
+  //   position: absolute;
+  //   // left: 70%;
+  //   right: 0;
+  //   top: 50%;
+  //   margin-top: -1px;
+  //   border-bottom: 1px solid;
+  // }
+
+
+// 前后两线上的图标
+.line-icon-sides-left{
+  display: inline-block;
+  margin-left:172px;
+  text-align: center;
+  width: 30px;
 }
-.jm-base-linehover0 {
-  border: 1px dashed #00c091;
+.line-icon-sides-right{
+  display: inline-block;
+  // margin-right:172px;
+  text-align: center;
+  width: 30px;
 }
+.jm-theme-hover{
+  /deep/.ivu-input {
+  border: none;
+  // color: #fff;
+background: #e0e0e0;
+// opacity: .2;
+}
+}
+.jm-theme-hover::before{
+    content: "";
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    width: 564px;
+    height: 135px;
+    background: #666;
+    opacity: .2;
+}
+  .jm-save-btn {
+    position: absolute;
+      background-color: #00c190;
+      color: white;
+      border-radius: 4px;
+      border: none;
+      width: 60px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      vertical-align: middle;
+      left:50%;
+      margin-left: -30px;
+      top: 50px;
+      z-index: 1000;
+      cursor: pointer;
+    }
 </style>

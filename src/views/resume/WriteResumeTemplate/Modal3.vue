@@ -43,7 +43,7 @@ export default {
   }
 };
 </script>
- <style lang="less" scoped>
+<style lang="less" scoped>
 .jm-skill-modal {
   width: 600px;
   /deep/.ivu-modal {
