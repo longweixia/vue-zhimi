@@ -1,51 +1,61 @@
 <template>
   <div>
     <!-- 求职意向主题 -->
-    <div>
-      <div class="jm-theme"  @mouseover="getHover(index)" v-for="(item, index) in list" :key="index">
-        <Row :class="indexZ==index?'jm-theme-hover':''">
-           <span v-if="indexZ==index" @click="save(index)" class="jm-save-btn">保存</span>
-          <Col>
-            <!-- 标题和图标 -->
-           
-            <div class="title">
-               
-              <!-- <Icon type="ios-wine" size="32"/> -->
-              <div class="jm-title-top" :class="[item.lineBottom,item.textDirection]">
-                <!-- 标题图标 -->
-                <Icon size="30" style="display:inline-block" :type="item.icon" v-if="item.isIcon" />
-                <!-- 标题前线 -->
-                <span v-if="item.lineIcon" :class="item.lineLeft"></span>
-               <!-- 标题前图标 -->
-                <span v-if="item.lineIcon" class="line-icon-sides-left">
-                     <Icon type="md-wine" />
-                </span>
-             <!-- 标题 -->
-              <Input
-                class="title-row"
-                :class="item.lineIcon"
-                v-model="title"
+
+    <div
+      class="jm-theme"
+      @mouseover="getHover(index)"
+      v-for="(item, index) in list"
+      :key="index"
+    >
+      <Row :class="indexZ == index ? 'jm-theme-hover' : ''">
+        <span v-if="indexZ == index" @click="save(index)" class="jm-save-btn"
+          >保存</span
+        >
+        <Row>
+          <!-- 标题和图标 -->
+          <div class="title">
+            <!-- <Icon type="ios-wine" size="32"/> -->
+            <div
+              class="jm-title-top"
+              :class="[item.lineBottom, item.textDirection]"
+            >
+              <!-- 标题图标 -->
+              <Icon
+                size="30"
+                style="display:inline-block"
+                :type="item.icon"
+                v-if="item.isIcon"
               />
+              <!-- 标题前线 -->
+              <span v-if="item.lineIcon" :class="item.lineLeft"></span>
+              <!-- 标题前图标 -->
+              <span v-if="item.lineIcon" class="line-icon-sides-left">
+                <Icon type="md-wine" />
+              </span>
+              <!-- 标题 -->
+              <span class="title-row" :class="item.lineIcon">{{ title }}</span>
               <!-- 标题后图标 -->
               <span v-if="item.lineIcon" class="line-icon-sides-right">
-                     <Icon type="md-wine" />
+                <Icon type="md-wine" />
               </span>
               <!-- 标题线 -->
-               <span v-if="item.lineIcon"  :class="item.lineRight"></span>
-              </div>
-              <!-- <Icon type="ios-wine" /> -->
+              <span v-if="item.lineIcon" :class="item.lineRight"></span>
             </div>
-          </Col>
+            <!-- <Icon type="ios-wine" /> -->
+          </div>
         </Row>
-        <Row
+      
+      <slot name="slotTheme"></slot>
+      <!-- <Row
           class="jobList"
           v-for="(item0, index0) in jobIntentionList"
           :key="index0"
         >
           <Icon :size="20" class="jobIcon" :type="item0.type" />
           <span class="jobText">{{ item0.baseText }}</span>
+        </Row> -->
         </Row>
-      </div>
     </div>
   </div>
 </template>
@@ -54,14 +64,14 @@ import Bus from "@/assets/event-bus.js";
 // import modal3 from "./Modal3";
 export default {
   name: "theme3",
-  props: [],
+  props: ["title", "themeFlag"],
   components: {
     // modal3
   },
   data() {
     return {
       // jmThemeHover:"jm-theme-hover",//hover后的遮罩层
-      indexZ:"",//悬浮的位置
+      indexZ: "", //悬浮的位置
       list: [
         {
           isIcon: false, //是否显示标题图标
@@ -70,7 +80,8 @@ export default {
           lineLeft: "both-sides-left", //前后线的样式,不写就没有前后的线
           lineRight: "both-sides-right", //前后线的样式,不写就没有前后的线
           lineBottom: "", //是否显示底部线，不写就没有底部的线
-          lineIcon:"line-icon",//前后线中间的图标，空为没有
+          lineIcon: "line-icon", //前后线中间的图标，空为没有
+          isShowTheme: true //是否显示为选择的主题
         },
         {
           isIcon: true,
@@ -78,7 +89,8 @@ export default {
           textDirection: "left",
           lineLeft: "",
           lineBottom: "line-bottom", //是否显示底部线
-          lineIcon:"",//前后线中间的图标
+          lineIcon: "", //前后线中间的图标
+          isShowTheme: true //是否显示为选择的主题
         },
         {
           isIcon: true,
@@ -86,10 +98,11 @@ export default {
           textDirection: "center",
           lineLeft: "",
           lineBottom: "line-bottom-sort", //是否显示底部线
-          lineIcon:"",//前后线中间的图标
+          lineIcon: "", //前后线中间的图标
+          isShowTheme: true //是否显示为选择的主题
         }
       ],
-      title: "求职意向",
+      // title: "求职意向",
       jobIntentionList: [
         //求职意向项
         {
@@ -117,15 +130,14 @@ export default {
   },
   watch: {},
   methods: {
-    getHover(index){
-      this.indexZ = index
+    getHover(index) {
+      this.indexZ = index;
     },
-    save(index){
-
+    save(index) {
       // console.log(index,this.list[index],"父亲")
-      
-       Bus.$emit('saveTheme',this.list[index])
-       Bus.$emit('closeTheme')
+
+      Bus.$emit("saveTheme", [this.list[index], this.themeFlag]);
+      Bus.$emit("closeTheme");
     }
   }
 };
@@ -134,14 +146,15 @@ export default {
 /deep/.ivu-input {
   border: none;
   // color: #fff;
-// background: #e0e0e0;
-// opacity: .2;
+  // background: #e0e0e0;
+  // opacity: .2;
 }
 
 // 每一项
 .jm-theme {
   // width:540px;
   // 求职意向主题
+  height: auto;
   border: 1px solid #e8e8e8;
   margin-bottom: 20px;
   padding: 20px;
@@ -164,9 +177,9 @@ export default {
     // margin-top:-30px;
     // margin-left:30px;
     display: inline-block;
-    .jm-title-top{
-      display:inline-block;
-      width:524px;
+    .jm-title-top {
+      display: inline-block;
+      width: 524px;
       position: relative;
     }
     // 标题下面的线，长线
@@ -177,12 +190,13 @@ export default {
     .line-bottom-sort {
       border-bottom: 1px solid #254665;
     }
-  
+
     // input,标题文字
     .title-row {
       width: 100px;
       display: inline-block;
-      
+      font-size: 20px;
+      font-weight: bold;
       // margin-left:212px;
       position: relative;
       /deep/ .ivu-input {
@@ -193,20 +207,18 @@ export default {
     }
     // 文字方向
     .center {
-     
-        text-align: center;
-      
+      text-align: center;
     }
     .right {
-        text-align: right;
+      text-align: right;
     }
     .left {
-        text-align: left;
+      text-align: left;
     }
   }
   // 标题前后的线
-  .both-sides-left{
-    width:167px;
+  .both-sides-left {
+    width: 167px;
     display: inline-block;
     content: "";
     border-color: #254665;
@@ -218,8 +230,8 @@ export default {
     margin-top: -1px;
     border-bottom: 1px solid;
   }
-  .both-sides-right{
-    width:167px;
+  .both-sides-right {
+    width: 167px;
     display: inline-block;
     content: "";
     border-color: #254665;
@@ -245,51 +257,51 @@ export default {
 }
 
 // 前后两线上的图标
-.line-icon-sides-left{
+.line-icon-sides-left {
   display: inline-block;
-  margin-left:172px;
+  margin-left: 172px;
   text-align: center;
   width: 30px;
 }
-.line-icon-sides-right{
+.line-icon-sides-right {
   display: inline-block;
   // margin-right:172px;
   text-align: center;
   width: 30px;
 }
-.jm-theme-hover{
+.jm-theme-hover {
   /deep/.ivu-input {
+    border: none;
+    // color: #fff;
+    background: #e0e0e0;
+    // opacity: .2;
+  }
+}
+.jm-theme-hover::before {
+  content: "";
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  width: 564px;
+  height: calc(100% + 40px);
+  background: #666;
+  opacity: 0.2;
+}
+.jm-save-btn {
+  position: absolute;
+  background-color: #00c190;
+  color: white;
+  border-radius: 4px;
   border: none;
-  // color: #fff;
-background: #e0e0e0;
-// opacity: .2;
+  width: 60px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  vertical-align: middle;
+  left: 50%;
+  margin-left: -30px;
+  top: 50%;
+  z-index: 1000;
+  cursor: pointer;
 }
-}
-.jm-theme-hover::before{
-    content: "";
-    position: absolute;
-    top: -20px;
-    left: -20px;
-    width: 564px;
-    height: 135px;
-    background: #666;
-    opacity: .2;
-}
-  .jm-save-btn {
-    position: absolute;
-      background-color: #00c190;
-      color: white;
-      border-radius: 4px;
-      border: none;
-      width: 60px;
-      height: 30px;
-      line-height: 30px;
-      text-align: center;
-      vertical-align: middle;
-      left:50%;
-      margin-left: -30px;
-      top: 50px;
-      z-index: 1000;
-      cursor: pointer;
-    }
 </style>

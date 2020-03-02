@@ -141,7 +141,9 @@
           <Row>
             <!-- 求职意向 -->
             <vuedraggable class="wrapper">
-              <rightContent
+              <rightContent 
+              :themeList="jobThemeList"
+              themeFlag="jobIntention"
                 key="1"
                 :jobIntentionLists="jobIntentionList"
                 v-on:savaJobIntention="savaJobIntention"
@@ -159,6 +161,8 @@
               </rightContent>
               <!-- 教育背景 -->
               <rightContent
+              :themeList="eduThemeList"
+              themeFlag="edu"
                 :key="2"
                 name="edu"
                 v-on:addEdus="addEdus('edu')"
@@ -202,6 +206,8 @@
               </rightContent>
               <!-- 工作经验 -->
               <rightContent
+              :themeList="workThemeList"
+              themeFlag="work"
                 key="3"
                 name="edu"
                 v-on:addEdus="addEdus('experience')"
@@ -241,7 +247,10 @@
                 </div>
               </rightContent>
               <!-- 自我评价 -->
-              <rightContent key="4" name="edu" title="自我评价">
+              <rightContent 
+                :themeList="ThemeAppraiseList"
+              themeFlag="appraise"
+               key="4" name="edu" title="自我评价">
                 <div slot="slotRight">
                   <Row>
                     <Col class="jm-edu-col">
@@ -282,6 +291,10 @@ export default {
   data() {
     return {
       // themeList:{},//主题数据
+      jobThemeList:{},//求职意向主题数据
+      eduThemeList:{},//教育背景主题数据
+      workThemeList:{},//工作主题数据
+      ThemeAppraiseList:{},//评价主题数据
       baseObjC: {}, //传递获取接口的数据到基本数据弹窗的数据
       // resumeTemplateObj: {}, //当该模板之前有提交过时，
       // wirteIdeContent.vue会将之前的值传过来传递过来
@@ -576,13 +589,24 @@ export default {
           console.log("err", err);
         });
     });
-    //  // 解决父组件多次传值的问题
+     // 解决父组件多次传值的问题
     // Bus.$off("saveTheme")
-    // // 点击主题的保存，传递过来主题数据
-    // Bus.$on("saveTheme", (themeList) => {
-    //   console.log(themeList,"子")
-    //   this.themeList = themeList
-    // })
+    // 点击主题的保存，传递过来主题数据
+    Bus.$on("saveTheme", (themeList) => {
+      var flags = themeList[1]//判断是哪项的标识
+      console.log(themeList,"子")
+      if(flags == "jobIntention"){
+        this.jobThemeList = themeList[0]
+      }else if(flags == "edu"){
+        this.eduThemeList = themeList[0]
+      }
+      else if(flags == "work"){
+        this.workThemeList = themeList[0]
+      }
+      else if(flags == "appraise"){
+        this.ThemeAppraiseList = themeList[0]
+      }
+    })
   },
   created() {}
 };
