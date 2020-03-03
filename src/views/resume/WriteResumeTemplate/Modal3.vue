@@ -44,19 +44,34 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+/deep/ .ivu-modal-body{
+   min-height: 340px;
+    height: 540px;
+    // max-height: 600px;
+    overflow: auto;
+}
 .jm-skill-modal {
+  overflow: auto;
   width: 600px;
   /deep/.ivu-modal {
     width: 600px !important;
+    // min-height: 340px;
+    // height: 540px;
+    // // max-height: 600px;
+    // overflow: auto;
   }
   // 加这个deep可以深度修改内置的样式
   /deep/.ivu-modal-header {
+    
     padding: 0 !important;
   }
-
+/deep/ .ivu-modal-header{
+  height: 40px;
+}
   // 标题
   .jm-title {
-    width: 100%;
+    position: fixed;
+    width: 600px;
     height: 40px;
     line-height: 40px;
     padding-left: 20px;

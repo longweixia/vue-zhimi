@@ -16,7 +16,7 @@
         v-on:changeSkillModel="changeSkillModel"
         v-on:saveBaseInfo="saveBaseInfo"
       />
-      <Col class="resume-left" span="8">
+      <div class="resume-left">
         <!-- 头像 -->
         <Row class="jm-headImg">
           <div
@@ -99,9 +99,9 @@
             </Row>
           </div>
         </Row>
-      </Col>
+      </div>
       <!-- 右侧区域 -->
-      <Col span="16" class="resume-right">
+      <div class="resume-right">
         <!-- 名字和介绍 -->
         <Row class="jm-base-name">
           <!-- 名字 -->
@@ -124,15 +124,16 @@
                 v-model="formData.name"
                 placeholder="你的名字"
                 clearable
-                style="width:94%;margin:5px 3%;font-size: 30px;"
+               class="right-name"
               />
             </div>
+            <!-- style="width:94%;margin:5px 3%;font-size: 30px;" -->
             <div v-if="formData.showDescribe" class="jm-name-introduce">
               <Input
                 v-model="formData.wordDescribe"
                 placeholder="一句话介绍自己，告诉HR为什么选择你而不是别人"
                 clearable
-                style="width:94%;margin:5px 3%"
+                autosize type="textarea" class="input-introduce"
               />
             </div>
           </div>
@@ -267,7 +268,7 @@
             </vuedraggable>
           </Row>
         </Row>
-      </Col>
+      </div>
     </Row>
   </div>
 </template>
@@ -627,17 +628,20 @@ export default {
   right: 0;
   color: #fff;
   background: #00c091;
+  margin: 5px;
 }
 body {
   min-width: 1240px;
 }
 .jm-template {
+  width: 820px;
+  min-height: 1160px;
   .resume-left {
-    // height: 3480px;
-    min-height: 1160px;
+    float: left;
+    height: 1160px;
     width: 270px;
     background: #254665;
-    padding: 10px 30px;
+    padding: 20px 30px 40px 30px;
   }
   //   头像
   .jm-headImg {
@@ -657,7 +661,7 @@ body {
 
   // 基本信息
   .jm-baseInfo {
-    padding: 20px 0 20px 4px;
+        padding: 20px 0 20px 4px;
     width: 210px;
     color: #fff;
     font-size: 14px;
@@ -689,7 +693,11 @@ body {
 }
 // 右侧信息
 .resume-right {
-  padding: 10px 30px;
+  // padding: 10px 30px;
+    float:right;
+    height: 1160px;
+    padding: 10px 30px 40px 30px;
+    width: 550px;
   .ivu-input {
     border: none !important;
   }
@@ -697,7 +705,7 @@ body {
 .jm-base-name {
   position: relative;
   /* border: 1px solid #254665;*/
-  padding: 20px;
+  // padding: 20px;
   padding-bottom: 15px;
   // background: #6b4b24;
   // color: #fff;
@@ -736,5 +744,22 @@ body {
     color: #747474;
     font-size: 14px;
   }
+}
+.right-name{
+  width: calc(100% - 45px);
+  margin: 20px 40px 10px 5px;
+  font-size: 30px;
+}
+.input-introduce{
+  width: calc(100% - 20px);
+  margin-left: 5px;
+  margin-bottom: 20px;
+  // 去掉textarea右下角的三角形
+  /deep/ textarea{
+    resize: none;
+  }
+}
+.jm-edu-col{
+  margin-top: 10px;
 }
 </style>

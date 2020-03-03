@@ -42,7 +42,7 @@
           <!-- 标题图标 -->
           <Icon
             size="30"
-            style="display:inline-block"
+            class="title-icon"
             :type="themeList.icon"
             v-if="themeList.isIcon"
           />
@@ -68,7 +68,7 @@
         <!-- <Icon type="ios-wine" /> -->
       </div>
       <!-- 默认主题 -->
-      <div v-if="!themeList.isShowTheme" class="jm-title-top">
+      <div v-if="!themeList.isShowTheme" class="jm-title-top line-bottom">
         <Icon size="30" style="display:inline-block" type="ios-bicycle" />
 
         <Input class="title-row" v-model="title" />
@@ -359,6 +359,8 @@ export default {
 </script>
 <style lang="less" scoped>
 .jm-job {
+  margin: 10px 5px 20px 5px;
+  padding-bottom: 10px;
   position: relative;
   border: 1px solid transparent;
   // padding: 20px 5px;
@@ -370,6 +372,7 @@ export default {
   }
   // 右侧悬浮时的小按钮
   .jm-head-icon {
+    margin: 5px;
     z-index: 100;
     position: absolute;
     top: 0;
@@ -378,6 +381,7 @@ export default {
     background: #00c091;
   }
   .jm-add-icon {
+    margin: 5px;
     z-index: 100;
     position: absolute;
     top: 0;
@@ -387,6 +391,7 @@ export default {
     border-radius: 10px;
   }
   .jm-theme-icon {
+    margin: 5px;
     position: absolute;
     z-index: 100;
     top: 0;
@@ -414,14 +419,18 @@ export default {
 }
 
 .title {
-  width: 440px;
+  width: 478px;
+ margin-top: 15px;
   // margin-top:-30px;
   // margin-left:30px;
   display: inline-block;
   .jm-title-top {
     display: inline-block;
-    width: 440px;
+     width: 478px;
     position: relative;
+    /deep/ .ivu-icon{
+      vertical-align: middle;
+    }
   }
   // 标题下面的线，长线
   .line-bottom {
@@ -458,7 +467,7 @@ export default {
 }
 // 标题前后的线
 .both-sides-left {
-  width: 138px;
+  width: 149px;
   display: inline-block;
   content: "";
   border-color: #254665;
@@ -471,7 +480,7 @@ export default {
   border-bottom: 1px solid;
 }
 .both-sides-right {
-  width: 138px;
+   width: 149px;
   display: inline-block;
   content: "";
   border-color: #254665;
@@ -498,7 +507,7 @@ export default {
 // 前后两线上的图标
 .line-icon-sides-left {
   display: inline-block;
-  margin-left: 138px;
+  margin-left: 149px;
   text-align: center;
   width: 30px;
 }

@@ -23,7 +23,7 @@
               <!-- 标题图标 -->
               <Icon
                 size="30"
-                style="display:inline-block"
+             
                 :type="item.icon"
                 v-if="item.isIcon"
               />
@@ -173,13 +173,13 @@ export default {
   }
   // 标题样式
   .title {
-    width: 524px;
+    width: 507px;
     // margin-top:-30px;
     // margin-left:30px;
     display: inline-block;
     .jm-title-top {
       display: inline-block;
-      width: 524px;
+      width: 507px;
       position: relative;
     }
     // 标题下面的线，长线
@@ -277,12 +277,13 @@ export default {
     // opacity: .2;
   }
 }
+// 遮罩层
 .jm-theme-hover::before {
   content: "";
   position: absolute;
   top: -20px;
   left: -20px;
-  width: 564px;
+  width: 538px;
   height: calc(100% + 40px);
   background: #666;
   opacity: 0.2;
