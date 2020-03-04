@@ -6,9 +6,18 @@
     @mouseenter="enter(name)"
     @mouseleave="leave(name)"
   >
+  <!-- 求职编辑按钮 -->
     <Icon
+      v-show="isIconWrite"
+      @click="displayModelBase(name)"
+      class="jm-add-icon"
+      size="20"
+      type="ios-create-outline"
+    />
+    <!-- 设置按钮 -->
+      <Icon
       v-show="isBaseLine"
-      @click="displayModelBase"
+      @click="showSettingModal(name)"
       class="jm-head-icon"
       size="20"
       type="md-settings"
@@ -81,6 +90,10 @@
         </div>
       </Col> -->
     </Row>
+    <!-- 设置面板 -->
+    <div class="setting" @mouseleave="hiddenSetting">
+      <setting3 v-if="showSetting" :themeFlag="themeFlag"></setting3>
+    </div>
     <!-- WriteResumeTemplate3的插槽 -->
     <slot name="slotRight"></slot>
     <!-- 求职意向弹窗 -->
@@ -183,15 +196,19 @@
 import Bus from "@/assets/event-bus.js";
 import modal3 from "./Modal3";
 import theme3 from "./Template3/Theme3";
+import setting3 from "./Template3/setting3";
 export default {
   name: "rightContent",
   props: ["name", "title", "jobIntentionLists","themeList","themeFlag"], //基本信息的弹窗标识
   components: {
     modal3,
-    theme3
+    theme3,
+    setting3
   },
   data() {
     return {
+      showSetting:false,
+      isIconWrite:false,//是否显示求职编辑按钮
       // themeList: {}, //主题数据
       // 表单输入框的值
       isBaseLine: false, //右边编辑框是否显示
@@ -308,15 +325,26 @@ export default {
       this.isBaseLine = true;
       if (name == "edu") {
         this.isIconAdd = true;
+      }else if(name == "jobIntention"){
+        this.isIconWrite = true
       }
     },
     leave(name) {
       this.isBaseLine = false;
       if (name == "edu") {
         this.isIconAdd = false;
+      }else if(name == "jobIntention"){
+        this.isIconWrite = false
       }
     },
-    // 显示编辑框
+      // 显示设置面板
+    showSettingModal(){
+      this.showSetting = true
+    },
+    hiddenSetting(){
+this.showSetting = false
+    },
+    // 显示编辑面板
     displayModelBase() {
       this.modalJob = true;
     },
@@ -552,4 +580,11 @@ export default {
 //   z-index: 1000;
 //   cursor: pointer;
 // }
+.setting{
+  width: 100%;
+  position: absolute;
+  left: 288px;
+  z-index: 1;
+  margin-top:5px;
+}
 </style>

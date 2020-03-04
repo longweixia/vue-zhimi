@@ -147,6 +147,7 @@
               themeFlag="jobIntention"
                 key="1"
                 :jobIntentionLists="jobIntentionList"
+                name="jobIntention"
                 v-on:savaJobIntention="savaJobIntention"
                 title="求职意向">
                 <div slot="slotRight">
@@ -170,7 +171,8 @@
                 title="教育背景">
                 <div slot="slotRight">
                   <Row v-for="(item, index) in eduList" :key="index">
-                    <Row>
+                    <Row v-if="settingObj.isShowJobTime">
+                      <Row>
                       <Col :span="12" class="jm-edu-col">
                         <Input
                           v-model="item.eduDate"
@@ -192,6 +194,7 @@
                         />
                       </Col>
                     </Row>
+                     </Row>
                     <Row>
                       <Col :span="18" class="jm-edu-col">
                         <Input
@@ -251,7 +254,7 @@
               <rightContent 
                 :themeList="ThemeAppraiseList"
               themeFlag="appraise"
-               key="4" name="edu" title="自我评价">
+               key="4" name="appraise" title="自我评价">
                 <div slot="slotRight">
                   <Row>
                     <Col class="jm-edu-col">
@@ -291,6 +294,7 @@ export default {
   },
   data() {
     return {
+      settingObj:{},//设置数据
       // themeList:{},//主题数据
       jobThemeList:{},//求职意向主题数据
       eduThemeList:{},//教育背景主题数据
@@ -380,6 +384,12 @@ export default {
   },
   watch: {},
   methods: {
+    // 获取设置数据
+    getSetting(){
+      Bus.$on("changeSetting",settingObj=>{
+        this.settingObj = settingObj;
+      })
+    },
     // 鼠标悬浮
     enter(flag) {
       switch (flag) {
@@ -508,6 +518,7 @@ export default {
     }
   },
   mounted() {
+    this.getSetting();
     // 获取简历信息
     Bus.$on("getTemplatesResume", resumeTemplateObj => {
       var resumeTemplateObj = resumeTemplateObj.resumeTemplate[0].resumeContent;
