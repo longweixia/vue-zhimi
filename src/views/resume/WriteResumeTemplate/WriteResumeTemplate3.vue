@@ -18,22 +18,29 @@
       />
       <div class="resume-left">
         <!-- 头像 -->
-        <Row class="jm-headImg">
+        <Row class="jm-headImg" :class="isHeadImg ? 'jm-headImg-lineIs' : ''">
+          <!-- jm-headImg-line   :class="isHeadImg ? 'jm-headImg-lineIs' : ''" -->
+          <Icon
+            v-show="isHeadImg"
+            class="jm-head-icon"
+            size="20"
+            type="md-settings"
+          />
           <div
-            :class="isHeadImg ? 'jm-headImg-lineIs' : ''"
-            class="jm-headImg-line"
+            class="head-icon"
             @mouseenter="enter('headImg')"
             @mouseleave="leave('headImg')"
           >
-            <div class="jm-upload-padding">
-              <Icon
-                v-show="isHeadImg"
-                class="jm-head-icon"
-                size="20"
-                type="md-settings"
-              />
-              <jmUploadImg />
-            </div>
+            <img
+              v-show="isHeadImg"
+              class="jm-upload-icon"
+              src="./../../../../static/image/bg3.jpg"
+            />
+            <!-- <a
+              v-show="isHeadImg"
+              class="jm-upload-icon"
+            ></a> -->
+            <jmUploadImg />
           </div>
         </Row>
         <!-- 基本信息 -->
@@ -124,7 +131,7 @@
                 v-model="formData.name"
                 placeholder="你的名字"
                 clearable
-               class="right-name"
+                class="right-name"
               />
             </div>
             <!-- style="width:94%;margin:5px 3%;font-size: 30px;" -->
@@ -133,7 +140,9 @@
                 v-model="formData.wordDescribe"
                 placeholder="一句话介绍自己，告诉HR为什么选择你而不是别人"
                 clearable
-                autosize type="textarea" class="input-introduce"
+                autosize
+                type="textarea"
+                class="input-introduce"
               />
             </div>
           </div>
@@ -142,14 +151,15 @@
           <Row>
             <!-- 求职意向 -->
             <vuedraggable class="wrapper">
-              <rightContent 
-              :themeList="jobThemeList"
-              themeFlag="jobIntention"
+              <rightContent
+                :themeList="jobThemeList"
+                themeFlag="jobIntention"
                 key="1"
                 :jobIntentionLists="jobIntentionList"
                 name="jobIntention"
                 v-on:savaJobIntention="savaJobIntention"
-                title="求职意向">
+                title="求职意向"
+              >
                 <div slot="slotRight">
                   <Row
                     class="jobList"
@@ -163,38 +173,39 @@
               </rightContent>
               <!-- 教育背景 -->
               <rightContent
-              :themeList="eduThemeList"
-              themeFlag="edu"
+                :themeList="eduThemeList"
+                themeFlag="edu"
                 :key="2"
                 name="edu"
                 v-on:addEdus="addEdus('edu')"
-                title="教育背景">
+                title="教育背景"
+              >
                 <div slot="slotRight">
                   <Row v-for="(item, index) in eduList" :key="index">
                     <Row v-if="settingObj.isShowJobTime">
                       <Row>
-                      <Col :span="12" class="jm-edu-col">
-                        <Input
-                          v-model="item.eduDate"
-                          placeholder="请填写时间如:2016/08-2017/09"
-                        />
-                      </Col>
-                      <Col :span="12" class="jm-edu-col">
-                        <Input
-                          v-model="item.schooName"
-                          placeholder="学校名字"
-                        />
-                      </Col>
+                        <Col :span="12" class="jm-edu-col">
+                          <Input
+                            v-model="item.eduDate"
+                            placeholder="请填写时间如:2016/08-2017/09"
+                          />
+                        </Col>
+                        <Col :span="12" class="jm-edu-col">
+                          <Input
+                            v-model="item.schooName"
+                            placeholder="学校名字"
+                          />
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col :span="18" class="jm-edu-col">
+                          <Input
+                            v-model="item.majorName"
+                            placeholder="请填写专业"
+                          />
+                        </Col>
+                      </Row>
                     </Row>
-                    <Row>
-                      <Col :span="18" class="jm-edu-col">
-                        <Input
-                          v-model="item.majorName"
-                          placeholder="请填写专业"
-                        />
-                      </Col>
-                    </Row>
-                     </Row>
                     <Row>
                       <Col :span="18" class="jm-edu-col">
                         <Input
@@ -210,12 +221,13 @@
               </rightContent>
               <!-- 工作经验 -->
               <rightContent
-              :themeList="workThemeList"
-              themeFlag="work"
+                :themeList="workThemeList"
+                themeFlag="work"
                 key="3"
                 name="edu"
                 v-on:addEdus="addEdus('experience')"
-                title="工作经验">
+                title="工作经验"
+              >
                 <div slot="slotRight">
                   <Row v-for="(item, index) in experienceList" :key="index">
                     <Row>
@@ -251,10 +263,13 @@
                 </div>
               </rightContent>
               <!-- 自我评价 -->
-              <rightContent 
+              <rightContent
                 :themeList="ThemeAppraiseList"
-              themeFlag="appraise"
-               key="4" name="appraise" title="自我评价">
+                themeFlag="appraise"
+                key="4"
+                name="appraise"
+                title="自我评价"
+              >
                 <div slot="slotRight">
                   <Row>
                     <Col class="jm-edu-col">
@@ -294,12 +309,12 @@ export default {
   },
   data() {
     return {
-      settingObj:{},//设置数据
+      settingObj: {}, //设置数据
       // themeList:{},//主题数据
-      jobThemeList:{},//求职意向主题数据
-      eduThemeList:{},//教育背景主题数据
-      workThemeList:{},//工作主题数据
-      ThemeAppraiseList:{},//评价主题数据
+      jobThemeList: {}, //求职意向主题数据
+      eduThemeList: {}, //教育背景主题数据
+      workThemeList: {}, //工作主题数据
+      ThemeAppraiseList: {}, //评价主题数据
       baseObjC: {}, //传递获取接口的数据到基本数据弹窗的数据
       // resumeTemplateObj: {}, //当该模板之前有提交过时，
       // wirteIdeContent.vue会将之前的值传过来传递过来
@@ -385,10 +400,10 @@ export default {
   watch: {},
   methods: {
     // 获取设置数据
-    getSetting(){
-      Bus.$on("changeSetting",settingObj=>{
+    getSetting() {
+      Bus.$on("changeSetting", settingObj => {
         this.settingObj = settingObj;
-      })
+      });
     },
     // 鼠标悬浮
     enter(flag) {
@@ -601,24 +616,22 @@ export default {
           console.log("err", err);
         });
     });
-     // 解决父组件多次传值的问题
+    // 解决父组件多次传值的问题
     // Bus.$off("saveTheme")
     // 点击主题的保存，传递过来主题数据
-    Bus.$on("saveTheme", (themeList) => {
-      var flags = themeList[1]//判断是哪项的标识
-      console.log(themeList,"子")
-      if(flags == "jobIntention"){
-        this.jobThemeList = themeList[0]
-      }else if(flags == "edu"){
-        this.eduThemeList = themeList[0]
+    Bus.$on("saveTheme", themeList => {
+      var flags = themeList[1]; //判断是哪项的标识
+      console.log(themeList, "子");
+      if (flags == "jobIntention") {
+        this.jobThemeList = themeList[0];
+      } else if (flags == "edu") {
+        this.eduThemeList = themeList[0];
+      } else if (flags == "work") {
+        this.workThemeList = themeList[0];
+      } else if (flags == "appraise") {
+        this.ThemeAppraiseList = themeList[0];
       }
-      else if(flags == "work"){
-        this.workThemeList = themeList[0]
-      }
-      else if(flags == "appraise"){
-        this.ThemeAppraiseList = themeList[0]
-      }
-    })
+    });
   },
   created() {}
 };
@@ -626,6 +639,35 @@ export default {
 
 
 <style lang="less" scoped>
+// 头像样式
+.jm-headImg {
+  position: relative;
+  display: block;
+  width: 170px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px dashed transparent !important;
+  .head-icon {
+    position: relative;
+    width: 128px;
+    height: 158px;
+    margin: 0 auto;
+    border: 4px solid #e5e5e5;
+    background: #e5e5e5;
+    overflow: hidden;
+    cursor: pointer;
+    .jm-upload-icon {
+          // background: url(./../../../../static/image/bg3.jpg);
+      position: absolute;
+      // z-index: -1;
+      width: 40px;
+      height: 40px;
+      margin-left: 40px;
+      margin-top: 55px;
+    }
+  }
+}
+
 /deep/.ivu-input {
   border: none !important;
 }
@@ -640,6 +682,7 @@ export default {
   color: #fff;
   background: #00c091;
   margin: 5px;
+  z-index: 1;
 }
 body {
   min-width: 1240px;
@@ -654,25 +697,10 @@ body {
     background: #254665;
     padding: 20px 30px 40px 30px;
   }
-  //   头像
-  .jm-headImg {
-    text-align: center;
-    padding: 10px 20px;
-    .jm-headImg-line {
-      position: relative;
-      border: 1px solid #254665;
-      padding: 20px;
-      padding-bottom: 15px;
-      .jm-upload-padding {
-        background: #f5f7f9b7;
-        padding: 3px;
-      }
-    }
-  }
 
   // 基本信息
   .jm-baseInfo {
-        padding: 20px 0 20px 4px;
+    padding: 20px 0 20px 4px;
     width: 210px;
     color: #fff;
     font-size: 14px;
@@ -705,21 +733,17 @@ body {
 // 右侧信息
 .resume-right {
   // padding: 10px 30px;
-    float:right;
-    height: 1160px;
-    padding: 10px 30px 40px 30px;
-    width: 550px;
+  float: right;
+  height: 1160px;
+  padding: 10px 30px 40px 30px;
+  width: 550px;
   .ivu-input {
     border: none !important;
   }
 }
 .jm-base-name {
   position: relative;
-  /* border: 1px solid #254665;*/
-  // padding: 20px;
   padding-bottom: 15px;
-  // background: #6b4b24;
-  // color: #fff;
   .jm-defult-line {
     border: 1px dashed transparent;
   }
@@ -729,12 +753,9 @@ body {
 
   /deep/.ivu-input {
     border: none;
-    // color: #fff;
-    // background: #6b4b24;
   }
   .jm-name {
     /deep/.ivu-input {
-      // color: #fff;
       font-size: 30px;
     }
   }
@@ -756,21 +777,21 @@ body {
     font-size: 14px;
   }
 }
-.right-name{
+.right-name {
   width: calc(100% - 45px);
   margin: 20px 40px 10px 5px;
   font-size: 30px;
 }
-.input-introduce{
+.input-introduce {
   width: calc(100% - 20px);
   margin-left: 5px;
   margin-bottom: 20px;
   // 去掉textarea右下角的三角形
-  /deep/ textarea{
+  /deep/ textarea {
     resize: none;
   }
 }
-.jm-edu-col{
+.jm-edu-col {
   margin-top: 10px;
 }
 </style>
