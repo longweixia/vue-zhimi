@@ -6,7 +6,7 @@
     @mouseenter="enter(name)"
     @mouseleave="leave(name)"
   >
-  <!-- 求职编辑按钮 -->
+    <!-- 求职编辑按钮 -->
     <Icon
       v-show="isIconWrite"
       @click="displayModelBase(name)"
@@ -15,7 +15,7 @@
       type="ios-create-outline"
     />
     <!-- 设置按钮 -->
-      <Icon
+    <Icon
       v-show="isBaseLine"
       @click="showSettingModal(name)"
       class="jm-head-icon"
@@ -73,16 +73,16 @@
           </span>
           <!-- 标题线 -->
           <span v-if="themeList.lineIcon" :class="themeList.lineRight"></span>
-      
-        <!-- <Icon type="ios-wine" /> -->
-      </div>
-      <!-- 默认主题 -->
-      <div v-if="!themeList.isShowTheme" class="jm-title-top line-bottom">
-        <Icon size="30" style="display:inline-block" type="ios-bicycle" />
 
-        <Input class="title-row" v-model="title" />
+          <!-- <Icon type="ios-wine" /> -->
+        </div>
+        <!-- 默认主题 -->
+        <div v-if="!themeList.isShowTheme" class="jm-title-top line-bottom">
+          <Icon size="30" style="display:inline-block" type="ios-bicycle" />
+
+          <Input class="title-row" v-model="title" />
+        </div>
       </div>
-  </div>
       <!-- <Col>
         <Icon style="margin-top:3px;" size="25" type="md-list-box" />
         <div class="title">
@@ -92,7 +92,21 @@
     </Row>
     <!-- 设置面板 -->
     <div class="setting" @mouseleave="hiddenSetting">
-      <setting3 v-if="showSetting" :themeFlag="themeFlag"></setting3>
+      <setting3 v-if="showSetting" :themeFlag="themeFlag">
+        <div slot="content">
+          <div v-for="(item, index) in settingList" :key="index">
+            <span>{{ item.text }}</span>
+            <i-Switch
+              size="large"
+              v-model="item.value"
+              @on-change="changeSwitch(index, item.value)"
+            >
+              <span slot="open">{{ item.switchOppen }}</span>
+              <span slot="close">{{ item.switchClose }}</span>
+            </i-Switch>
+          </div>
+        </div>
+      </setting3>
     </div>
     <!-- WriteResumeTemplate3的插槽 -->
     <slot name="slotRight"></slot>
@@ -179,8 +193,8 @@
     >
       <div class="jm-job" slot="jobModal">
         <!-- <Row class="jm-row"> -->
-          <!-- 主题 -->
-        <theme3 :title="title" :themeFlag="themeFlag"> 
+        <!-- 主题 -->
+        <theme3 :title="title" :themeFlag="themeFlag">
           <div slot="slotTheme">
             <!-- 直接把要改变的选项的内容透传过去 -->
             <slot name="slotRight"></slot>
@@ -199,7 +213,7 @@ import theme3 from "./Template3/Theme3";
 import setting3 from "./Template3/setting3";
 export default {
   name: "rightContent",
-  props: ["name", "title", "jobIntentionLists","themeList","themeFlag"], //基本信息的弹窗标识
+  props: ["name", "title", "jobIntentionLists", "themeList", "themeFlag"], //基本信息的弹窗标识
   components: {
     modal3,
     theme3,
@@ -207,8 +221,34 @@ export default {
   },
   data() {
     return {
-      showSetting:false,
-      isIconWrite:false,//是否显示求职编辑按钮
+      settingList: [
+        {
+          text: "隐藏时间模块",
+          switchOppen: "开",
+          switchClose: "关",
+          value: true
+        },
+        {
+          text: "隐藏描述模块",
+          switchOppen: "开",
+          switchClose: "关",
+          value: true
+        },
+        {
+          text: "恢复模块样式",
+          switchOppen: "开",
+          switchClose: "关",
+          value: true
+        },
+        {
+          text: "删除该条模块",
+          switchOppen: "开",
+          switchClose: "关",
+          value: true
+        }
+      ],
+      showSetting: false,
+      isIconWrite: false, //是否显示求职编辑按钮
       // themeList: {}, //主题数据
       // 表单输入框的值
       isBaseLine: false, //右边编辑框是否显示
@@ -304,6 +344,22 @@ export default {
     }
   },
   methods: {
+    // 改变设置面板的内容时
+     changeSwitch(index, val) {
+      var settingObj = {
+        text: "隐藏时间模块",
+        isShowJobTime: "",
+        isShowDescribe: "",
+        isRecovery: "",
+        isDelete: ""
+      };
+      if (index == 0) {
+        val
+          ? (settingObj.isShowJobTime = true)
+          : (settingObj.isShowJobTime = false);
+      }
+      Bus.$emit("changeSetting", settingObj);
+    },
     // modal3传过来的，点击取消
     closeModel(value) {
       if (value == "jobIntention") {
@@ -325,28 +381,31 @@ export default {
       this.isBaseLine = true;
       if (name == "edu") {
         this.isIconAdd = true;
-      }else if(name == "jobIntention"){
-        this.isIconWrite = true
+      } else if (name == "jobIntention") {
+        this.isIconWrite = true;
       }
     },
     leave(name) {
       this.isBaseLine = false;
       if (name == "edu") {
         this.isIconAdd = false;
-      }else if(name == "jobIntention"){
-        this.isIconWrite = false
+      } else if (name == "jobIntention") {
+        this.isIconWrite = false;
       }
     },
-      // 显示设置面板
-    showSettingModal(){
-      this.showSetting = true
+    // 显示设置面板
+    showSettingModal() {
+      this.showSetting = true;
     },
-    hiddenSetting(){
-this.showSetting = false
+    hiddenSetting() {
+      this.showSetting = false;
     },
     // 显示编辑面板
-    displayModelBase() {
-      this.modalJob = true;
+    displayModelBase(name) {
+      if(this.themeFlag=="jobIntention"){
+ this.modalJob = true;
+      }
+     
     },
     // 改变薪资
     choseSalarys() {
@@ -448,15 +507,15 @@ this.showSetting = false
 
 .title {
   width: 478px;
- margin-top: 15px;
+  margin-top: 20px;
   // margin-top:-30px;
   // margin-left:30px;
   display: inline-block;
   .jm-title-top {
     display: inline-block;
-     width: 478px;
+    width: 478px;
     position: relative;
-    /deep/ .ivu-icon{
+    /deep/ .ivu-icon {
       vertical-align: middle;
     }
   }
@@ -508,7 +567,7 @@ this.showSetting = false
   border-bottom: 1px solid;
 }
 .both-sides-right {
-   width: 149px;
+  width: 149px;
   display: inline-block;
   content: "";
   border-color: #254665;
@@ -580,11 +639,12 @@ this.showSetting = false
 //   z-index: 1000;
 //   cursor: pointer;
 // }
-.setting{
+.setting {
   width: 100%;
   position: absolute;
   left: 288px;
   z-index: 1;
-  margin-top:5px;
+  margin-top: -35px;
+  padding-top: 20px;
 }
 </style>

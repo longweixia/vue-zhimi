@@ -7,42 +7,62 @@
         :modalSkills="modalSkill"
         :hasSkillLists="hasSkillList"
         v-on:changeSkillModel="changeSkillModel"
-        v-on:saveSkill="saveSkill"
-      />
+        v-on:saveSkill="saveSkill"/>
       <baseInfoModel
         :modalSkills="modalBaseInfo"
         :baseInfoList="baseInfoList"
         :baseObjC="baseObjC"
         v-on:changeSkillModel="changeSkillModel"
-        v-on:saveBaseInfo="saveBaseInfo"
-      />
+        v-on:saveBaseInfo="saveBaseInfo"/>
       <div class="resume-left">
         <!-- 头像 -->
-        <Row class="jm-headImg" :class="isHeadImg ? 'jm-headImg-lineIs' : ''">
+        <div
+          v-if="showHeadImg"
+          @mouseenter="enter('headImg')"
+          @mouseleave="leave('headImg')"
+          class="jm-headImg"
+          :class="isHeadImg ? 'jm-headImg-lineIs' : ''">
           <!-- jm-headImg-line   :class="isHeadImg ? 'jm-headImg-lineIs' : ''" -->
           <Icon
             v-show="isHeadImg"
             class="jm-head-icon"
             size="20"
             type="md-settings"
-          />
-          <div
-            class="head-icon"
-            @mouseenter="enter('headImg')"
-            @mouseleave="leave('headImg')"
-          >
-            <img
-              v-show="isHeadImg"
-              class="jm-upload-icon"
-              src="./../../../../static/image/bg3.jpg"
-            />
-            <!-- <a
-              v-show="isHeadImg"
-              class="jm-upload-icon"
-            ></a> -->
-            <jmUploadImg />
+            @click="displayModelBase('headIcon')"/>
+          <div class="head-icon" :style="imgFartherClass">
+            <jmUploadImg :imgClass="imgClass" :isHeadImg="isHeadImg" />
           </div>
-        </Row>
+          <!-- 头像设置面板 -->
+          <div class="setting-head" @mouseleave="hiddenSetting">
+            <!-- v-if="showSetting" -->
+            <setting3 v-if="showSetting">
+              <div slot="content">
+                <div style="margin-bottom:10px;">
+                  <span style="float:left;margin-left:15px;">风格</span>
+                  <span style="margin-left:40px;">隐藏
+                    <i-Switch
+                      size="large"
+                      v-model="headIconHidden"
+                      @on-change="changeSwitch(-1, headIconHidden)">
+                      <span slot="open">开</span>
+                      <span slot="close">关</span>
+                    </i-Switch>
+                  </span>
+                  </div>
+              
+                <div class="head-img-example"  @mouseenter="bgHeadIconIndex = index"
+                   @mouseleave="bgHeadIconIndex=-1" v-for="(item,index) in headIconList" :key="index"
+                    :class="bgHeadIconIndex==index?'bg-head-icon':''" @click="changeHeadIcon(index)">
+                      <img class="round-head-icon" :class="item.otherClass" :src="item.imgSrc" />
+                      <div>{{item.text}}</div>
+                  </div>
+               </div>
+
+              
+              
+            </setting3>
+          </div>
+        </div>
         <!-- 基本信息 -->
         <Row>
           <div
@@ -52,7 +72,7 @@
             @mouseleave="leave('base')"
           >
             <Icon
-              @click="displayModelBase"
+              @click="displayModelBase('base')"
               v-show="isBase"
               class="jm-head-icon"
               size="20"
@@ -121,7 +141,7 @@
           >
             <Icon
               v-show="isBaseLine"
-              @click="displayModelBase"
+              @click="displayModelBase('base')"
               class="jm-head-icon"
               size="20"
               type="md-settings"
@@ -298,6 +318,7 @@ import baseInfoModel from "./BaseInfoModel";
 import rightContent from "./RightContent";
 import Bus from "@/assets/event-bus.js";
 import vuedraggable from "vuedraggable";
+import setting3 from "./Template3/setting3";
 export default {
   name: "WriteResumeTemplate3",
   components: {
@@ -305,11 +326,37 @@ export default {
     skillModal,
     baseInfoModel,
     rightContent,
-    vuedraggable
+    vuedraggable,
+    setting3
   },
   data() {
     return {
-      settingObj: {}, //设置数据
+      showHeadImg:true,//是否显示头像
+      imgFartherClass:"",//改变头像样式将传给父dom的类
+      imgClass:"",//透传给上传组件的选定的样式头像
+      bgHeadIconIndex:"",//悬浮头像案例图标位置
+      headIconHidden:true,//显示隐藏头像
+      showSetting:false,//是否显示头像的设置面板
+      headIconList:[
+        {
+          otherClass:"",
+          imgSrc:"https://static.500d.me/resources/500d/cvresume/images/1.jpg",
+          text:"圆形"
+        },
+        {
+          otherClass:"one-head-icon",
+          imgSrc:"https://static.500d.me/resources/500d/cvresume/images/1.jpg",
+          text:"1：1"
+        },
+        {
+          otherClass:"three-head-icon",
+          imgSrc:"https://static.500d.me/resources/500d/cvresume/images/1.jpg",
+          text:"3：4"
+        }
+      ],
+      settingObj: {
+        isShowJobTime:true
+      }, //设置数据
       // themeList:{},//主题数据
       jobThemeList: {}, //求职意向主题数据
       eduThemeList: {}, //教育背景主题数据
@@ -399,6 +446,35 @@ export default {
   },
   watch: {},
   methods: {
+    // 改变设置面板的开关
+    changeSwitch(index,value){
+if(index==-1){
+  this.showHeadImg =value
+  var abc;
+  this.showHeadImg?abc="显示":abc="隐藏"
+  Bus.$emit('getShowHeadImg',abc)
+}
+    },
+    // 点击头像设置样式案例
+    changeHeadIcon(index){
+      if(index==0){
+        console.log(index,"099009")
+        this.imgClass="round-head"
+        this.imgFartherClass = "height:128px;"
+      }else if(index==1){
+        this.imgClass="one-head"
+        this.imgFartherClass = "height:128px;"
+      }else if(index==2){
+        this.imgClass="three-head"
+        this.imgFartherClass = "height:156px;"
+      }
+      this.showSetting = false;
+    },
+    // 隐藏头像设置面板
+    hiddenSetting(){
+      this.showSetting = false;
+    },
+
     // 获取设置数据
     getSetting() {
       Bus.$on("changeSetting", settingObj => {
@@ -460,8 +536,13 @@ export default {
       this.modalSkill = true;
     },
     // 显示基本信息弹窗
-    displayModelBase() {
-      this.modalBaseInfo = true;
+    displayModelBase(name) {
+      if(name == "base"){
+this.modalBaseInfo = true;
+      }else if(name == "headIcon"){
+this.showSetting = true;
+      }
+      
     },
     // 关闭技能弹窗，基本信息弹窗
     changeSkillModel(data) {
@@ -490,6 +571,11 @@ export default {
             this.baseInfoList.find(item => item.baseText == "邮箱").inputText =
               data.mail;
             break;
+        }
+        if(data.headPic == "显示"){
+          this.showHeadImg=true
+        }else if(data.headPic == "隐藏"){
+this.showHeadImg=false
         }
         this.formData = data;
       }
@@ -537,7 +623,14 @@ export default {
     // 获取简历信息
     Bus.$on("getTemplatesResume", resumeTemplateObj => {
       var resumeTemplateObj = resumeTemplateObj.resumeTemplate[0].resumeContent;
-      console.log(resumeTemplateObj, "====");
+     if(resumeTemplateObj.baseInfoList.headPic=="显示"){
+       this.showHeadImg = true
+     }else if(resumeTemplateObj.baseInfoList.headPic=="隐藏"){
+       this.showHeadImg = false
+     }
+     
+     
+     console.log(resumeTemplateObj, "====");
       // 组装基本数据，传递到基本数据弹窗
       this.baseObjC = {
         name: resumeTemplateObj.baseInfoList.name,
@@ -650,21 +743,21 @@ export default {
   .head-icon {
     position: relative;
     width: 128px;
-    height: 158px;
+    height: 156px;
     margin: 0 auto;
     border: 4px solid #e5e5e5;
     background: #e5e5e5;
     overflow: hidden;
     cursor: pointer;
-    .jm-upload-icon {
-          // background: url(./../../../../static/image/bg3.jpg);
-      position: absolute;
-      // z-index: -1;
-      width: 40px;
-      height: 40px;
-      margin-left: 40px;
-      margin-top: 55px;
-    }
+    // .jm-upload-icon {
+    //   // background: url(./../../../../static/image/bg3.jpg);
+    //   position: absolute;
+    //   // z-index: -1;
+    //   width: 40px;
+    //   height: 40px;
+    //   margin-left: 40px;
+    //   margin-top: 55px;
+    // }
   }
 }
 
@@ -793,5 +886,41 @@ body {
 }
 .jm-edu-col {
   margin-top: 10px;
+}
+// 默认圆形头像
+.round-head-icon{
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+}
+// 1:1头像
+.one-head-icon{
+ border-radius: 0;
+}
+// 1:1头像
+.three-head-icon{
+  width: 30px;
+  height: 40px;
+ border-radius: 0;
+}
+.head-img-example{
+  width: 52px;
+  height: 79px;
+  display: inline-block;
+  margin: 5px;
+  padding: 5px;
+  border: 1px solid rgb(148, 147, 147);
+  border-radius: 5px;
+  cursor: pointer;
+}
+.setting-head{
+  position: absolute;
+  z-index: 10;
+  top: 20px;
+  padding-top: 20px;
+  right:-10px;
+}
+.bg-head-icon{
+  background: #00c091;
 }
 </style>

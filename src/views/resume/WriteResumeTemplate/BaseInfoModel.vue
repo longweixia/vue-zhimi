@@ -80,6 +80,7 @@
   </div>
 </template>
 <script>
+import Bus from "@/assets/event-bus.js";
 export default {
   name: "baseInfoModel",
   props: ["modalSkills","baseObjC"], //基本信息的弹窗标识
@@ -124,7 +125,11 @@ export default {
     }
   },
   methods: {
-
+  getShowHeadImgs(){
+Bus.$on("getShowHeadImg",value=>{
+  this.formData.headPic = value
+})
+  },
     // 点击取消
     cancelModel() {
       this.$emit("changeSkillModel", false);
@@ -140,6 +145,9 @@ export default {
     changeSwitch(status){
       status ? this.formData.showDescribe = false : this.formData.showDescribe = true
     }
+  },
+  mounted(){
+    this.getShowHeadImgs();
   }
 };
 </script>
