@@ -1,17 +1,17 @@
 <template>
 <div class="jm-header">
-  <Row>
-     <Col :span="8">
+  <div>
+     <span class="head-text"  @click="$router.back(-1)">
   返回
-    </Col>
-    <Col :span="8">
+    </span>
+    <span class="head-text">
     龙伟的简历
-    </Col>
-    <Col :span="8">
+    </span>
+    <span class="head-text">
     <span @click="saveContent">保存</span>
-    <span>下载</span>
-    </Col>
-  </Row>
+    <span >下载</span>
+    </span>
+  </div>
 </div>
 </template>
 
@@ -31,7 +31,8 @@ export default {
     saveContent(){
       //  Bus.$emit('BsaveMsg', 120)
        Bus.$emit('saveContents')
-    }
+    },
+  
   },
   watch: {},
 
@@ -45,6 +46,12 @@ export default {
 <style lang="less" scoped>
 .jm-header{
     height: 50px;
+    text-align: center;
+    padding-right: 50px;
+    .head-text{
+      padding-right: 100px;
+    }
+
     /deep/.ivu-layout-header{
       height: 50px;
       line-height: 50px;

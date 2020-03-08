@@ -5,7 +5,9 @@ import App from './App'
 import router from './router'
 import iView from 'view-design';
 import 'view-design/dist/styles/iview.css';
-import '../static/css/common.css';
+import  '../static/css/common.css';
+import common from './assets/common.js';
+Vue.prototype.common = common
 // 引入axios
 import axios from 'axios'
 //引入vue-socket.io模块  把这块注释掉才不会报错EIO=3&transport=polling

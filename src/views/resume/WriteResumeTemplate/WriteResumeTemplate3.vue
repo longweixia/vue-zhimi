@@ -7,13 +7,15 @@
         :modalSkills="modalSkill"
         :hasSkillLists="hasSkillList"
         v-on:changeSkillModel="changeSkillModel"
-        v-on:saveSkill="saveSkill"/>
+        v-on:saveSkill="saveSkill"
+      />
       <baseInfoModel
         :modalSkills="modalBaseInfo"
         :baseInfoList="baseInfoList"
         :baseObjC="baseObjC"
         v-on:changeSkillModel="changeSkillModel"
-        v-on:saveBaseInfo="saveBaseInfo"/>
+        v-on:saveBaseInfo="saveBaseInfo"
+      />
       <div class="resume-left">
         <!-- 头像 -->
         <div
@@ -21,14 +23,16 @@
           @mouseenter="enter('headImg')"
           @mouseleave="leave('headImg')"
           class="jm-headImg"
-          :class="isHeadImg ? 'jm-headImg-lineIs' : ''">
+          :class="isHeadImg ? 'jm-headImg-lineIs' : ''"
+        >
           <!-- jm-headImg-line   :class="isHeadImg ? 'jm-headImg-lineIs' : ''" -->
           <Icon
             v-show="isHeadImg"
             class="jm-head-icon"
             size="20"
             type="md-settings"
-            @click="displayModelBase('headIcon')"/>
+            @click="displayModelBase('headIcon')"
+          />
           <div class="head-icon" :style="imgFartherClass">
             <jmUploadImg :imgClass="imgClass" :isHeadImg="isHeadImg" />
           </div>
@@ -39,27 +43,36 @@
               <div slot="content">
                 <div style="margin-bottom:10px;">
                   <span style="float:left;margin-left:15px;">风格</span>
-                  <span style="margin-left:40px;">隐藏
+                  <span style="margin-left:40px;"
+                    >隐藏
                     <i-Switch
                       size="large"
                       v-model="headIconHidden"
-                      @on-change="changeSwitch(-1, headIconHidden)">
+                      @on-change="changeSwitch(-1, headIconHidden)"
+                    >
                       <span slot="open">开</span>
                       <span slot="close">关</span>
                     </i-Switch>
                   </span>
-                  </div>
-              
-                <div class="head-img-example"  @mouseenter="bgHeadIconIndex = index"
-                   @mouseleave="bgHeadIconIndex=-1" v-for="(item,index) in headIconList" :key="index"
-                    :class="bgHeadIconIndex==index?'bg-head-icon':''" @click="changeHeadIcon(index)">
-                      <img class="round-head-icon" :class="item.otherClass" :src="item.imgSrc" />
-                      <div>{{item.text}}</div>
-                  </div>
-               </div>
+                </div>
 
-              
-              
+                <div
+                  class="head-img-example"
+                  @mouseenter="bgHeadIconIndex = index"
+                  @mouseleave="bgHeadIconIndex = -1"
+                  v-for="(item, index) in headIconList"
+                  :key="index"
+                  :class="bgHeadIconIndex == index ? 'bg-head-icon' : ''"
+                  @click="changeHeadIcon(index)"
+                >
+                  <img
+                    class="round-head-icon"
+                    :class="item.otherClass"
+                    :src="item.imgSrc"
+                  />
+                  <div>{{ item.text }}</div>
+                </div>
+              </div>
             </setting3>
           </div>
         </div>
@@ -128,7 +141,7 @@
         </Row>
       </div>
       <!-- 右侧区域 -->
-      <div class="resume-right">
+      <div class="resume-right" ref="rightContent">
         <!-- 名字和介绍 -->
         <Row class="jm-base-name">
           <!-- 名字 -->
@@ -227,11 +240,13 @@
                       </Row>
                     </Row>
                     <Row>
-                      <Col :span="18" class="jm-edu-col">
+                      <Col class="jm-edu-col">
                         <Input
                           v-model="item.eduContent"
                           type="textarea"
-                          :autosize="{ minRows: 2, maxRows: 5 }"
+                          clearable
+                          autosize
+                          class="input-introduce"
                           placeholder="请填写内容"
                         />
                       </Col>
@@ -270,11 +285,13 @@
                       </Col>
                     </Row>
                     <Row>
-                      <Col :span="18" class="jm-edu-col">
+                      <Col class="jm-edu-col">
                         <Input
                           v-model="item.content"
+                          clearable
+                          autosize
                           type="textarea"
-                          :autosize="{ minRows: 2, maxRows: 5 }"
+                          class="input-introduce"
                           placeholder="请填写内容"
                         />
                       </Col>
@@ -295,9 +312,11 @@
                     <Col class="jm-edu-col">
                       <Input
                         v-model="selfEvaluation"
+                        placeholder="请填写内容，字数不超过500字"
+                        clearable
+                        autosize
                         type="textarea"
-                        :autosize="{ minRows: 2, maxRows: 5 }"
-                        placeholder="请填写内容"
+                        class="input-introduce"
                       />
                     </Col>
                   </Row>
@@ -331,31 +350,32 @@ export default {
   },
   data() {
     return {
-      showHeadImg:true,//是否显示头像
-      imgFartherClass:"",//改变头像样式将传给父dom的类
-      imgClass:"",//透传给上传组件的选定的样式头像
-      bgHeadIconIndex:"",//悬浮头像案例图标位置
-      headIconHidden:true,//显示隐藏头像
-      showSetting:false,//是否显示头像的设置面板
-      headIconList:[
+      // contentHight:"",//内容高度
+      showHeadImg: true, //是否显示头像
+      imgFartherClass: "", //改变头像样式将传给父dom的类
+      imgClass: "", //透传给上传组件的选定的样式头像
+      bgHeadIconIndex: "", //悬浮头像案例图标位置
+      headIconHidden: true, //显示隐藏头像
+      showSetting: false, //是否显示头像的设置面板
+      headIconList: [
         {
-          otherClass:"",
-          imgSrc:"https://static.500d.me/resources/500d/cvresume/images/1.jpg",
-          text:"圆形"
+          otherClass: "",
+          imgSrc: "https://static.500d.me/resources/500d/cvresume/images/1.jpg",
+          text: "圆形"
         },
         {
-          otherClass:"one-head-icon",
-          imgSrc:"https://static.500d.me/resources/500d/cvresume/images/1.jpg",
-          text:"1：1"
+          otherClass: "one-head-icon",
+          imgSrc: "https://static.500d.me/resources/500d/cvresume/images/1.jpg",
+          text: "1：1"
         },
         {
-          otherClass:"three-head-icon",
-          imgSrc:"https://static.500d.me/resources/500d/cvresume/images/1.jpg",
-          text:"3：4"
+          otherClass: "three-head-icon",
+          imgSrc: "https://static.500d.me/resources/500d/cvresume/images/1.jpg",
+          text: "3：4"
         }
       ],
       settingObj: {
-        isShowJobTime:true
+        isShowJobTime: true
       }, //设置数据
       // themeList:{},//主题数据
       jobThemeList: {}, //求职意向主题数据
@@ -444,34 +464,153 @@ export default {
       selfEvaluation: ""
     };
   },
-  watch: {},
+  watch: {
+    contentHight: {
+      handler(newVal, oldVal) {
+       if (newVal !== oldVal) { console.log(newVal)}
+
+     
+    },
+      deep: true
+    }
+  },
   methods: {
+    // 获取简历信息
+    getTemplatesResumes(){
+       Bus.$on("getTemplatesResume", resumeTemplateObj => {
+      var resumeTemplateObj = resumeTemplateObj.resumeTemplate[0].resumeContent;
+      if (resumeTemplateObj.baseInfoList.headPic == "显示") {
+        this.showHeadImg = true;
+      } else if (resumeTemplateObj.baseInfoList.headPic == "隐藏") {
+        this.showHeadImg = false;
+      }
+
+      console.log(resumeTemplateObj, "====");
+      // 组装基本数据，传递到基本数据弹窗
+      this.baseObjC = {
+        name: resumeTemplateObj.baseInfoList.name,
+        birthday: resumeTemplateObj.baseInfoList.birthday,
+        age: resumeTemplateObj.baseInfoList.age, //年龄
+        tel: resumeTemplateObj.baseInfoList.tel,
+        mail: resumeTemplateObj.baseInfoList.mail,
+        work: resumeTemplateObj.baseInfoList.work, //工作年限
+        headPic: resumeTemplateObj.baseInfoList.headPic, //是否显示头像
+        wordDescribe: resumeTemplateObj.baseInfoList.wordDescribe, //一句话描述
+        showDescribe: resumeTemplateObj.baseInfoList.showDescribe //是否开启隐藏按钮
+      };
+      // 获取数据，回填到表单
+      (this.baseInfoList = [
+        //基本信息
+        {
+          type: "ios-contact",
+          baseText: "年龄",
+          inputText: resumeTemplateObj.baseInfoList.age || ""
+        },
+        {
+          type: "md-briefcase",
+          baseText: "工作经验",
+          inputText: resumeTemplateObj.baseInfoList.work || ""
+        },
+        {
+          type: "ios-call",
+          baseText: "电话",
+          inputText: resumeTemplateObj.baseInfoList.tel || ""
+        },
+        {
+          type: "ios-mail",
+          baseText: "邮箱",
+          inputText: resumeTemplateObj.baseInfoList.mail || ""
+        }
+      ]),
+        (this.formData = resumeTemplateObj.baseInfoList);
+      this.hasSkillList = resumeTemplateObj.SkillList;
+      this.jobIntentionList = resumeTemplateObj.jobIntentionList;
+      this.eduList = resumeTemplateObj.eduList;
+      this.experienceList = resumeTemplateObj.experienceList;
+      this.selfEvaluation = resumeTemplateObj.selfEvaluation;
+    });
+    },
+     // 点击保存按钮，提交填写好的简历
+     saveContentss(){
+        Bus.$on("saveContents", () => {
+      console.log(this.formData, "====");
+      // 组装要提交的信息
+      var content = {
+        userName: localStorage.getItem("userName"), //简历名称
+        hasCommonResume: false, //是否有基础简历的信息
+        resumeTemplate: [
+          //模板简历
+          {
+            TemplateId: 3, //模板ID
+            resumeContent: {
+              //简历内容
+              baseInfoList: this.formData, //基本信息
+              SkillList: this.hasSkillList, //技能特长
+              jobIntentionList: this.jobIntentionList, //求职意向
+              eduList: this.eduList, //教育背景
+              experienceList: this.experienceList, //工作经验
+              selfEvaluation: this.selfEvaluation //自我评价
+            }
+          }
+        ]
+      };
+
+      this.axios
+        .post("resumeTemplates/resumeTemplates", { content: content })
+        .then(res => {
+          if (res.data.status == "0") {
+            this.$Message.success("保存成功");
+          }
+        })
+        .catch(err => {
+          console.log("err", err);
+        });
+    });
+     },
+      // 解决父组件多次传值的问题
+    // Bus.$off("saveTheme")
+    // 点击主题的保存，传递过来主题数据
+    saveThemes(){
+       Bus.$on("saveTheme", themeList => {
+      var flags = themeList[1]; //判断是哪项的标识
+      console.log(themeList, "子");
+      if (flags == "jobIntention") {
+        this.jobThemeList = themeList[0];
+      } else if (flags == "edu") {
+        this.eduThemeList = themeList[0];
+      } else if (flags == "work") {
+        this.workThemeList = themeList[0];
+      } else if (flags == "appraise") {
+        this.ThemeAppraiseList = themeList[0];
+      }
+    });
+    },
     // 改变设置面板的开关
-    changeSwitch(index,value){
-if(index==-1){
-  this.showHeadImg =value
-  var abc;
-  this.showHeadImg?abc="显示":abc="隐藏"
-  Bus.$emit('getShowHeadImg',abc)
-}
+    changeSwitch(index, value) {
+      if (index == -1) {
+        this.showHeadImg = value;
+        var abc;
+        this.showHeadImg ? (abc = "显示") : (abc = "隐藏");
+        Bus.$emit("getShowHeadImg", abc);
+      }
     },
     // 点击头像设置样式案例
-    changeHeadIcon(index){
-      if(index==0){
-        console.log(index,"099009")
-        this.imgClass="round-head"
-        this.imgFartherClass = "height:128px;"
-      }else if(index==1){
-        this.imgClass="one-head"
-        this.imgFartherClass = "height:128px;"
-      }else if(index==2){
-        this.imgClass="three-head"
-        this.imgFartherClass = "height:156px;"
+    changeHeadIcon(index) {
+      if (index == 0) {
+        console.log(index, "099009");
+        this.imgClass = "round-head";
+        this.imgFartherClass = "height:128px;";
+      } else if (index == 1) {
+        this.imgClass = "one-head";
+        this.imgFartherClass = "height:128px;";
+      } else if (index == 2) {
+        this.imgClass = "three-head";
+        this.imgFartherClass = "height:156px;";
       }
       this.showSetting = false;
     },
     // 隐藏头像设置面板
-    hiddenSetting(){
+    hiddenSetting() {
       this.showSetting = false;
     },
 
@@ -483,6 +622,7 @@ if(index==-1){
     },
     // 鼠标悬浮
     enter(flag) {
+     
       switch (flag) {
         case "headImg":
           this.isHeadImg = true;
@@ -537,12 +677,11 @@ if(index==-1){
     },
     // 显示基本信息弹窗
     displayModelBase(name) {
-      if(name == "base"){
-this.modalBaseInfo = true;
-      }else if(name == "headIcon"){
-this.showSetting = true;
+      if (name == "base") {
+        this.modalBaseInfo = true;
+      } else if (name == "headIcon") {
+        this.showSetting = true;
       }
-      
     },
     // 关闭技能弹窗，基本信息弹窗
     changeSkillModel(data) {
@@ -572,10 +711,10 @@ this.showSetting = true;
               data.mail;
             break;
         }
-        if(data.headPic == "显示"){
-          this.showHeadImg=true
-        }else if(data.headPic == "隐藏"){
-this.showHeadImg=false
+        if (data.headPic == "显示") {
+          this.showHeadImg = true;
+        } else if (data.headPic == "隐藏") {
+          this.showHeadImg = false;
         }
         this.formData = data;
       }
@@ -619,115 +758,21 @@ this.showHeadImg=false
     }
   },
   mounted() {
+    // this.common.nima();
+    // 绑定内容高度，然后监听
+    this.contentHight = this.$refs.rightContent.offsetHeight;
+    console.log(this.contentHight)
     this.getSetting();
     // 获取简历信息
-    Bus.$on("getTemplatesResume", resumeTemplateObj => {
-      var resumeTemplateObj = resumeTemplateObj.resumeTemplate[0].resumeContent;
-     if(resumeTemplateObj.baseInfoList.headPic=="显示"){
-       this.showHeadImg = true
-     }else if(resumeTemplateObj.baseInfoList.headPic=="隐藏"){
-       this.showHeadImg = false
-     }
-     
-     
-     console.log(resumeTemplateObj, "====");
-      // 组装基本数据，传递到基本数据弹窗
-      this.baseObjC = {
-        name: resumeTemplateObj.baseInfoList.name,
-        birthday: resumeTemplateObj.baseInfoList.birthday,
-        age: resumeTemplateObj.baseInfoList.age, //年龄
-        tel: resumeTemplateObj.baseInfoList.tel,
-        mail: resumeTemplateObj.baseInfoList.mail,
-        work: resumeTemplateObj.baseInfoList.work, //工作年限
-        headPic: resumeTemplateObj.baseInfoList.headPic, //是否显示头像
-        wordDescribe: resumeTemplateObj.baseInfoList.wordDescribe, //一句话描述
-        showDescribe: resumeTemplateObj.baseInfoList.showDescribe //是否开启隐藏按钮
-      };
-      // 获取数据，回填到表单
-      (this.baseInfoList = [
-        //基本信息
-        {
-          type: "ios-contact",
-          baseText: "年龄",
-          inputText: resumeTemplateObj.baseInfoList.age || ""
-        },
-        {
-          type: "md-briefcase",
-          baseText: "工作经验",
-          inputText: resumeTemplateObj.baseInfoList.work || ""
-        },
-        {
-          type: "ios-call",
-          baseText: "电话",
-          inputText: resumeTemplateObj.baseInfoList.tel || ""
-        },
-        {
-          type: "ios-mail",
-          baseText: "邮箱",
-          inputText: resumeTemplateObj.baseInfoList.mail || ""
-        }
-      ]),
-        (this.formData = resumeTemplateObj.baseInfoList);
-      this.hasSkillList = resumeTemplateObj.SkillList;
-      this.jobIntentionList = resumeTemplateObj.jobIntentionList;
-      this.eduList = resumeTemplateObj.eduList;
-      this.experienceList = resumeTemplateObj.experienceList;
-      this.selfEvaluation = resumeTemplateObj.selfEvaluation;
-    });
+   this.getTemplatesResumes();
     // 点击保存按钮，提交填写好的简历
-    Bus.$on("saveContents", () => {
-      console.log(this.formData, "====");
-      // 组装要提交的信息
-      var content = {
-        userName: localStorage.getItem("userName"), //简历名称
-        hasCommonResume: false, //是否有基础简历的信息
-        resumeTemplate: [
-          //模板简历
-          {
-            TemplateId: 3, //模板ID
-            resumeContent: {
-              //简历内容
-              baseInfoList: this.formData, //基本信息
-              SkillList: this.hasSkillList, //技能特长
-              jobIntentionList: this.jobIntentionList, //求职意向
-              eduList: this.eduList, //教育背景
-              experienceList: this.experienceList, //工作经验
-              selfEvaluation: this.selfEvaluation //自我评价
-            }
-          }
-        ]
-      };
-
-      this.axios
-        .post("resumeTemplates/resumeTemplates", { content: content })
-        .then(res => {
-          if (res.data.status == "0") {
-            this.$Message.success("保存成功");
-          }
-        })
-        .catch(err => {
-          console.log("err", err);
-        });
-    });
+   this.saveContentss();
     // 解决父组件多次传值的问题
     // Bus.$off("saveTheme")
     // 点击主题的保存，传递过来主题数据
-    Bus.$on("saveTheme", themeList => {
-      var flags = themeList[1]; //判断是哪项的标识
-      console.log(themeList, "子");
-      if (flags == "jobIntention") {
-        this.jobThemeList = themeList[0];
-      } else if (flags == "edu") {
-        this.eduThemeList = themeList[0];
-      } else if (flags == "work") {
-        this.workThemeList = themeList[0];
-      } else if (flags == "appraise") {
-        this.ThemeAppraiseList = themeList[0];
-      }
-    });
+   this.saveThemes();
   },
-  created() {}
-};
+  }
 </script>
 
 
@@ -827,7 +872,7 @@ body {
 .resume-right {
   // padding: 10px 30px;
   float: right;
-  height: 1160px;
+  min-height: 1160px;
   padding: 10px 30px 40px 30px;
   width: 550px;
   .ivu-input {
@@ -888,22 +933,22 @@ body {
   margin-top: 10px;
 }
 // 默认圆形头像
-.round-head-icon{
+.round-head-icon {
   width: 40px;
   height: 40px;
   border-radius: 20px;
 }
 // 1:1头像
-.one-head-icon{
- border-radius: 0;
+.one-head-icon {
+  border-radius: 0;
 }
 // 1:1头像
-.three-head-icon{
+.three-head-icon {
   width: 30px;
   height: 40px;
- border-radius: 0;
+  border-radius: 0;
 }
-.head-img-example{
+.head-img-example {
   width: 52px;
   height: 79px;
   display: inline-block;
@@ -913,14 +958,14 @@ body {
   border-radius: 5px;
   cursor: pointer;
 }
-.setting-head{
+.setting-head {
   position: absolute;
   z-index: 10;
   top: 20px;
   padding-top: 20px;
-  right:-10px;
+  right: -10px;
 }
-.bg-head-icon{
+.bg-head-icon {
   background: #00c091;
 }
 </style>

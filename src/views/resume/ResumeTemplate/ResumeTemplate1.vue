@@ -5,7 +5,7 @@
         <NavHeader></NavHeader>
         <Button
           type="primary"
-          @click="changeImage"
+          @click="changeImages"
         >保存为图片</Button>
         <Button
           type="primary"
@@ -169,7 +169,10 @@ export default {
   watch: {},
   methods: {
     // 转换图片
-    changeImage() {
+    changeImages() {
+      // this.imgURL = this.common.changeImage("#code","mytitle")
+      // console.log(this.common.changeImage("#code","mytitle"))
+
       let imgHeight = window.document.querySelector("#code").offsetHeight; // 获取DOM高度
       let imgWidth = window.document.querySelector("#code").offsetWidth; // 获取DOM宽度
       let scale = window.devicePixelRatio; // 获取设备像素比
@@ -190,8 +193,7 @@ export default {
       }).then(canvas => {
         let imgURL = canvas.toDataURL("image/png");
         this.imgURL = imgURL;
-        // 
-
+        //
       });
     },
   
