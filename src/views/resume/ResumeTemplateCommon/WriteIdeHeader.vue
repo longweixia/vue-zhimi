@@ -2,14 +2,18 @@
 <div class="jm-header">
   <div>
      <span class="head-text"  @click="$router.back(-1)">
-  返回
+    返回
     </span>
     <span class="head-text">
     龙伟的简历
     </span>
     <span class="head-text">
+     <span @click="preview">预览</span>
+    </span>
+    <span class="head-text">
     <span @click="saveContent">保存</span>
-    <span >下载</span>
+    <span>下载</span>
+  
     </span>
   </div>
 </div>
@@ -28,9 +32,13 @@ export default {
 
   },
   methods:{
+    // 保存
     saveContent(){
-      //  Bus.$emit('BsaveMsg', 120)
        Bus.$emit('saveContents')
+    },
+    // 预览
+    preview(){
+       Bus.$emit('previews')
     },
   
   },
@@ -50,6 +58,7 @@ export default {
     padding-right: 50px;
     .head-text{
       padding-right: 100px;
+      cursor: pointer;
     }
 
     /deep/.ivu-layout-header{

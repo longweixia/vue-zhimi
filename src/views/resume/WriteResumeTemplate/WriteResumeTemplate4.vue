@@ -307,18 +307,18 @@ export default {
     //  Bus.$on('BsaveMsg', content => {
     //       console.log(content)
     //     });
-    Bus.$on("saveContents", () => {
-      console.log(2)
-      this.axios
-        .post("resumes/resumeTemplate", { flag: "all" })
-        .then(res => {
-        var imgList = res.data.url;
-          console.log(imgList);
-        })
-        .catch(err => {
-          console.log("err", err);
-        });
-    });
+    // Bus.$on("saveContents", () => {
+    //   console.log(2)
+    //   this.axios
+    //     .post("resumes/resumeTemplate", { flag: "all" })
+    //     .then(res => {
+    //     var imgList = res.data.url;
+    //       console.log(imgList);
+    //     })
+    //     .catch(err => {
+    //       console.log("err", err);
+    //     });
+    // });
   },
   created() {}
 };

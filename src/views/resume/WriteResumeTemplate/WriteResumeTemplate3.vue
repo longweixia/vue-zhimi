@@ -1,6 +1,7 @@
 <template>
   <div class="jm-template">
-    <Row>
+     <img class="jm-upload-img" :src="imgURLPreview" />
+    <Row id="code">
       <!-- {{modalSkill}} -->
       <!-- 左侧区域 -->
       <skillModal
@@ -300,7 +301,7 @@
                 </div>
               </rightContent>
               <!-- 自我评价 -->
-              <rightContent
+              <rightContent 
                 :themeList="ThemeAppraiseList"
                 themeFlag="appraise"
                 key="4"
@@ -338,6 +339,7 @@ import rightContent from "./RightContent";
 import Bus from "@/assets/event-bus.js";
 import vuedraggable from "vuedraggable";
 import setting3 from "./Template3/setting3";
+import html2canvas from "html2canvas";
 export default {
   name: "WriteResumeTemplate3",
   components: {
@@ -350,6 +352,7 @@ export default {
   },
   data() {
     return {
+      imgURLPreview:"",//预览图片url
       // contentHight:"",//内容高度
       showHeadImg: true, //是否显示头像
       imgFartherClass: "", //改变头像样式将传给父dom的类
@@ -475,6 +478,36 @@ export default {
     }
   },
   methods: {
+    // 预览
+    preview(){
+       Bus.$on("previews",() => {
+         this.changeImage();
+       })
+    },
+     // 转换图片
+    changeImage() {
+      let imgHeight = window.document.querySelector("#code").offsetHeight; // 获取DOM高度
+      let imgWidth = window.document.querySelector("#code").offsetWidth; // 获取DOM宽度
+      let scale = window.devicePixelRatio; // 获取设备像素比
+      html2canvas(window.document.querySelector("#code"), {
+        backgroundColor: null, //设置背景颜色
+        useCORS: true, //允许图片跨域
+        scale: scale, //缩放2倍，使得图片更加清晰
+        width: imgWidth,
+        height: imgHeight,
+        imageTimeout: 5000, //设置图片的超时，设置0为禁用
+        proxy: "", //url代理，用于加载跨域图源，为空则不会加载
+        ignoreElements: element => {
+          //用于忽略转换的图片中不需要的匹配元素，注意，为true才不会转换
+          if (element.id == "mytitle") {
+            return true;
+          }
+        }
+      }).then(canvas => {
+        this.imgURLPreview = canvas.toDataURL("image/png");
+       
+      });
+    },
     // 获取简历信息
     getTemplatesResumes(){
        Bus.$on("getTemplatesResume", resumeTemplateObj => {
@@ -759,6 +792,7 @@ export default {
   },
   mounted() {
     // this.common.nima();
+    this.preview();
     // 绑定内容高度，然后监听
     this.contentHight = this.$refs.rightContent.offsetHeight;
     console.log(this.contentHight)

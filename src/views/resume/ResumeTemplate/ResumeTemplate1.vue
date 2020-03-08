@@ -197,19 +197,19 @@ export default {
       });
     },
   
-  //将图片Base64 转成文件
-  dataURLtoFile(dataurl, filename) {
-        console.log("转文件")
-        var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-            bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-        while(n--){
-            u8arr[n] = bstr.charCodeAt(n);
-        }
-        return new File([u8arr], filename, {type:mime});
-    },
+  // //将图片Base64 转成文件
+  // dataURLtoFile(dataurl, filename) {
+  //       console.log("转文件")
+  //       var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+  //           bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+  //       while(n--){
+  //           u8arr[n] = bstr.charCodeAt(n);
+  //       }
+  //       return new File([u8arr], filename, {type:mime});
+  //   },
 // 上传图片，注意，上传图片要把图片的base64格式转换为图片格式，然后上传
   postImage(){
-    var file = this.dataURLtoFile(this.imgURL,"img.png");
+    var file = this.common.dataURLtoFile(this.imgURL,"img.png");
       let data = new FormData();
       data.append("file", file, file.name);//很重要 data.append("file", file);不成功
       data.append('data',112)

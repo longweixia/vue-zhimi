@@ -1,6 +1,23 @@
 import html2canvas from "html2canvas";
 export default{  
-    
+    //将图片Base64 转成文件
+    dataURLtoFile:function(dataurl, filename) {
+      console.log("转文件");
+      var arr = dataurl.split(","),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]),
+        n = bstr.length,
+        u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new File([u8arr], filename, { type: mime });
+    },
+
+
+
+
+
     // 将文档转换为图片
      changeImage: function(id,noId){
         // id需要转换的dom 的id, noId为不需要转换的id
