@@ -22,7 +22,7 @@ export default {
     return {
       file: null,
       loadingStatus: false,
-      imgUrl: "https://static.500d.me/resources/500d/cvresume/images/1.jpg"
+      imgUrl: "./../../static/image/1.jpg"
     };
   },
   methods: {
@@ -64,7 +64,7 @@ export default {
   text-align: center;
   .jm-upload-icon {
     background: rgba(0, 192, 142, 0.5)
-      url(https://static.500d.me/resources/500d/cvresume/images/upheadimg.png)
+      url(./../../static/image/upheadimg.png)
       no-repeat center;
     position: absolute;
     width: 100%;

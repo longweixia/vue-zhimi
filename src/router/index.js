@@ -8,6 +8,7 @@ import ResumeTemplate1 from '@/views/resume/ResumeTemplate/ResumeTemplate1'
 import TemplateMall from '@/views/templateMall/TemplateMall'   
 import WriteResumeIde from '@/views/resume/WriteResumeIde'   
 import WriteIdeHeader from '@/views/resume/ResumeTemplateCommon/WriteIdeHeader'   
+import Preview from '@/views/resume/ResumeTemplateCommon/Preview'   
 import WriteIdeSiderLeft from '@/views/resume/ResumeTemplateCommon/WriteIdeSiderLeft'   
 import WriteResumeTemplate1 from '@/views/resume/WriteResumeTemplate/WriteResumeTemplate1'
 import WriteResumeTemplate2 from '@/views/resume/WriteResumeTemplate/WriteResumeTemplate2'
@@ -80,6 +81,11 @@ export default new Router({
             path: '/writeResumeTemplate2',
             name: 'writeResumeTemplate2',
             component: WriteResumeTemplate2
+        },
+        {
+            path: '/preview',
+            name: 'preview',
+            component: Preview
         }
     ]
 })

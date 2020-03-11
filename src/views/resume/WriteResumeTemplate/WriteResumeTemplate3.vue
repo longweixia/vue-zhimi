@@ -1,6 +1,6 @@
 <template>
   <div class="jm-template">
-     <img class="jm-upload-img" :src="imgURLPreview" />
+    
     <Row id="code">
       <!-- {{modalSkill}} -->
       <!-- 左侧区域 -->
@@ -353,7 +353,6 @@ export default {
   },
   data() {
     return {
-      imgURLPreview:"",//预览图片url
       // contentHight:"",//内容高度
       showHeadImg: true, //是否显示头像
       imgFartherClass: "", //改变头像样式将传给父dom的类
@@ -364,17 +363,17 @@ export default {
       headIconList: [
         {
           otherClass: "",
-          imgSrc: "https://static.500d.me/resources/500d/cvresume/images/1.jpg",
+          imgSrc: "./../../static/image/1.jpg",
           text: "圆形"
         },
         {
           otherClass: "one-head-icon",
-          imgSrc: "https://static.500d.me/resources/500d/cvresume/images/1.jpg",
+          imgSrc: "./../../static/image/1.jpg",
           text: "1：1"
         },
         {
           otherClass: "three-head-icon",
-          imgSrc: "https://static.500d.me/resources/500d/cvresume/images/1.jpg",
+          imgSrc: "./../../static/image/1.jpg",
           text: "3：4"
         }
       ],
@@ -479,20 +478,19 @@ export default {
     }
   },
   methods: {
-    // 预览
-    preview(){
-       Bus.$on("previews",() => {
-         this.transformImage();
-       })
-    },
+    // // 预览
+    // preview(){
+     
+    // },
     transformImage(){
-      domtoimage.toPng(document.getElementById("code"))
-        .then((dataUrl) => {
-            this.imgURLPreview =  dataUrl
-        })
-        .catch(function (error) {
-          console.error('oops, something went wrong!', error);
-        });
+      let doms = document.getElementById("code")
+      this.common.transformImage(doms).then(dataUrl=>{
+                   this.$router.push(
+              { name: 'preview', 
+              params: { dataUrl: dataUrl }
+              }
+            )
+      })
     },
     // 获取简历信息
     getTemplatesResumes(){
@@ -777,8 +775,9 @@ export default {
     }
   },
   mounted() {
-    // this.common.nima();
-    this.preview();
+      Bus.$on("previews",() => {
+         this.transformImage();
+       })
     // 绑定内容高度，然后监听
     this.contentHight = this.$refs.rightContent.offsetHeight;
     console.log(this.contentHight)
@@ -791,7 +790,12 @@ export default {
     // Bus.$off("saveTheme")
     // 点击主题的保存，传递过来主题数据
    this.saveThemes();
+   
   },
+  // 解决$on接收多次的问题
+  beforeDestroy(){
+    Bus.$off("saveContentss")
+  }
   }
 </script>
 

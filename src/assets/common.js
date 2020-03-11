@@ -1,4 +1,4 @@
-// import domtoimage from 'dom-to-image';
+import domtoimage from 'dom-to-image';
 export default{  
     //将图片Base64 转成文件
     dataURLtoFile:function(dataurl, filename) {
@@ -15,16 +15,24 @@ export default{
     },
 
     // 将文档转换为图片
-    // transformImage: function(id){
-    //   domtoimage.toPng(document.getElementById(id))
-    //     .then((dataUrl) => {
+    transformImage: function(dom){
+      return new Promise(function(resolve,reject){
+        domtoimage.toPng(dom)
+        .then((dataUrl) => {
+          resolve(dataUrl)
+        }).catch(function (error) {
+          reject(error)
+        });
+      })
+      // domtoimage.toPng(document.getElementById(id))
+      //   .then((dataUrl) => {
        
-    //         console.log(dataUrl)
-    //         return dataUrl
+      //       console.log(dataUrl)
+      //       return dataUrl
           
-    //     })
-    //     .catch(function (error) {
-    //       console.error('oops, something went wrong!', error);
-    //     });
-    // }
+      //   })
+      //   .catch(function (error) {
+      //     console.error('oops, something went wrong!', error);
+      //   });
+    }
  }
