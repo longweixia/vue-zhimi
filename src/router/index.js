@@ -12,6 +12,8 @@ import Preview from '@/views/resume/ResumeTemplateCommon/Preview'
 import WriteIdeSiderLeft from '@/views/resume/ResumeTemplateCommon/WriteIdeSiderLeft'   
 import WriteResumeTemplate1 from '@/views/resume/WriteResumeTemplate/WriteResumeTemplate1'
 import WriteResumeTemplate2 from '@/views/resume/WriteResumeTemplate/WriteResumeTemplate2'
+import MyCenter from '@/views/myCenter/MyCenter'   
+import MyResume from '@/views/myCenter/MyResume'   
 
 
 Vue.use(Router)
@@ -86,6 +88,16 @@ export default new Router({
             path: '/preview',
             name: 'preview',
             component: Preview
+        },
+        {
+            path: '/myCenter',
+            name: 'myCenter',
+            component: MyCenter
+        },
+        {
+            path: '/myResume',
+            name: 'myResume',
+            component: MyResume
         }
     ]
 })

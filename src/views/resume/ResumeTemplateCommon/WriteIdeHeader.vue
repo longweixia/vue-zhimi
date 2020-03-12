@@ -14,6 +14,9 @@
         <span @click="saveContent">保存</span>
         <span @click="downImg">下载</span>
       </span>
+      <span class="head-text">
+        <span @click="toMyCenter">个人中心</span>
+      </span>
     </div>
   </div>
 </template>
@@ -34,6 +37,10 @@ export default {
     // 预览
     preview() {
       Bus.$emit("previews");
+    },
+    // 个人中心
+    toMyCenter() {
+     this.$router.push({name:"myCenter"})
     },
 
     // 下载
