@@ -37,7 +37,7 @@
         ><span class="zm-header-text">职觅社区</span></Col
       >
       <Col span="2" class="zm-header-column jm-ct"
-        ><span class="zm-header-text">个人中心</span></Col
+        ><span class="zm-header-text" @click="toMyCenter">个人中心</span></Col
       >
 
       <Col span="6" class="zm-header-btn jm-ct">
@@ -116,6 +116,10 @@ export default {
     };
   },
   methods: {
+     // 个人中心
+    toMyCenter() {
+     this.$router.push({name:"myResume"})
+    },
     ok() {},
     cancel() {},
     // 返回首页

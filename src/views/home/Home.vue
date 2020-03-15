@@ -77,7 +77,7 @@
                     :key="index">
                   <ul>
                     <li class="jm-li">
-                      <img :src="'http://localhost:3000' + item" alt="JM0203" />
+                      <img :src="'http://localhost:3000' + item.url" alt="JM0203" />
 
                       <!-- 遮罩层 -->
                       <div
@@ -99,7 +99,7 @@
                       </div>
                       <div  class="jm-preview" v-show="currentIcon==index">
                         <img :class="isRightImg?'rightPreview':'leftPreview'"
-                          :src="'http://localhost:3000' + item"
+                          :src="'http://localhost:3000' + item.url"
                           alt="JM0203"
                         />
                       </div>
@@ -380,9 +380,9 @@ export default {
     // 获取图片列表
     getImgList() {
       this.axios
-        .post("resumes/resumeImgList", { flag: "all" })
+        .post("resumes/resumeImgList",  { flag: "all",typeImg:"mall" })
         .then(res => {
-          this.imgList = res.data.url;
+          this.imgList = res.data.result;
           console.log(this.imgList);
         })
         .catch(err => {

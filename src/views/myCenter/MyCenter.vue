@@ -1,10 +1,11 @@
 <template>
   <div>
-     <Menu class="jm-menu" active-name="1-2" :open-names="['1']">
+      
+     <Menu class="jm-menu" active-name="1-1" :open-names="['1']">
         <Submenu name="1">
             <template slot="title">
                 <Icon type="ios-analytics" />
-               个人中心
+              简历中心
             </template>
           
                 <MenuItem name="1-1" to="myResume">我的简历</MenuItem>
@@ -42,22 +43,27 @@
    <!-- 面包屑 -->
    <div class="jm-bread">
         <Breadcrumb>
-                <BreadcrumbItem to="/">
-                  <Icon type="ios-home-outline"></Icon> 首页
+                <BreadcrumbItem>
+                  <Icon type="ios-home-outline"></Icon> 个人中心
                 </BreadcrumbItem>
-                <BreadcrumbItem to="TemplateMall">
-                  <Icon type="logo-buffer"></Icon> 模板商城
+                <BreadcrumbItem to="myResume">
+                  <Icon type="logo-buffer"></Icon> 我的简历
                 </BreadcrumbItem>
               </Breadcrumb>
    </div>
    <!-- 点击页面标签，在当前页面内更新内容，不刷新页面 -->
-   <router-view></router-view>
+   <router-view>
+   </router-view>
   </div>
 </template>
 
 <script>
+
 export default {
   name: "myCenter",
+  components:{
+   
+  },
   data() {
     return {};
   },
@@ -85,4 +91,5 @@ export default {
     line-height: 40px;
     margin: 10px;
 }
+
 </style>

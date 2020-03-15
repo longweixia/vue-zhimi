@@ -40,7 +40,7 @@ export default {
     },
     // 个人中心
     toMyCenter() {
-     this.$router.push({name:"myCenter"})
+     this.$router.push({name:"myResume"})
     },
 
     // 下载
