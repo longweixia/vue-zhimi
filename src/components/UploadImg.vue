@@ -9,20 +9,26 @@
     >
       <!-- 图片悬浮时的背景 -->
       <a v-show="isHeadImg" class="jm-upload-icon"></a>
-      <img class="jm-upload-img" :class="imgClass" :src="imgUrl" />
+      <img class="jm-upload-img" :class="imgClass" :src="ImgBase64" />
     </Upload>
     <!-- <div v-if="file !== null">Upload file: {{ file.name }} <Button type="text" @click="upload" :loading="loadingStatus">{{ loadingStatus ? 'Uploading' : 'Click to upload' }}</Button></div> -->
   </div>
 </template>
 <script>
+import Bus from "@/assets/event-bus.js";
 export default {
   name: "jmUploadImg",
-  props: ["imgClass", "isHeadImg"],
+  props: {
+    imgClass:{}, isHeadImg:{},
+  ImgBase64: {
+      type: String,
+      default: "./../../static/image/1.jpg"
+    }},
   data() {
     return {
       file: null,
       loadingStatus: false,
-      imgUrl: "./../../static/image/1.jpg"
+      // imgUrl: "./../../static/image/1.jpg"
     };
   },
   methods: {
@@ -36,23 +42,24 @@ export default {
       reader.readAsDataURL(file);
       // onload 在文件读取成功时触发
       reader.onload = () => {
-        const ImgBase64 = reader.result;
+        // this.ImgBase64 = reader.result;
         // 实现预览，实际是拿到图片的base64数据去挂在到图片的src上
-        this.imgUrl = ImgBase64;
+        // this.imgUrl = ImgBase64;
+        Bus.$emit("postPhotoBase64",reader.result);
       };
-      this.postImage();
+      // this.postImage();
       return false;
     },
-    postImage() {
-      var file = this.file;
-      let data = new FormData();
-      data.append("file", file, file.name); //很重要 data.append("file", file);不成功
-      data.append("data", 112);
-      console.log(data.get("file"));
-      this.axios.post("resumes/file", data, {
-        headers: { "content-type": "multipart/form-data" }
-      });
-    }
+    // postImage() {
+    //   var file = this.file;
+    //   let data = new FormData();
+    //   data.append("file", file, file.name); //很重要 data.append("file", file);不成功
+    //   data.append("data", 112);
+    //   console.log(data.get("file"));
+    //   this.axios.post("resumes/file", data, {
+    //     headers: { "content-type": "multipart/form-data" }
+    //   });
+    // }
   }
 };
 </script>

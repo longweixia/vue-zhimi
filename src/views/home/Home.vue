@@ -382,7 +382,7 @@ export default {
       this.axios
         .post("resumes/resumeImgList",  { flag: "all",typeImg:"mall" })
         .then(res => {
-          this.imgList = res.data.result;
+          this.imgList = res.data.result.splice(0,8);
           console.log(this.imgList);
         })
         .catch(err => {

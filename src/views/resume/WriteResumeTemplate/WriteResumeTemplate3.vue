@@ -35,7 +35,7 @@
             @click="displayModelBase('headIcon')"
           />
           <div class="head-icon" :style="imgFartherClass">
-            <jmUploadImg :imgClass="imgClass" :isHeadImg="isHeadImg" />
+            <jmUploadImg :ImgBase64="formData.ImgBase64" :imgClass="imgClass" :isHeadImg="isHeadImg" />
           </div>
           <!-- 头像设置面板 -->
           <div class="setting-head" @mouseleave="hiddenSetting">
@@ -399,6 +399,7 @@ export default {
         showDescribe: true //默认显示描述
       }, //基本信息弹窗传过来的数据
       hasSkillList: [], //传过来的技能数组
+      ImgBase64:"",//头像数据
       baseInfoList: [
         //基本信息
         {
@@ -551,6 +552,7 @@ export default {
      saveContentss(){
         Bus.$on("saveContents", () => {
       console.log(this.formData, "====");
+    //  this.formData.ImgBase64 = this.ImgBase64
       // 组装要提交的信息
       var content = {
         userName: localStorage.getItem("userName"), //简历名称
@@ -775,6 +777,10 @@ export default {
     }
   },
   mounted() {
+     // 获取头像的数据
+      Bus.$on("postPhotoBase64", (ImgBase64) => {
+        this.formData.ImgBase64 = ImgBase64
+      })
       Bus.$on("previews",() => {
          this.transformImage();
        })

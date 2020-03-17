@@ -115,7 +115,9 @@
                 </Col>
               </Row>
               <Row class="jm-page">
-                <Page :total="100" show-elevator prev-text="上一页" next-text="下一页"/>
+                <Page :total="totalPage" :page-size-opts="[8,16,24,40]" show-elevator 
+                prev-text="上一页" next-text="下一页" show-sizer :page-size="pageSize"
+                @on-change="changePageNumber" @on-page-size-change="changePageSize"/>
               </Row>
             </Row>
           </Row>
@@ -146,7 +148,11 @@ export default {
       jmMaskOpacity: "", //图片列表遮罩层的透明度
       current: 0, //当前悬浮图片的位置
       currentIcon: -1, //当前悬浮预览图标
-      isRightImg: false //是否是右边图
+      isRightImg: false, //是否是右边图
+      totalPage:null,//页面总条数
+      pageSize:8,//每页展示的数量
+      currentPage:1,//当前页码
+
     };
   },
   components: {
@@ -154,6 +160,18 @@ export default {
     NavFooter
   },
   methods: {
+    // 改变页码
+    changePageNumber(data){
+      console.log(data)
+      this.currentPage= data
+      this.getImgList();
+    },
+    //切换每页显示条数
+    changePageSize(data){ 
+      console.log(data)
+      this.PageSize= data
+      this.getImgList();
+    },
     // 进入简历模板
     gotoResumeTemplate(index){
       console.log(index+1,"进入模板")
@@ -206,9 +224,15 @@ export default {
     // 获取图片列表
     getImgList() {
       this.axios
-        .post("resumes/resumeImgList", { flag: "all",typeImg:"mall" })
+        .post("resumes/resumeImgList", { 
+          flag: "all",
+          typeImg:"mall",
+          pageSize: this.pageSize,
+          currentPage:this.currentPage,
+          })
         .then(res => {
           this.imgList = res.data.result;
+          this.totalPage = res.data.result.length;
           console.log(this.imgList);
         })
         .catch(err => {
