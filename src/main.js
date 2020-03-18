@@ -10,6 +10,8 @@ import common from './assets/common.js';
 Vue.prototype.common = common
 // 引入axios
 import axios from 'axios'
+import Vuelazyload from 'vue-lazyload'
+
 //引入vue-socket.io模块  把这块注释掉才不会报错EIO=3&transport=polling
 // import socket from 'socket.io-client'
 // // 连接到指定服务地址
@@ -21,6 +23,11 @@ import axios from 'axios'
 Vue.prototype.axios = axios
 
 Vue.use(iView);
+Vue.use(Vuelazyload,{
+loading:"./../static/image/template/loading-bars.svg",
+try:3
+});
+
 // 按需引入iview组件
 // import { Button, Layout,Header,Content,Footer } from 'iview';
 // Vue.component('Button', Button);

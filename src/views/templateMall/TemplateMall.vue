@@ -74,6 +74,12 @@
                   </Col>
                 </Row>
               </Row>
+              <Upload
+      :show-upload-list="false"
+      :before-upload="handleUpload"
+      action="">
+      <Button>上传模板商城图片</Button>
+      </Upload>
               <!-- 简历列表 -->
               <Row>
                 <Col>
@@ -83,8 +89,7 @@
                     :key="index"
                   >
                     <li class="jm-li">
-                      <img :src="'http://localhost:3000' + item.url" alt="JM0203" />
-
+                      <img v-lazy="item.imgUrl"/>
                       <!-- 遮罩层 -->
                       <div
                         @mouseenter="enter(index)"
@@ -106,8 +111,7 @@
                       <div class="jm-preview" v-show="currentIcon == index">
                         <img
                           :class="isRightImg ? 'rightPreview' : 'leftPreview'"
-                          :src="'http://localhost:3000' + item.url"
-                          alt="JM0203"
+                          :src="item.imgUrl"
                         />
                       </div>
                     </li>
@@ -152,7 +156,7 @@ export default {
       totalPage:null,//页面总条数
       pageSize:8,//每页展示的数量
       currentPage:1,//当前页码
-
+      file:null
     };
   },
   components: {
@@ -160,6 +164,32 @@ export default {
     NavFooter
   },
   methods: {
+    handleUpload(file) {
+      // 需要传给后台的file文件
+      this.file = file;
+      // FileReader api 为用户提供了方法去读取一个文件或者一个二进制大对象，
+      // 并且提供了事件模型让用户可以操作读取后的结果
+      const reader = new FileReader();
+      // readAsDataURL：读取为base64格式
+      reader.readAsDataURL(file);
+      // onload 在文件读取成功时触发
+      reader.onload = () => {
+        // 拿到图片的base64数据
+        this.postImage(reader.result);
+      };
+      return false;
+    },
+    postImage(data) {
+      this.axios.post("malls/uploadImg", {
+        imgUrl:data,
+        mallId:0
+      }).then(res => {
+         this.$Message.info(res.data.msg);
+        })
+        .catch(err => {
+          console.log("err", err);
+        });
+    },
     // 改变页码
     changePageNumber(data){
       console.log(data)
@@ -169,7 +199,7 @@ export default {
     //切换每页显示条数
     changePageSize(data){ 
       console.log(data)
-      this.PageSize= data
+      this.pageSize= data
       this.getImgList();
     },
     // 进入简历模板
@@ -224,16 +254,15 @@ export default {
     // 获取图片列表
     getImgList() {
       this.axios
-        .post("resumes/resumeImgList", { 
-          flag: "all",
-          typeImg:"mall",
+        .get("malls/getImgList", { 
+          params:{
           pageSize: this.pageSize,
-          currentPage:this.currentPage,
+          currentPage:this.currentPage
+          }
           })
         .then(res => {
-          this.imgList = res.data.result;
-          this.totalPage = res.data.result.length;
-          console.log(this.imgList);
+          this.imgList = res.data.result.list;
+          this.totalPage = res.data.result.totol;
         })
         .catch(err => {
           console.log("err", err);

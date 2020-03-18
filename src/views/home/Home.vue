@@ -77,7 +77,7 @@
                     :key="index">
                   <ul>
                     <li class="jm-li">
-                      <img :src="'http://localhost:3000' + item.url" alt="JM0203" />
+                      <img v-lazy="item.imgUrl"/>
 
                       <!-- 遮罩层 -->
                       <div
@@ -99,8 +99,7 @@
                       </div>
                       <div  class="jm-preview" v-show="currentIcon==index">
                         <img :class="isRightImg?'rightPreview':'leftPreview'"
-                          :src="'http://localhost:3000' + item.url"
-                          alt="JM0203"
+                          :src="item.imgUrl"
                         />
                       </div>
                     </li>
@@ -110,9 +109,17 @@
             </Row>
           </Row>
           <!-- 更多模板 -->
-          <Row class="jm-more ">
+          <Row class="jm-more">
+            <Row class="jm-collect" v-if="isCollect">
+              <Col>
+              <span  @click="collect">
+                <span style="font-size:20px">☝</span>
+                收起来
+                </span>
+              </Col>
+              </Row>
             <Col class="jm-ct">
-              <Button type="primary" class="jm-more-btn">更多模板</Button>
+              <Button type="primary" :disabled="isdisable" @click="getMoreResume" class="jm-more-btn">{{resumeBtn}}</Button>
             </Col>
           </Row>
           <!-- 分享 -->
@@ -317,6 +324,9 @@ export default {
   name: "Home",
   data() {
     return {
+      isCollect:false,//是否展示收起来
+      resumeBtn:"更多模板",
+      isdisable:false,//是否不能点击更多模板了
       resulist: [1, 2],
       resumeIndex: [{ ry: false }, { ry: false }],
       value2: 0,
@@ -326,6 +336,7 @@ export default {
       current: 0, //当前悬浮图片的位置
       currentIcon: -1, //当前悬浮预览图标
       isRightImg:false,//是否是右边图
+      pageSize:4,//默认展示，点击更多时让pageSize+4
     };
   },
   components: {
@@ -335,7 +346,30 @@ export default {
     ResumeTemplate1,
     ResumeTemplate2
   },
+  watch:{
+   pageSize: {
+      handler(newVal, oldVal) {
+       if (newVal>4) { 
+         this.isCollect = true
+            }else{
+              this.isCollect = false
+            }
+    },
+      deep: true
+    }
+  },
   methods: {
+    // 收起来
+    collect(){
+      console.log(1)
+      this.pageSize=4;
+      this.getImgList();
+    },
+    // 更多模板
+    getMoreResume(){
+      this.pageSize=this.pageSize+4;
+      this.getImgList();
+    },
      // 进入模板商城
     goTemplateMall() {
       this.$router.push({
@@ -379,11 +413,22 @@ export default {
     },
     // 获取图片列表
     getImgList() {
-      this.axios
-        .post("resumes/resumeImgList",  { flag: "all",typeImg:"mall" })
+          this.axios
+        .get("malls/getImgList", { 
+          params:{
+          pageSize: this.pageSize,
+          currentPage:1
+          }
+          })
         .then(res => {
-          this.imgList = res.data.result.splice(0,8);
-          console.log(this.imgList);
+          this.imgList = res.data.result.list;
+          if(this.imgList.length==res.data.result.totol){
+            this.resumeBtn="没有更多了"
+            this.isdisable = true
+          }else{
+            this.resumeBtn="更多模板"
+            this.isdisable = false
+          }
         })
         .catch(err => {
           console.log("err", err);
@@ -545,6 +590,12 @@ export default {
 // 更多模板
 .jm-more {
   background: #f5f7f9;
+  .jm-collect{
+    z-index: 10;
+    position: absolute;
+    right: 20px;
+    cursor: pointer;
+  }
   .jm-more-btn {
     width: 25%;
     margin-top: 20px;

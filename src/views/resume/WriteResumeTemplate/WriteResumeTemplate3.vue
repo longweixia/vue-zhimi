@@ -472,16 +472,17 @@ export default {
     contentHight: {
       handler(newVal, oldVal) {
        if (newVal !== oldVal) { console.log(newVal)}
-
-     
     },
       deep: true
     }
   },
   methods: {
-    // // 预览
-    // preview(){
-     
+    // // 将文档转换成图片
+    // domToImg(){
+    //    let doms = document.getElementById("code")
+    //    this.common.transformImage(doms).then(dataUrl=>{
+    //           this.resumeUrl = dataUrl
+    //   })
     // },
     transformImage(){
       let doms = document.getElementById("code")
@@ -551,8 +552,10 @@ export default {
      // 点击保存按钮，提交填写好的简历
      saveContentss(){
         Bus.$on("saveContents", () => {
-      console.log(this.formData, "====");
-    //  this.formData.ImgBase64 = this.ImgBase64
+       console.log(this.formData, "====");
+        let doms = document.getElementById("code")
+       this.common.transformImage(doms).then(dataUrl=>{
+              //  this.formData.ImgBase64 = this.ImgBase64
       // 组装要提交的信息
       var content = {
         userName: localStorage.getItem("userName"), //简历名称
@@ -561,6 +564,10 @@ export default {
           //模板简历
           {
             TemplateId: 3, //模板ID
+            img:{
+              url:dataUrl,
+              name:3
+            },
             resumeContent: {
               //简历内容
               baseInfoList: this.formData, //基本信息
@@ -584,6 +591,8 @@ export default {
         .catch(err => {
           console.log("err", err);
         });
+      })
+    
     });
      },
       // 解决父组件多次传值的问题

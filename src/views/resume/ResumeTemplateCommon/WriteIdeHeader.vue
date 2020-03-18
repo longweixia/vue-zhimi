@@ -1,6 +1,9 @@
 <template>
   <div class="jm-header">
     <div>
+      <span class="head-text">
+        <router-link :to="{name:'home'}"> 首页</router-link>
+      </span>
       <span class="head-text" @click="$router.back(-1)">
         返回
       </span>

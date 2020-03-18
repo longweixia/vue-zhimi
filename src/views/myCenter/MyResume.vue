@@ -6,11 +6,10 @@
       <ul v-if="!showMsg" class="jm-ul">
       
         <li class="jm-li" v-for="(item, index) in imgList" :key="index">
-            <span>{{item.name.split('.')[0]}}</span>
+            <span>{{item.name}}</span>
           <img
             class="jm-img"
-            :src="'http://localhost:3000' + item.url"
-            alt="JM0203"
+           :src="item.url"
           />
 
           <!-- 遮罩层 -->
@@ -45,8 +44,7 @@
           <div class="jm-preview" v-show="currentIcon == index">
             <img
               :class="isRightImg ? 'rightPreview' : 'leftPreview'"
-              :src="'http://localhost:3000' + item.url"
-              alt="JM0203"
+              :src="item.url"
             />
           </div>
         </li>
@@ -147,18 +145,38 @@ export default {
     // 获取图片列表
     getImgList() {
       this.axios
-        .post("resumes/resumeImgList", { flag: "all",name:"longwei",typeImg:"myResume" })
+        .get("resumeTemplates/getTemplatesResume", {
+          params: {
+         userName: localStorage.getItem("userName") //暂时写死，到时候用vuex
+        }
+        })
         .then(res => {
-          if (res.data.result) {
-            this.imgList = res.data.result;
-            this.showMsg = false;
-          } else {
-            this.showMsg = true;
+          if (res.data.status == "0") {
+           let resumeTemplateObj = res.data.result;
+           this.imgList.push(
+            resumeTemplateObj.resumeTemplate[0].img
+             )
+
+          //  如果获取不到数据，就不执行，防止后面获取属性值：null.xxx报错
+           if(!resumeTemplateObj){
+             return
+           }
           }
         })
-        .catch(err => {
-          console.log("err", err);
-        });
+        .catch(err => {});
+      // this.axios
+      //   .post("resumes/resumeImgList", { flag: "all",name:"longwei",typeImg:"myResume" })
+      //   .then(res => {
+      //     if (res.data.result) {
+      //       this.imgList = res.data.result;
+      //       this.showMsg = false;
+      //     } else {
+      //       this.showMsg = true;
+      //     }
+      //   })
+      //   .catch(err => {
+      //     console.log("err", err);
+      //   });
     }
   },
   mounted() {
