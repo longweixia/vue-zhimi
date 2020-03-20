@@ -5,15 +5,16 @@
       <div
         style="position: relative;"
         class="jm-defult-line"
-        :class="isBaseLine ? 'jm-base-linehover0' : ''"
-        @mouseenter="enterBase"
-        @mouseleave="leaveBase"
+        :class="isBaseLine == 'name' ? 'jm-base-linehover0' : ''"
+        @mouseenter="enterBase('name')"
+        @mouseleave="leaveBase('name')"
       >
         <Icon
-          v-show="isBaseLine"
+          v-show="isBaseLine == 'name'"
           class="jm-head-icon"
           size="20"
           type="md-settings"
+          @click="displayModelBase('name')"
         />
         <div class="jm-name">
           <Input
@@ -33,42 +34,23 @@
         </div>
       </div>
     </div>
-    <!-- 年龄信息 -->
+    <!-- 年龄等基本信息 -->
+    <!-- isBaseLine=='age'这个判断优秀，减少新建不同的变量 -->
     <div class="jm-base-age">
-      <div class="jm-age-content">
-        <span>
-          <Input
-            v-model="age"
-            placeholder="年龄"
-            clearable
-            style="width:40px;font-size: 18px;"
-          />
+      <span
+        @mouseenter="enterBase('age')"
+        @mouseleave="leaveBase('age')"
+        class="jm-age-content jm-defult-line"
+        :class="isBaseLine == 'age' ? 'jm-base-linehover0' : ''">
+        <!-- 基本信息 -->
+        <Icon class="jm-head-icon" @click="displayModelBase('age')"
+              v-show="isBaseLine=='age'" size="20" type="md-create" />
+        <span class="jm-age" v-for="(item, index) in baseInfoList" :key="index">
+          <Icon :type="item.type" />
+          <span class="jm-baseText">{{ item.baseText }}</span>
+          <span class="jm-baseText">{{ item.inputText }}</span>
         </span>
-        <span>
-          <Input
-            v-model="workYear"
-            placeholder="工作经验"
-            clearable
-            style="width:80px;font-size: 18px;"
-          />
-        </span>
-        <span>
-          <Input
-            v-model="phone"
-            placeholder="手机号"
-            clearable
-            style="width:120px;font-size: 18px;"
-          />
-        </span>
-        <span>
-          <Input
-            v-model="email"
-            placeholder="邮箱号"
-            clearable
-            style="width:150px;font-size: 18px;"
-          />
-        </span>
-      </div>
+       </span>
     </div>
     <!-- 求职意向 -->
     <div class="jm-base-like">
@@ -108,9 +90,9 @@
           </Row>
           <Row class="jm-work-content">
             <Input
-             @on-focus="focusInput" 
-             @on-blur="blurInput"
-             :class="inFocus?'':'hasFocus'"
+              @on-focus="focusInput"
+              @on-blur="blurInput"
+              :class="inFocus ? '' : 'hasFocus'"
               style="margin-bottom:'10px'"
               v-model="eduText"
               type="textarea"
@@ -159,9 +141,9 @@
           <Row class="jm-work-content">
             <Input
               style="margin-bottom:'10px'"
-               @on-focus="focusInput" 
-             @on-blur="blurInput"
-             :class="inFocus?'':'hasFocus'"
+              @on-focus="focusInput"
+              @on-blur="blurInput"
+              :class="inFocus ? '' : 'hasFocus'"
               v-model="workText"
               type="textarea"
               :autosize="{ minRows: 2, maxRows: 5 }"
@@ -182,9 +164,9 @@
         <Row class="jm-like-work">
           <Row class="jm-work-content">
             <Input
-             @on-focus="focusInput" 
-             @on-blur="blurInput"
-             :class="inFocus?'':'hasFocus'"
+              @on-focus="focusInput"
+              @on-blur="blurInput"
+              :class="inFocus ? '' : 'hasFocus'"
               style="margin-bottom:'10px'"
               v-model="textWork1"
               type="textarea"
@@ -206,9 +188,9 @@
         <Row class="jm-like-work">
           <Row class="jm-work-content">
             <Input
-             @on-focus="focusInput" 
-             @on-blur="blurInput"
-             :class="inFocus?'':'hasFocus'"
+              @on-focus="focusInput"
+              @on-blur="blurInput"
+              :class="inFocus ? '' : 'hasFocus'"
               style="margin-bottom:'10px'"
               v-model="project"
               type="textarea"
@@ -230,9 +212,9 @@
         <Row class="jm-like-work">
           <Row class="jm-work-content">
             <Input
-             @on-focus="focusInput" 
-             @on-blur="blurInput"
-             :class="inFocus?'':'hasFocus'"
+              @on-focus="focusInput"
+              @on-blur="blurInput"
+              :class="inFocus ? '' : 'hasFocus'"
               style="margin-bottom:'10px'"
               v-model="selfEvaluation"
               type="textarea"
@@ -243,24 +225,33 @@
         </Row>
       </div>
     </div>
+    <!-- 弹窗区域 -->
+    <baseInfoModel
+      :modalSkills="modalBaseInfo"
+      :baseInfoList="baseInfoList"
+      :baseObjC="baseObjC"
+      v-on:changeSkillModel="changeSkillModel"
+      v-on:saveBaseInfo="saveBaseInfo"
+    />
   </div>
 </template>
 
 <script>
 import jmUploadImg from "@/components/UploadImg";
+import baseInfoModel from "./BaseInfoModel";
 import Bus from "@/assets/event-bus.js";
 export default {
   name: "WriteResumeTemplate4",
   data() {
     return {
       textWork1: "",
-      isBaseLine: false, //是否基本信息编辑框
+      isBaseLine: "", //baseLine对应悬浮模板的名称
       name: "",
       introduce: "",
-      email: "",
-      phone: "",
-      workYear: "",
-      age: "",
+      // email: "",
+      // phone: "",
+      // workYear: "",
+      // age: "",
       eduText: "",
       jmDate: "jm-date", //是否显示日期选择框的笑图标
       eduDate: "",
@@ -272,34 +263,73 @@ export default {
       workText: "",
       project: "", //项目
       selfEvaluation: "", //自我评价
-      inFocus:false,//textarea是否在聚焦
+      inFocus: false, //textarea是否在聚焦
+      // 基本信息弹窗
+      modalBaseInfo: false, //默认基本信息弹窗不显示
+      baseInfoList: [
+        //基本信息
+        {
+          type: "ios-contact",
+          baseText: "年龄",
+          inputText: ""
+        },
+        {
+          type: "md-briefcase",
+          baseText: "工作经验",
+          inputText: ""
+        },
+        {
+          type: "ios-call",
+          baseText: "电话",
+          inputText: ""
+        },
+        {
+          type: "ios-mail",
+          baseText: "邮箱",
+          inputText: ""
+        }
+      ],
+      baseObjC: {} //传递获取接口的数据到基本数据弹窗的数据
     };
   },
   components: {
-    jmUploadImg
+    jmUploadImg,
+    baseInfoModel
   },
   watch: {},
   methods: {
+     // 关闭技能弹窗，基本信息弹窗
+    changeSkillModel(data) {
+      // this.modalSkill = false;
+      this.modalBaseInfo = false;
+    },
+    // 弹出基本信息框
+    displayModelBase(name){
+      if (name == "name") {
+        this.modalBaseInfo = true;
+      }
+    },
+    saveBaseInfo() {},
     // 确定日期
     confirmDate() {
       this.jmDate = "jm-date";
     },
     // 鼠标悬浮头像
-    enterBase() {
-      this.isBaseLine = true;
+    enterBase(name) {
+      this.isBaseLine = name;
     },
     //鼠标离开头像
-    leaveBase() {
-      this.isBaseLine = false;
+    leaveBase(name) {
+      this.isBaseLine = "";
     },
     // 输入域聚焦
     focusInput() {
-      console.log(0)
+      console.log(0);
       this.inFocus = true;
     },
     //输入域失去焦点
     blurInput() {
-      console.log(1)
+      console.log(1);
       this.inFocus = false;
     }
   },
@@ -325,9 +355,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.hasFocus /deep/textarea{
+.hasFocus /deep/textarea {
   resize: none;
-} 
+}
 .jm-template {
   margin-bottom: 40px;
 }
@@ -335,6 +365,7 @@ export default {
   position: absolute;
   top: 0;
   right: 0;
+  cursor: pointer;
   color: #fff;
   background: #00c091;
   /*z-index: 1;*/
@@ -346,12 +377,6 @@ export default {
   padding-bottom: 15px;
   background: #6b4b24;
   color: #fff;
-  .jm-defult-line{
-      border: 1px dashed transparent;
-  }
-  .jm-base-linehover0 {
-  border: 1px dashed #00c091;
-}
 
   /deep/.ivu-input {
     border: none;
@@ -371,11 +396,15 @@ export default {
 
 .jm-base-age {
   height: 100px;
-  padding-left: 30px;
-  padding-right: 30px;
+  line-height: 100px;
+  margin-left: 20px;
+  margin-right: 20px;
   margin-top: 10px;
   padding-bottom: 10px;
+
   .jm-age-content {
+    position: relative;
+    padding: 10px;
     padding-right: 170px;
     /deep/.ivu-input {
       border: none;
@@ -452,5 +481,18 @@ export default {
   }
 }
 .jm-work-experience {
+}
+.jm-defult-line {
+  border: 1px dashed transparent;
+}
+.jm-base-linehover0 {
+  border: 1px dashed #00c091;
+}
+.jm-age {
+  height: 24px;
+  line-height: 24px;
+  .jm-baseText {
+    margin-left: 5px;
+  }
 }
 </style>

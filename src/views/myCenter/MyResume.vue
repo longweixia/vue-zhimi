@@ -188,8 +188,9 @@ export default {
 <style lang="less" scoped>
 .center-right {
   position: absolute;
-  top: 60px;
+  top: 80px;
   left: 240px;
+  margin: 10px;
   .jm-ul {
     margin-top: 20px;
     .jm-li {

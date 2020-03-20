@@ -1,6 +1,8 @@
 <template>
   <div>
-      
+     
+          <NavHeader></NavHeader>
+     
      <Menu class="jm-menu" active-name="1-1" :open-names="['1']">
         <Submenu name="1">
             <template slot="title">
@@ -58,16 +60,15 @@
 </template>
 
 <script>
-
+import NavHeader from "@/components/NavHeader";
 export default {
   name: "myCenter",
   components:{
-   
+   NavHeader
   },
   data() {
     return {};
   },
-  components: {},
   methods: {
     
   },
@@ -90,6 +91,7 @@ export default {
     height: 40px;
     line-height: 40px;
     margin: 10px;
+    margin-top: 60px;
 }
 
 </style>
