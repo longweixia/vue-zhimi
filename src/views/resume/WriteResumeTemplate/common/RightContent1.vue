@@ -1,5 +1,5 @@
 <template>
-  <!-- 简历模板3右侧模块 -->
+  <!-- 简历模板3右侧模块，包括设置弹窗模块 -->
   <div
     class="jm-job"
     :class="isBaseLine ? 'jm-base-linehover0' : ''"
@@ -83,16 +83,11 @@
           <Input class="title-row" v-model="title" />
         </div>
       </div>
-      <!-- <Col>
-        <Icon style="margin-top:3px;" size="25" type="md-list-box" />
-        <div class="title">
-          <Input class="title-row" v-model="title" />222
-        </div>
-      </Col> -->
     </Row>
     <!-- 设置面板 -->
     <div class="setting" @mouseleave="hiddenSetting">
-      <setting3 v-if="showSetting" :themeFlag="themeFlag">
+      
+      <setting3 v-if="showSetting"  :themeFlag="themeFlag">
         <div slot="content">
           <div v-for="(item, index) in settingList" :key="index">
             <span>{{ item.text }}</span>
@@ -208,11 +203,11 @@
 </template>
 <script>
 import Bus from "@/assets/event-bus.js";
-import modal3 from "./Modal3";
-import theme3 from "./Template3/Theme3";
-import setting3 from "./Template3/setting3";
+import modal3 from "./../Template3/Modal3";
+import theme3 from "./../Template3/Theme3";
+import setting3 from "./../Template3/setting3";
 export default {
-  name: "rightContent",
+  name: "rightContent1",
   props: ["name", "title", "jobIntentionLists", "themeList", "themeFlag"], //基本信息的弹窗标识
   components: {
     modal3,
@@ -345,7 +340,7 @@ export default {
   },
   methods: {
     // 改变设置面板的内容时
-     changeSwitch(index, val) {
+    changeSwitch(index, val) {
       var settingObj = {
         text: "隐藏时间模块",
         isShowJobTime: "",
@@ -402,10 +397,9 @@ export default {
     },
     // 显示编辑面板
     displayModelBase(name) {
-      if(this.themeFlag=="jobIntention"){
- this.modalJob = true;
+      if (this.themeFlag == "jobIntention") {
+        this.modalJob = true;
       }
-     
     },
     // 改变薪资
     choseSalarys() {
@@ -422,10 +416,17 @@ export default {
     // 点击换肤按钮，切换主题
     changeTheme() {
       this.modalTheme = true;
-    }
+    },
+    //   // 获取设置数据
+    // getSetting() {
+    //   Bus.$on("changeSetting", settingObj => {
+    //     this.settingObj = settingObj;
+    //   });
+    // },
   },
   mounted() {
     this.closeModel("theme");
+    // this.getSetting();
     // var that = this
     Bus.$on("closeTheme", () => {
       this.modalTheme = false;
@@ -446,7 +447,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .jm-job {
-  margin: 10px 5px 20px 5px;
+  margin: 10px 30px 20px 30px;
   padding-bottom: 10px;
   position: relative;
   border: 1px solid transparent;
@@ -487,33 +488,20 @@ export default {
     background: #00c091;
     border-radius: 10px;
   }
-  // .title {
-  //   width: 400px;
-  //   display: inline-block;
-  //   .title-row {
-  //     border-bottom: 1px solid #254665;
-  //     /deep/ .ivu-input {
-  //       width:100px;
-  //       color: #254665;
-  //       font-size: 20px;
-  //       font-weight: bold;
-  //     }
-  //   }
-  // }
 }
 .jm-base-linehover0 {
   border: 1px dashed #00c091;
 }
 
 .title {
-  width: 478px;
+  // width: 478px;
   margin-top: 20px;
   // margin-top:-30px;
   // margin-left:30px;
-  display: inline-block;
+  // display: inline-block;
   .jm-title-top {
     display: inline-block;
-    width: 478px;
+    width: 100%;
     position: relative;
     /deep/ .ivu-icon {
       vertical-align: middle;
@@ -532,10 +520,15 @@ export default {
   .title-row {
     width: 100px;
     display: inline-block;
-
-    // margin-left:212px;
     position: relative;
+    /deep/ .ivu-input:focus {
+      box-shadow: none;
+      background: #eaeaea;
+      border: none;
+    }
+    // 设置input的样式
     /deep/ .ivu-input {
+      border: none;
       color: #254665;
       font-size: 20px;
       font-weight: bold;
@@ -554,11 +547,11 @@ export default {
 }
 // 标题前后的线
 .both-sides-left {
-  width: 149px;
+  width: calc(50% - 85px);
   display: inline-block;
   content: "";
   border-color: #254665;
-  position: absolute;
+  // position: absolute;
   z-index: 100;
   // left: 0;
   // right: 172px;
@@ -567,7 +560,7 @@ export default {
   border-bottom: 1px solid;
 }
 .both-sides-right {
-  width: 149px;
+  width: calc(50% - 85px);
   display: inline-block;
   content: "";
   border-color: #254665;
@@ -579,22 +572,11 @@ export default {
   margin-top: -1px;
   border-bottom: 1px solid;
 }
-// .both-sides-left::after {
-//   width:172px;
-//   content: "";
-//   border-color: #254665;
-//   position: absolute;
-//   // left: 70%;
-//   right: 0;
-//   top: 50%;
-//   margin-top: -1px;
-//   border-bottom: 1px solid;
-// }
 
 // 前后两线上的图标
 .line-icon-sides-left {
   display: inline-block;
-  margin-left: 149px;
+  // margin-left: 149px;
   text-align: center;
   width: 30px;
 }
@@ -604,47 +586,10 @@ export default {
   text-align: center;
   width: 30px;
 }
-// .jm-theme-hover {
-//   /deep/.ivu-input {
-//     border: none;
-//     // color: #fff;
-//     background: #e0e0e0;
-//     // opacity: .2;
-//   }
-// }
-// .jm-theme-hover::before {
-//   content: "";
-//   position: absolute;
-//   top: -20px;
-//   left: -20px;
-//   width: 564px;
-//   height: 135px;
-//   background: #666;
-//   opacity: 0.2;
-// }
-// .jm-save-btn {
-//   position: absolute;
-//   background-color: #00c190;
-//   color: white;
-//   border-radius: 4px;
-//   border: none;
-//   width: 60px;
-//   height: 30px;
-//   line-height: 30px;
-//   text-align: center;
-//   vertical-align: middle;
-//   left: 50%;
-//   margin-left: -30px;
-//   top: 50px;
-//   z-index: 1000;
-//   cursor: pointer;
-// }
 .setting {
-  width: 100%;
   position: absolute;
-  left: 288px;
-  z-index: 1;
-  margin-top: -35px;
-  padding-top: 20px;
+    z-index: 1;
+    right: -10px;
+    top: 40px;
 }
 </style>

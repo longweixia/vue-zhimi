@@ -18,65 +18,8 @@
         v-on:saveBaseInfo="saveBaseInfo"
       />
       <div class="resume-left">
-        <!-- 头像 -->
-        <div
-          v-if="showHeadImg"
-          @mouseenter="enter('headImg')"
-          @mouseleave="leave('headImg')"
-          class="jm-headImg"
-          :class="isHeadImg ? 'jm-headImg-lineIs' : ''"
-        >
-          <!-- jm-headImg-line   :class="isHeadImg ? 'jm-headImg-lineIs' : ''" -->
-          <Icon
-            v-show="isHeadImg"
-            class="jm-head-icon"
-            size="20"
-            type="md-settings"
-            @click="displayModelBase('headIcon')"
-          />
-          <div class="head-icon" :style="imgFartherClass">
-            <jmUploadImg :ImgBase64="formData.ImgBase64" :imgClass="imgClass" :isHeadImg="isHeadImg" />
-          </div>
-          <!-- 头像设置面板 -->
-          <div class="setting-head" @mouseleave="hiddenSetting">
-            <!-- v-if="showSetting" -->
-            <setting3 v-if="showSetting">
-              <div slot="content">
-                <div style="margin-bottom:10px;">
-                  <span style="float:left;margin-left:15px;">风格</span>
-                  <span style="margin-left:40px;"
-                    >隐藏
-                    <i-Switch
-                      size="large"
-                      v-model="headIconHidden"
-                      @on-change="changeSwitch(-1, headIconHidden)"
-                    >
-                      <span slot="open">开</span>
-                      <span slot="close">关</span>
-                    </i-Switch>
-                  </span>
-                </div>
-
-                <div
-                  class="head-img-example"
-                  @mouseenter="bgHeadIconIndex = index"
-                  @mouseleave="bgHeadIconIndex = -1"
-                  v-for="(item, index) in headIconList"
-                  :key="index"
-                  :class="bgHeadIconIndex == index ? 'bg-head-icon' : ''"
-                  @click="changeHeadIcon(index)"
-                >
-                  <img
-                    class="round-head-icon"
-                    :class="item.otherClass"
-                    :src="item.imgSrc"
-                  />
-                  <div>{{ item.text }}</div>
-                </div>
-              </div>
-            </setting3>
-          </div>
-        </div>
+         <!-- 头像 -->
+         <headContent :formData="formData" :showHeadImg="showHeadImg"></headContent>
         <!-- 基本信息 -->
         <Row>
           <div
@@ -151,8 +94,7 @@
             class="jm-defult-line"
             :class="isBaseLine ? 'jm-base-linehover0' : ''"
             @mouseenter="enter('baseRight')"
-            @mouseleave="leave('baseRight')"
-          >
+            @mouseleave="leave('baseRight')">
             <Icon
               v-show="isBaseLine"
               @click="displayModelBase('base')"
@@ -168,7 +110,6 @@
                 class="right-name"
               />
             </div>
-            <!-- style="width:94%;margin:5px 3%;font-size: 30px;" -->
             <div v-if="formData.showDescribe" class="jm-name-introduce">
               <Input
                 v-model="formData.wordDescribe"
@@ -335,48 +276,28 @@
 import jmUploadImg from "@/components/UploadImg";
 import skillModal from "./SkillModal";
 import baseInfoModel from "./BaseInfoModel";
-import rightContent from "./RightContent";
+import rightContent from "./common/RightContent";
 import Bus from "@/assets/event-bus.js";
 import vuedraggable from "vuedraggable";
-import setting3 from "./Template3/setting3";
+import headContent from "@/components/HeadContent";
+
 // import html2canvas from "html2canvas";
 import domtoimage from 'dom-to-image';
 export default {
-  name: "WriteResumeTemplate3",
+  name: "Template3",
   components: {
     jmUploadImg,
     skillModal,
     baseInfoModel,
     rightContent,
     vuedraggable,
-    setting3
+    headContent
   },
   data() {
     return {
       // contentHight:"",//内容高度
       showHeadImg: true, //是否显示头像
-      imgFartherClass: "", //改变头像样式将传给父dom的类
-      imgClass: "", //透传给上传组件的选定的样式头像
-      bgHeadIconIndex: "", //悬浮头像案例图标位置
-      headIconHidden: true, //显示隐藏头像
-      showSetting: false, //是否显示头像的设置面板
-      headIconList: [
-        {
-          otherClass: "",
-          imgSrc: "./../../static/image/1.jpg",
-          text: "圆形"
-        },
-        {
-          otherClass: "one-head-icon",
-          imgSrc: "./../../static/image/1.jpg",
-          text: "1：1"
-        },
-        {
-          otherClass: "three-head-icon",
-          imgSrc: "./../../static/image/1.jpg",
-          text: "3：4"
-        }
-      ],
+      // showSetting: false, //是否显示头像的设置面板
       settingObj: {
         isShowJobTime: true
       }, //设置数据
@@ -388,7 +309,6 @@ export default {
       baseObjC: {}, //传递获取接口的数据到基本数据弹窗的数据
       // resumeTemplateObj: {}, //当该模板之前有提交过时，
       // wirteIdeContent.vue会将之前的值传过来传递过来
-      isHeadImg: false, //是否显示头像编辑框
       modalSkill: false, //默认技能弹窗不显示
       modalBaseInfo: false, //默认基本信息弹窗不显示
       isBase: false, //是否显示base编辑框
@@ -459,7 +379,7 @@ export default {
       experienceList: [
         {
           date: "",
-          dame: "",
+          name: "",
           positionName: "",
           content: ""
         }
@@ -494,9 +414,31 @@ export default {
             )
       })
     },
+     // 获取简历信息
+    // 调用接口，判断获取该模板中是否已经填写过内容，如果是，直接将数据回填
+    getTemplatesResume(){
+      this.axios
+        .get("resumeTemplates/getTemplatesResume", {
+          params: {
+         userName: localStorage.getItem("userName"), //暂时写死，到时候用vuex
+         TemplateId:this.$route.query.id
+        }
+        })
+        .then(res => {
+          if (res.data.status == "0") {
+           var resumeTemplateObj = res.data.result;
+          //  如果获取不到数据，就不执行，防止后面获取属性值：null.xxx报错
+           if(!resumeTemplateObj){
+             return
+           }
+           this.getTemplatesResumes(resumeTemplateObj)
+          }
+        })
+        .catch(err => {});
+    },
     // 获取简历信息
-    getTemplatesResumes(){
-       Bus.$on("getTemplatesResume", resumeTemplateObj => {
+    getTemplatesResumes(resumeTemplateObj){
+      
       var resumeTemplateObj = resumeTemplateObj.resumeTemplate[0].resumeContent;
       if (resumeTemplateObj.baseInfoList.headPic == "显示") {
         this.showHeadImg = true;
@@ -547,7 +489,7 @@ export default {
       this.eduList = resumeTemplateObj.eduList;
       this.experienceList = resumeTemplateObj.experienceList;
       this.selfEvaluation = resumeTemplateObj.selfEvaluation;
-    });
+
     },
      // 点击保存按钮，提交填写好的简历
      saveContentss(){
@@ -556,17 +498,19 @@ export default {
         let doms = document.getElementById("code")
        this.common.transformImage(doms).then(dataUrl=>{
               //  this.formData.ImgBase64 = this.ImgBase64
+              let nameId= this.$route.query.id
       // 组装要提交的信息
       var content = {
         userName: localStorage.getItem("userName"), //简历名称
         hasCommonResume: false, //是否有基础简历的信息
+        
         resumeTemplate: [
           //模板简历
           {
-            TemplateId: 3, //模板ID
+            TemplateId: nameId, //模板ID
             img:{
               url:dataUrl,
-              name:3
+              name:nameId
             },
             resumeContent: {
               //简历内容
@@ -613,35 +557,6 @@ export default {
       }
     });
     },
-    // 改变设置面板的开关
-    changeSwitch(index, value) {
-      if (index == -1) {
-        this.showHeadImg = value;
-        var abc;
-        this.showHeadImg ? (abc = "显示") : (abc = "隐藏");
-        Bus.$emit("getShowHeadImg", abc);
-      }
-    },
-    // 点击头像设置样式案例
-    changeHeadIcon(index) {
-      if (index == 0) {
-        console.log(index, "099009");
-        this.imgClass = "round-head";
-        this.imgFartherClass = "height:128px;";
-      } else if (index == 1) {
-        this.imgClass = "one-head";
-        this.imgFartherClass = "height:128px;";
-      } else if (index == 2) {
-        this.imgClass = "three-head";
-        this.imgFartherClass = "height:156px;";
-      }
-      this.showSetting = false;
-    },
-    // 隐藏头像设置面板
-    hiddenSetting() {
-      this.showSetting = false;
-    },
-
     // 获取设置数据
     getSetting() {
       Bus.$on("changeSetting", settingObj => {
@@ -652,9 +567,7 @@ export default {
     enter(flag) {
      
       switch (flag) {
-        case "headImg":
-          this.isHeadImg = true;
-          break;
+
         case "base":
           this.isBase = true;
           break;
@@ -669,9 +582,7 @@ export default {
     //鼠标离开
     leave(flag) {
       switch (flag) {
-        case "headImg":
-          this.isHeadImg = false;
-          break;
+    
         case "base":
           this.isBase = false;
           break;
@@ -683,22 +594,6 @@ export default {
           break;
       }
     },
-    // 鼠标悬浮基本信息
-    enterBase() {
-      this.isBase = true;
-    },
-    //鼠标离开基本信息
-    leaveBase() {
-      this.isBase = false;
-    },
-    // 鼠标悬浮技能特长
-    enterSkill() {
-      this.isSkill = true;
-    },
-    //鼠标离开技能特长
-    leaveSkill() {
-      this.isSkill = false;
-    },
     // 显示技能弹窗
     displaySkillModel() {
       this.modalSkill = true;
@@ -707,9 +602,10 @@ export default {
     displayModelBase(name) {
       if (name == "base") {
         this.modalBaseInfo = true;
-      } else if (name == "headIcon") {
-        this.showSetting = true;
       }
+      //  else if (name == "headIcon") {
+      //   this.showSetting = true;
+      // }
     },
     // 关闭技能弹窗，基本信息弹窗
     changeSkillModel(data) {
@@ -777,7 +673,7 @@ export default {
       if (name == "experience") {
         var objExperience = {
           date: "",
-          dame: "",
+          name: "",
           positionName: "",
           content: ""
         };
@@ -786,6 +682,13 @@ export default {
     }
   },
   mounted() {
+    Bus.$on("getShowHeadImg",value=>{
+   if ( value== "显示") {
+          this.showHeadImg = true;
+        } else if (value == "隐藏") {
+          this.showHeadImg = false;
+        }
+})
      // 获取头像的数据
       Bus.$on("postPhotoBase64", (ImgBase64) => {
         this.formData.ImgBase64 = ImgBase64
@@ -798,7 +701,7 @@ export default {
     console.log(this.contentHight)
     this.getSetting();
     // 获取简历信息
-   this.getTemplatesResumes();
+   this.getTemplatesResume();
     // 点击保存按钮，提交填写好的简历
    this.saveContentss();
     // 解决父组件多次传值的问题
@@ -860,6 +763,7 @@ export default {
   background: #00c091;
   margin: 5px;
   z-index: 1;
+  cursor: pointer;
 }
 body {
   min-width: 1240px;

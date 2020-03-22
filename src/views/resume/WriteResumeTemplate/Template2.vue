@@ -686,7 +686,7 @@ import NavHeader from "@/components/NavHeader";
 import NavFooter from "@/components/NavFooter";
 import html2canvas from "html2canvas";
 export default {
-  name: "WriteResumeTemplate2",
+  name: "Template2",
   data() {
     return {
       resumeList: {},

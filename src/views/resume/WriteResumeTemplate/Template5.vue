@@ -53,7 +53,7 @@
 import jmUploadImg from "@/components/UploadImg";
 import Bus from "@/assets/event-bus.js";
 export default {
-  name: "WriteResumeTemplate5",
+  name: "Template5",
   data() {
     return {
       name: "",

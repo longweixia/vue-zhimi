@@ -27,7 +27,7 @@ const files = require.context("./../WriteResumeTemplate", false, /\.vue$/);
 const modules = {};
 files.keys().forEach(key => {
   const name = path.basename(key, '.vue')
-  if (name == "WriteResumeTemplate" + templateId) {
+  if (name == "Template" + templateId) {
     templateName = name;
     modules[templateName] = files(key).default || files(key);
     console.log(modules);
@@ -44,37 +44,38 @@ export default {
   components: { TemplateNames: modules[templateName] },
   watch: {},
   methods:{
-  // 获取简历信息
-    // 调用接口，判断获取该模板中是否已经填写过内容，如果是，直接将数据回填
-    getTemplatesResume(){
-      this.axios
-        .get("resumeTemplates/getTemplatesResume", {
-          params: {
-         userName: localStorage.getItem("userName") //暂时写死，到时候用vuex
-        }
-        // ,
-        //   headers:{
-        //     token:"jack"
-        //   }
-        })
-        .then(res => {
-          if (res.data.status == "0") {
-           var resumeTemplateObj = res.data.result;
-          //  如果获取不到数据，就不执行，防止后面获取属性值：null.xxx报错
-           if(!resumeTemplateObj){
-             return
-           }
-          //  将数据获取后传递到各个模板简历上
-           Bus.$emit('getTemplatesResume',resumeTemplateObj)
-          //  console.log(resumeList)
-          }
-        })
-        .catch(err => {});
-    }
+  // // 获取简历信息
+  //   // 调用接口，判断获取该模板中是否已经填写过内容，如果是，直接将数据回填
+  //   getTemplatesResume(){
+  //     console.log(this.$route.query.id,"11111")
+  //     this.axios
+  //       .get("resumeTemplates/getTemplatesResume", {
+  //         params: {
+  //        userName: localStorage.getItem("userName") //暂时写死，到时候用vuex
+  //       }
+  //       // ,
+  //       //   headers:{
+  //       //     token:"jack"
+  //       //   }
+  //       })
+  //       .then(res => {
+  //         if (res.data.status == "0") {
+  //          var resumeTemplateObj = res.data.result;
+  //         //  如果获取不到数据，就不执行，防止后面获取属性值：null.xxx报错
+  //          if(!resumeTemplateObj){
+  //            return
+  //          }
+  //         //  将数据获取后传递到各个模板简历上
+  //          Bus.$emit('getTemplatesResume',resumeTemplateObj)
+  //         //  console.log(resumeList)
+  //         }
+  //       })
+  //       .catch(err => {});
+  //   }
   },
 
   mounted() {
-    this.getTemplatesResume();
+    // this.getTemplatesResume();
   },
   beforeCreate(){
   },

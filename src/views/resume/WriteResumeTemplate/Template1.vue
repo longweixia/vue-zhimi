@@ -7,7 +7,7 @@
 
 <script>
 export default {
-  name: "WriteResumeTemplate1",
+  name: "Template1",
   data() {
     return {
    

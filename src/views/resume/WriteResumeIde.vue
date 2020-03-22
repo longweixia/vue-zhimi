@@ -13,10 +13,10 @@
 </template>
 
 <script>
-import WriteIdeHeader from "@/views/resume/ResumeTemplateCommon/WriteIdeHeader";
-import WriteIdeSiderLeft from "@/views/resume/ResumeTemplateCommon/WriteIdeSiderLeft";
-import WriteIdeSiderRight from "@/views/resume/ResumeTemplateCommon/WriteIdeSiderRight";
-import WriteIdeContent from "@/views/resume/ResumeTemplateCommon/WriteIdeContent";
+import WriteIdeHeader from "@/views/resume/Common/WriteIdeHeader";
+import WriteIdeSiderLeft from "@/views/resume/Common/WriteIdeSiderLeft";
+import WriteIdeSiderRight from "@/views/resume/Common/WriteIdeSiderRight";
+import WriteIdeContent from "@/views/resume/Common/WriteIdeContent";
 export default {
   name: "WriteResumeIde",
   data() {

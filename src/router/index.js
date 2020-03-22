@@ -7,11 +7,11 @@ import WriteBaseInfo from '@/views/resume/WriteBaseInfo'
 import ResumeTemplate1 from '@/views/resume/ResumeTemplate/ResumeTemplate1'
 import TemplateMall from '@/views/templateMall/TemplateMall'   
 import WriteResumeIde from '@/views/resume/WriteResumeIde'   
-import WriteIdeHeader from '@/views/resume/ResumeTemplateCommon/WriteIdeHeader'   
-import Preview from '@/views/resume/ResumeTemplateCommon/Preview'   
-import WriteIdeSiderLeft from '@/views/resume/ResumeTemplateCommon/WriteIdeSiderLeft'   
-import WriteResumeTemplate1 from '@/views/resume/WriteResumeTemplate/WriteResumeTemplate1'
-import WriteResumeTemplate2 from '@/views/resume/WriteResumeTemplate/WriteResumeTemplate2'
+import WriteIdeHeader from '@/views/resume/Common/WriteIdeHeader'   
+import Preview from '@/views/resume/Common/Preview'   
+import WriteIdeSiderLeft from '@/views/resume/Common/WriteIdeSiderLeft'   
+// import WriteResumeTemplate1 from '@/views/resume/WriteResumeTemplate/WriteResumeTemplate1'
+// import WriteResumeTemplate2 from '@/views/resume/WriteResumeTemplate/WriteResumeTemplate2'
 import MyCenter from '@/views/myCenter/MyCenter'   
 import MyResume from '@/views/myCenter/MyResume'   
 
@@ -74,16 +74,16 @@ export default new Router({
             name: 'writeIdeSiderLeft',
             component: WriteIdeSiderLeft
         },
-        {
-            path: '/writeResumeTemplate1',
-            name: 'writeResumeTemplate1',
-            component: WriteResumeTemplate1
-        },
-        {
-            path: '/writeResumeTemplate2',
-            name: 'writeResumeTemplate2',
-            component: WriteResumeTemplate2
-        },
+        // {
+        //     path: '/writeResumeTemplate1',
+        //     name: 'writeResumeTemplate1',
+        //     component: WriteResumeTemplate1
+        // },
+        // {
+        //     path: '/writeResumeTemplate2',
+        //     name: 'writeResumeTemplate2',
+        //     component: WriteResumeTemplate2
+        // },
         {
             path: '/preview',
             name: 'preview',
