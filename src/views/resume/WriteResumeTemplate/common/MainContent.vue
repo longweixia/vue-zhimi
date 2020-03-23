@@ -330,7 +330,10 @@ export default {
       };
 
       this.axios
-        .post("resumeTemplates/resumeTemplates", { content: content })
+        .post("resumeTemplates/resumeTemplates", { 
+          content: content,
+          TemplateId:this.$route.query.id
+           })
         .then(res => {
           if (res.data.status == "0") {
             this.$Message.success("保存成功");
@@ -356,38 +359,37 @@ export default {
         })
         .then(res => {
           if (res.data.status == "0") {
-           var resumeTemplateObj = res.data.result;
+           var result = res.data.result;
           //  如果获取不到数据，就不执行，防止后面获取属性值：null.xxx报错
-           if(!resumeTemplateObj){
+           if(!result){
              return
            }
-           this.getTemplatesResumes(resumeTemplateObj)
+           this.getTemplatesResumes(result)
           }
         })
         .catch(err => {});
     },
      // 获取简历信息
-    getTemplatesResumes(resumeTemplateObj){
-     
-      var resumeTemplateObj = resumeTemplateObj.resumeTemplate[0].resumeContent;
-      if (resumeTemplateObj.baseInfoList.headPic == "显示") {
+    getTemplatesResumes(result){
+      var content = result.resumeContent;
+      if (content.baseInfoList.headPic == "显示") {
         this.showHeadImg = true;
-      } else if (resumeTemplateObj.baseInfoList.headPic == "隐藏") {
+      } else if (content.baseInfoList.headPic == "隐藏") {
         this.showHeadImg = false;
       }
 
-      console.log(resumeTemplateObj, "====");
+      console.log(content, "====");
       // 组装基本数据，传递到基本数据弹窗
       this.baseObjC = {
-        name: resumeTemplateObj.baseInfoList.name,
-        birthday: resumeTemplateObj.baseInfoList.birthday,
-        age: resumeTemplateObj.baseInfoList.age, //年龄
-        tel: resumeTemplateObj.baseInfoList.tel,
-        mail: resumeTemplateObj.baseInfoList.mail,
-        work: resumeTemplateObj.baseInfoList.work, //工作年限
-        headPic: resumeTemplateObj.baseInfoList.headPic, //是否显示头像
-        wordDescribe: resumeTemplateObj.baseInfoList.wordDescribe, //一句话描述
-        showDescribe: resumeTemplateObj.baseInfoList.showDescribe //是否开启隐藏按钮
+        name: content.baseInfoList.name,
+        birthday: content.baseInfoList.birthday,
+        age: content.baseInfoList.age, //年龄
+        tel: content.baseInfoList.tel,
+        mail: content.baseInfoList.mail,
+        work: content.baseInfoList.work, //工作年限
+        headPic: content.baseInfoList.headPic, //是否显示头像
+        wordDescribe: content.baseInfoList.wordDescribe, //一句话描述
+        showDescribe: content.baseInfoList.showDescribe //是否开启隐藏按钮
       };
       // 获取数据，回填到表单
       let baseInfoList = [
@@ -395,32 +397,32 @@ export default {
         {
           type: "ios-contact",
           baseText: "年龄",
-          inputText: resumeTemplateObj.baseInfoList.age || ""
+          inputText: content.baseInfoList.age || ""
         },
         {
           type: "md-briefcase",
           baseText: "工作经验",
-          inputText: resumeTemplateObj.baseInfoList.work || ""
+          inputText: content.baseInfoList.work || ""
         },
         {
           type: "ios-call",
           baseText: "电话",
-          inputText: resumeTemplateObj.baseInfoList.tel || ""
+          inputText: content.baseInfoList.tel || ""
         },
         {
           type: "ios-mail",
           baseText: "邮箱",
-          inputText: resumeTemplateObj.baseInfoList.mail || ""
+          inputText: content.baseInfoList.mail || ""
         }
       ]
       // console.log(this.baseInfoList,"this.baseInfoList")
-        Bus.$emit("getFormData",[resumeTemplateObj.baseInfoList,baseInfoList,this.baseObjC])
-        // (this.formData = resumeTemplateObj.baseInfoList);
-      this.hasSkillList = resumeTemplateObj.SkillList;
-      this.jobIntentionList = resumeTemplateObj.jobIntentionList;
-      this.eduList = resumeTemplateObj.eduList;
-      this.experienceList = resumeTemplateObj.experienceList;
-      this.selfEvaluation = resumeTemplateObj.selfEvaluation;
+        Bus.$emit("getFormData",[content.baseInfoList,baseInfoList,this.baseObjC])
+        // (this.formData = content.baseInfoList);
+      this.hasSkillList = content.SkillList;
+      this.jobIntentionList = content.jobIntentionList;
+      this.eduList = content.eduList;
+      this.experienceList = content.experienceList;
+      this.selfEvaluation = content.selfEvaluation;
  
     },
   },

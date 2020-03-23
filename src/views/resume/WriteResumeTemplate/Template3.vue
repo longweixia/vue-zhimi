@@ -280,7 +280,6 @@ import rightContent from "./common/RightContent";
 import Bus from "@/assets/event-bus.js";
 import vuedraggable from "vuedraggable";
 import headContent from "@/components/HeadContent";
-
 // import html2canvas from "html2canvas";
 import domtoimage from 'dom-to-image';
 export default {
@@ -426,7 +425,7 @@ export default {
         })
         .then(res => {
           if (res.data.status == "0") {
-           var resumeTemplateObj = res.data.result;
+           var resumeTemplateObj = res.data.result.resumeContent;
           //  如果获取不到数据，就不执行，防止后面获取属性值：null.xxx报错
            if(!resumeTemplateObj){
              return
@@ -439,13 +438,12 @@ export default {
     // 获取简历信息
     getTemplatesResumes(resumeTemplateObj){
       
-      var resumeTemplateObj = resumeTemplateObj.resumeTemplate[0].resumeContent;
+      // var resumeTemplateObj = resumeTemplateObj.resumeTemplate[0].resumeContent;
       if (resumeTemplateObj.baseInfoList.headPic == "显示") {
         this.showHeadImg = true;
       } else if (resumeTemplateObj.baseInfoList.headPic == "隐藏") {
         this.showHeadImg = false;
       }
-
       console.log(resumeTemplateObj, "====");
       // 组装基本数据，传递到基本数据弹窗
       this.baseObjC = {
@@ -489,7 +487,6 @@ export default {
       this.eduList = resumeTemplateObj.eduList;
       this.experienceList = resumeTemplateObj.experienceList;
       this.selfEvaluation = resumeTemplateObj.selfEvaluation;
-
     },
      // 点击保存按钮，提交填写好的简历
      saveContentss(){
@@ -524,9 +521,8 @@ export default {
           }
         ]
       };
-
       this.axios
-        .post("resumeTemplates/resumeTemplates", { content: content })
+        .post("resumeTemplates/resumeTemplates", { content: content,TemplateId:this.$route.query.id })
         .then(res => {
           if (res.data.status == "0") {
             this.$Message.success("保存成功");
@@ -567,7 +563,6 @@ export default {
     enter(flag) {
      
       switch (flag) {
-
         case "base":
           this.isBase = true;
           break;
@@ -747,7 +742,6 @@ export default {
     // }
   }
 }
-
 /deep/.ivu-input {
   border: none !important;
 }
@@ -778,7 +772,6 @@ body {
     background: #254665;
     padding: 20px 30px 40px 30px;
   }
-
   // 基本信息
   .jm-baseInfo {
     padding: 20px 0 20px 4px;
@@ -831,7 +824,6 @@ body {
   .jm-base-linehover0 {
     border: 1px dashed #00c091;
   }
-
   /deep/.ivu-input {
     border: none;
   }
