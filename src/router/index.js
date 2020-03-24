@@ -14,6 +14,7 @@ import WriteIdeSiderLeft from '@/views/resume/Common/WriteIdeSiderLeft'
 // import WriteResumeTemplate2 from '@/views/resume/WriteResumeTemplate/WriteResumeTemplate2'
 import MyCenter from '@/views/myCenter/MyCenter'   
 import MyResume from '@/views/myCenter/MyResume'   
+import Collection from '@/views/myCenter/Collection'   
 
 
 Vue.use(Router)
@@ -98,6 +99,11 @@ export default new Router({
             path: '/myResume',
             name: 'myResume',
             component: MyResume
+        },
+        {
+            path: '/collection',
+            name: 'collection',
+            component: Collection
         }
     ]
 })

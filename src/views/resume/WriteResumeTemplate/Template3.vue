@@ -807,6 +807,7 @@ body {
 // 右侧信息
 .resume-right {
   // padding: 10px 30px;
+  background: #fff;
   float: right;
   min-height: 1160px;
   padding: 10px 30px 40px 30px;

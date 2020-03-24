@@ -11,6 +11,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       // /users/**表示有三级路由
+      // 注意，如果新建的代理，调用接口报404，可以npm run dev后再调用
       '/users/**':{
         target:'http://localhost:3000'
       },
@@ -21,6 +22,9 @@ module.exports = {
         target:'http://localhost:3000'
       },
       '/malls/**':{
+        target:'http://localhost:3000'
+      },
+      '/collections/**':{
         target:'http://localhost:3000'
       }
     },

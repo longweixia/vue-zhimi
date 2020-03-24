@@ -11,7 +11,7 @@
             </template>
           
                 <MenuItem name="1-1" to="myResume">我的简历</MenuItem>
-                <MenuItem name="1-2">我的收藏</MenuItem>
+                <MenuItem name="1-2" to="collection">我的收藏</MenuItem>
          
             <MenuGroup title="Item 2">
                 <MenuItem name="1-3">Option 3</MenuItem>

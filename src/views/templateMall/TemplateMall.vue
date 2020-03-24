@@ -104,9 +104,13 @@
                           @mouseenter.native="enterIcon(index)"
                           @mouseleave.native="leaveIcon(index)"
                         />
+                        <div class="center-btn">
                         <Button @click="gotoResumeTemplate(index)" class="jm-btn" shape="circle" icon="ios-search"
-                          >编辑简历</Button
-                        >
+                          >编辑简历</Button>
+                          </div>
+                          <div class="center-btn">
+                        <Button @click="collections(imgList[index].mallId)" class="jm-btn jm-btn-delete" shape="circle" icon="ios-heart-outline">  收藏</Button>
+                      </div>
                       </div>
                       <div class="jm-preview" v-show="currentIcon == index">
                         <img
@@ -164,6 +168,21 @@ export default {
     NavFooter
   },
   methods: {
+    // 收藏简历
+    collections(name){
+      this.axios.post("collections/resume", {
+        userName: localStorage.getItem("userName"), //暂时写死，到时候用vuex
+        mallId:name
+      }).then(res => {
+        // if(res.data.status=="0"){
+        //   this.$Message.info(res.data.msg);
+        // }
+         
+        })
+        .catch(err => {
+          console.log("err", err);
+        });
+    },
     handleUpload(file) {
       // 需要传给后台的file文件
       this.file = file;
@@ -399,7 +418,7 @@ export default {
     bottom: 0;
     .jm-btn {
       position: relative;
-      top: 50%;
+      // top: 50%;
       font-size: 20px;
       transform: translate(0, -50%);
     }
@@ -446,4 +465,12 @@ export default {
   margin-top:40px;
   margin-bottom: 40px;
 }
+  .jm-btn-delete{
+    margin-top: 10px;
+    color: red;
+  }
+  .center-btn{
+    position: relative;
+    top: 50%;
+  }
 </style>

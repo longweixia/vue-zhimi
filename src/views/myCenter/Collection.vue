@@ -1,8 +1,8 @@
 <template>
+<!-- 我的收藏 -->
   <div>
-    <!-- <NavHeader></NavHeader> -->
     <myCenter></myCenter>
-    <div class="center-right">
+    <div class="center-right">33
       <ul v-if="!showMsg" class="jm-ul">
       
         <li class="jm-li" v-for="(item, index) in imgList" :key="index">
@@ -65,7 +65,7 @@ import myCenter from "./MyCenter";
 import NavHeader from "@/components/NavHeader";
 import NavFooter from "@/components/NavFooter";
 export default {
-  name: "myResume",
+  name: "collection",
   data() {
     return {
       imgList: [], //首页图片列表
@@ -150,7 +150,7 @@ export default {
     // 获取图片列表
     getImgList() {
       this.axios
-        .get("resumeTemplates/getMyResume", {
+        .get("collections/getResume", {
           params: {
          userName: localStorage.getItem("userName") //暂时写死，到时候用vuex
         }

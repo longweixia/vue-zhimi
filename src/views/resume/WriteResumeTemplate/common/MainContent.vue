@@ -158,29 +158,6 @@ export default {
       eduThemeList: {}, //教育背景主题数据
       workThemeList: {}, //工作主题数据
       ThemeAppraiseList: {}, //评价主题数据
-      // baseInfoList: [
-      //   //基本信息
-      //   {
-      //     type: "ios-contact",
-      //     baseText: "年龄",
-      //     inputText: ""
-      //   },
-      //   {
-      //     type: "md-briefcase",
-      //     baseText: "工作经验",
-      //     inputText: ""
-      //   },
-      //   {
-      //     type: "ios-call",
-      //     baseText: "电话",
-      //     inputText: ""
-      //   },
-      //   {
-      //     type: "ios-mail",
-      //     baseText: "邮箱",
-      //     inputText: ""
-      //   }
-      // ],
       jobIntentionList: [
         //求职意向项
         {

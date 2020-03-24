@@ -259,6 +259,7 @@ export default {
 .jm-template {
   position: relative;
   margin-bottom: 40px;
+  background: #fff;
 }
 .jm-head-icon {
   position: absolute;
