@@ -109,7 +109,8 @@
                           >编辑简历</Button>
                           </div>
                           <div class="center-btn">
-                        <Button @click="collections(imgList[index].mallId)" class="jm-btn jm-btn-delete" shape="circle" icon="ios-heart-outline">  收藏</Button>
+                        <Button @click="collections(index,imgList[index].mallId)" class="jm-btn jm-btn-delete"
+                         shape="circle" icon="ios-heart-outline">{{item.collectText}}</Button>
                       </div>
                       </div>
                       <div class="jm-preview" v-show="currentIcon == index">
@@ -169,14 +170,20 @@ export default {
   },
   methods: {
     // 收藏简历
-    collections(name){
+    collections(index,name){
       this.axios.post("collections/resume", {
-        userName: localStorage.getItem("userName"), //暂时写死，到时候用vuex
+        userName: localStorage.getItem("userName"), 
         mallId:name
       }).then(res => {
-        // if(res.data.status=="0"){
-        //   this.$Message.info(res.data.msg);
-        // }
+        
+        if(res.data.status=="0"){
+          this.imgList[index].collectText="取消收藏"
+          
+        }else if(res.data.status=="2"){
+          this.imgList[index].collectText="收藏"
+        }else{
+          this.$Message.info(res.data.msg);
+        }
          
         })
         .catch(err => {
@@ -276,11 +283,15 @@ export default {
         .get("malls/getImgList", { 
           params:{
           pageSize: this.pageSize,
-          currentPage:this.currentPage
+          currentPage:this.currentPage,
+          userName: localStorage.getItem("userName")
           }
           })
         .then(res => {
           this.imgList = res.data.result.list;
+          this.imgList.forEach((val,item)=>{
+            val.collectText="收藏"
+          })
           this.totalPage = res.data.result.totol;
         })
         .catch(err => {

@@ -52,7 +52,7 @@
       <div v-if="showMsg" class="msg-info">
         您还没有简历数据呢，请在
         <span class="msg-router" @click="gotoTemplateMall"
-          >简历模板页面</span
+          >模板商城页面</span
         >
         选择您喜欢的模板创建简历。
       </div>

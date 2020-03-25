@@ -2,14 +2,14 @@
 <!-- 我的收藏 -->
   <div>
     <myCenter></myCenter>
-    <div class="center-right">33
+    <div class="center-right">
       <ul v-if="!showMsg" class="jm-ul">
       
         <li class="jm-li" v-for="(item, index) in imgList" :key="index">
-            <span>{{item.name}}</span>
+            <span>{{item.mallId}}</span>
           <img
             class="jm-img"
-           :src="item.url"
+           :src="item.imgUrl"
           />
 
           <!-- 遮罩层 -->
@@ -27,34 +27,34 @@
               @mouseleave.native="leaveIcon(index)"
             />
             <Button
-              @click="gotoResumeTemplate(item.name)"
+              @click="gotoResumeTemplate(item.mallId)"
               class="jm-btn"
               shape="circle"
               icon="ios-search"
               >编辑简历</Button
             >
             <Button
-              @click="deleteResume(index,item.name)"
+              @click="cancle(index,item.mallId)"
               class="jm-btn jm-btn-delete"
               shape="circle"
               icon="ios-trash"
-              >删除简历</Button
+              >取消收藏</Button
             >
           </div>
           <div class="jm-preview" v-show="currentIcon == index">
             <img
               :class="isRightImg ? 'rightPreview' : 'leftPreview'"
-              :src="item.url"
+              :src="item.imgUrl"
             />
           </div>
         </li>
       </ul>
       <div v-if="showMsg" class="msg-info">
-        您还没有简历数据呢，请在
+        您还没有收藏的简历数据呢，请在
         <span class="msg-router" @click="gotoTemplateMall"
-          >简历模板页面</span
+          >模板商城页面</span
         >
-        选择您喜欢的模板创建简历。
+        收藏您喜欢的简历模板。
       </div>
     </div>
   </div>
@@ -83,28 +83,25 @@ export default {
   },
   methods: {
     //删除简历
-    deleteResume(index,name) {
-      this.axios
-        .post("resumeTemplates/deletaResume", {
-          name: name,
-          userName:localStorage.getItem("userName")
-          //   headers: { "content-type": "multipart/form-data" }
-        })
-        .then(res => {
-          if (res.data.status == "0") {
-            // 如果删除成功，本地图片列表也要删除使得视图不刷新也会同步
-            this.imgList.splice(index,1)
-            // 注意，判断数组是否为空，不能[]==[],这样是false
-            if(this.imgList==""){
+    cancle(index,name) {
+       this.axios.post("collections/resume", {
+        userName: localStorage.getItem("userName"), //暂时写死，到时候用vuex
+        mallId:name
+      }).then(res => {
+        if(res.data.status=="2"){
+          this.imgList.splice(index,1)
+          if(this.imgList==""){
              this.showMsg = true;
              return
            }else{
              this.showMsg = false;
            }
-          }
-          
+        }
+         
         })
-        .catch(err => {});
+        .catch(err => {
+          console.log("err", err);
+        });
     },
     // 进入简历模板商城页面
     gotoTemplateMall() {
@@ -159,7 +156,7 @@ export default {
           if (res.data.status == "0") {
           this.imgList = res.data.result;
           //  如果获取不到数据，就不执行，防止后面获取属性值：null.xxx报错
-           if(!this.imgList || this.imgList==""){
+           if(!this.imgList || this.imgList==""){ 
              this.showMsg = true;
              return
            }else{
