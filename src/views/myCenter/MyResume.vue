@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- <NavHeader></NavHeader> -->
-    <myCenter></myCenter>
+    <myCenter :bread="breadText" :openNames="openNames"></myCenter>
     <div class="center-right">
       <ul v-if="!showMsg" class="jm-ul">
       
@@ -64,6 +64,8 @@
 import myCenter from "./MyCenter";
 import NavHeader from "@/components/NavHeader";
 import NavFooter from "@/components/NavFooter";
+import Bus from "@/assets/event-bus.js";
+
 export default {
   name: "myResume",
   data() {
@@ -73,7 +75,9 @@ export default {
       current: 0, //当前悬浮图片的位置
       currentIcon: -1, //当前悬浮预览图标
       isRightImg: false, //是否是右边图
-      showMsg: false //是否显示没有图片的提示
+      showMsg: false, //是否显示没有图片的提示
+      breadText:"我的简历",//面包屑文字
+      openNames:"1-1"
     };
   },
   components: {
@@ -172,6 +176,10 @@ export default {
   },
   mounted() {
     this.getImgList();
+    Bus.$on("postOpenNames", (data) => {
+      this.openNames = data
+      
+    })
   }
 };
 </script>

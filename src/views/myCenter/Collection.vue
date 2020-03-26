@@ -1,7 +1,9 @@
 <template>
 <!-- 我的收藏 -->
   <div>
-    <myCenter></myCenter>
+    <!-- 这里收藏也引入myCenter组件，所以刚引入进来的mycenteropenNames是1-1，这也就是当点击收藏进入收藏页面的时候，
+    第一次点击,mycenter相当于出书画还是引入进来的状态，第二次点击才会选择收藏的状态，所以要用变量，且变量要由mycenter改变 -->
+    <myCenter :bread="breadText" :openNames="openNames"></myCenter>
     <div class="center-right">
       <ul v-if="!showMsg" class="jm-ul">
       
@@ -64,6 +66,8 @@
 import myCenter from "./MyCenter";
 import NavHeader from "@/components/NavHeader";
 import NavFooter from "@/components/NavFooter";
+import Bus from "@/assets/event-bus.js";
+
 export default {
   name: "collection",
   data() {
@@ -73,7 +77,9 @@ export default {
       current: 0, //当前悬浮图片的位置
       currentIcon: -1, //当前悬浮预览图标
       isRightImg: false, //是否是右边图
-      showMsg: false //是否显示没有图片的提示
+      showMsg: false, //是否显示没有图片的提示
+      breadText:"我的收藏",//面包屑文字
+      openNames:"1-2"//点击哪一项的标识
     };
   },
   components: {
@@ -169,6 +175,10 @@ export default {
   },
   mounted() {
     this.getImgList();
+      Bus.$on("postOpenNames", (data) => {
+      this.openNames = data
+      
+    })
   }
 };
 </script>

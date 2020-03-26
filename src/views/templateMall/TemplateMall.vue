@@ -174,10 +174,9 @@ export default {
       this.axios.post("collections/resume", {
         userName: localStorage.getItem("userName"), 
         mallId:name
-      }).then(res => {
-        
+      }).then(res => { 
         if(res.data.status=="0"){
-          this.imgList[index].collectText="取消收藏"
+          this.imgList[index].collectText="已收藏"
           
         }else if(res.data.status=="2"){
           this.imgList[index].collectText="收藏"
@@ -289,9 +288,9 @@ export default {
           })
         .then(res => {
           this.imgList = res.data.result.list;
-          this.imgList.forEach((val,item)=>{
-            val.collectText="收藏"
-          })
+          // this.imgList.forEach((val,item)=>{
+          //   val.collectText="收藏"
+          // })
           this.totalPage = res.data.result.totol;
         })
         .catch(err => {

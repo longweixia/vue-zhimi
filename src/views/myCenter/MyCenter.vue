@@ -1,22 +1,20 @@
 <template>
   <div>
-     
-          <NavHeader></NavHeader>
-     
-     <Menu class="jm-menu" active-name="1-1" :open-names="['1']">
+     <NavHeader></NavHeader>
+     <!-- 注意，这里不要这样写：@on-select="changeMenu()"，带括号会默认你没有传参数 -->
+     <i-Menu class="jm-menu" :active-name="openNames" :open-names="[1-1]" accordion @on-select="changeMenu">
         <Submenu name="1">
             <template slot="title">
                 <Icon type="ios-analytics" />
               简历中心
             </template>
-          
+
                 <MenuItem name="1-1" to="myResume">我的简历</MenuItem>
                 <MenuItem name="1-2" to="collection">我的收藏</MenuItem>
-         
-            <MenuGroup title="Item 2">
-                <MenuItem name="1-3">Option 3</MenuItem>
-                <MenuItem name="1-4">Option 4</MenuItem>
-            </MenuGroup>
+      
+            <!-- <MenuGroup title="Item 2">
+              <MenuItem name="1-2" to="collection">我的收藏</MenuItem>
+            </MenuGroup> -->
         </Submenu>
         <Submenu name="2">
             <template slot="title">
@@ -31,25 +29,15 @@
                 <MenuItem name="3-2">Option 8</MenuItem>
             </Submenu>
         </Submenu>
-        <Submenu name="4">
-            <template slot="title">
-                <Icon type="ios-cog" />
-                Navigation Three
-            </template>
-            <MenuItem name="4-1">Option 9</MenuItem>
-            <MenuItem name="4-2">Option 10</MenuItem>
-            <MenuItem name="4-3">Option 11</MenuItem>
-            <MenuItem name="4-4">Option 12</MenuItem>
-        </Submenu>
-    </Menu>
+    </i-Menu>
    <!-- 面包屑 -->
    <div class="jm-bread">
         <Breadcrumb>
                 <BreadcrumbItem>
                   <Icon type="ios-home-outline"></Icon> 个人中心
                 </BreadcrumbItem>
-                <BreadcrumbItem to="myResume">
-                  <Icon type="logo-buffer"></Icon> 我的简历
+                <BreadcrumbItem>
+                  <Icon type="logo-buffer"></Icon> {{bread}}
                 </BreadcrumbItem>
               </Breadcrumb>
    </div>
@@ -61,16 +49,22 @@
 
 <script>
 import NavHeader from "@/components/NavHeader";
+import Bus from "@/assets/event-bus.js";
 export default {
   name: "myCenter",
   components:{
    NavHeader
   },
+  props:["bread","openNames"],
   data() {
-    return {};
+    return {
+    };
   },
   methods: {
-    
+    changeMenu(i){
+        console.log(i)
+         Bus.$emit("postOpenNames",i+"")
+    }
   },
   watch: {},
 
