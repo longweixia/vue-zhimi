@@ -34,10 +34,10 @@
         ><span class="zm-header-text">优秀简历</span></Col
       >
       <Col span="2" class="zm-header-column jm-ct"
-        ><span class="zm-header-text">职觅社区</span></Col
+        ><span class="zm-header-text" @click="routerTo('club')">职觅社区</span></Col
       >
       <Col span="2" class="zm-header-column jm-ct"
-        ><span class="zm-header-text" @click="toMyCenter">个人中心</span></Col
+        ><span class="zm-header-text" @click="routerTo('center')">个人中心</span></Col
       >
 
       <Col span="6" class="zm-header-btn jm-ct">
@@ -117,8 +117,13 @@ export default {
   },
   methods: {
      // 个人中心
-    toMyCenter() {
-     this.$router.push({name:"myResume"})
+    routerTo(name) {
+      if(name=='center'){
+        this.$router.push({name:"myResume"})
+      }else if(name=='club'){
+        this.$router.push({name:"clubContent"})
+      }
+     
     },
     ok() {},
     cancel() {},

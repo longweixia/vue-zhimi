@@ -93,9 +93,14 @@
                           @mouseenter.native="enterIcon(index)"
                           @mouseleave.native="leaveIcon(index)"
                         />
-                        <Button class="jm-btn" shape="circle" icon="ios-search"
-                          >编辑简历</Button
-                        >
+                         <div class="center-btn">
+                        <Button @click="gotoResumeTemplate(index)" class="jm-btn" shape="circle" icon="ios-search"
+                          >编辑简历</Button>
+                          </div>
+                          <div class="center-btn">
+                        <Button @click="collections(index,imgList[index].mallId)" class="jm-btn jm-btn-delete"
+                         shape="circle" icon="ios-heart-outline">{{item.collectText}}</Button>
+                      </div>
                       </div>
                       <div  class="jm-preview" v-show="currentIcon==index">
                         <img :class="isRightImg?'rightPreview':'leftPreview'"
@@ -196,7 +201,7 @@
               <!-- 更多分享 -->
               <Row class="jm-more jm-more-share ">
                 <Col class="jm-ct">
-                  <Button type="primary" class="jm-more-btn">更多分享</Button>
+                  <Button type="primary" class="jm-more-btn" @click="routerTo('club')">更多分享</Button>
                 </Col>
               </Row>
             </Row>
@@ -306,8 +311,12 @@
         </Content>
 
         <NavFooter></NavFooter>
+     
       </Layout>
     </div>
+       <BackTop :height="100" :bottom="50">
+        <div class="top">返回顶端</div>
+        </BackTop>
   </div>
 </template>
 
@@ -347,6 +356,7 @@ export default {
     ResumeTemplate2
   },
   watch:{
+     
    pageSize: {
       handler(newVal, oldVal) {
        if (newVal>4) { 
@@ -359,6 +369,45 @@ export default {
     }
   },
   methods: {
+    // 收藏简历
+    collections(index,name){
+      this.axios.post("collections/resume", {
+        userName: localStorage.getItem("userName"), 
+        mallId:name
+      }).then(res => { 
+        if(res.data.status=="0"){
+          this.imgList[index].collectText="已收藏"
+          
+        }else if(res.data.status=="2"){
+          this.imgList[index].collectText="收藏"
+        }else{
+          this.$Message.info(res.data.msg);
+        }
+         
+        })
+        .catch(err => {
+          console.log("err", err);
+        });
+    },
+     // 进入简历模板
+    gotoResumeTemplate(index){
+      this.$router.push({
+        // name: "writeResumeTemplate"+(index+1)
+        name: "writeResumeIde",
+        query:{
+          id:index+1
+        }
+ 
+      });
+      // 解决模板引入需要刷新才改变视图的问题
+       window.location.reload();
+    },
+    routerTo(name) {
+      if(name=='club'){
+        this.$router.push({name:"clubContent"})
+      }
+     
+    },
     // 收起来
     collect(){
       console.log(1)
@@ -413,22 +462,16 @@ export default {
     },
     // 获取图片列表
     getImgList() {
-          this.axios
+      this.axios
         .get("malls/getImgList", { 
           params:{
           pageSize: this.pageSize,
-          currentPage:1
+          currentPage:this.currentPage,
+          userName: localStorage.getItem("userName")
           }
           })
         .then(res => {
           this.imgList = res.data.result.list;
-          if(this.imgList.length==res.data.result.totol){
-            this.resumeBtn="没有更多了"
-            this.isdisable = true
-          }else{
-            this.resumeBtn="更多模板"
-            this.isdisable = false
-          }
         })
         .catch(err => {
           console.log("err", err);
@@ -452,6 +495,14 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
+ .jm-btn-delete{
+    margin-top: 10px;
+    color: red;
+  }
+  .center-btn{
+    position: relative;
+    top: 50%;
+  }
 .zm {
   max-width: 1920px;
   // padding-left: 2%;
@@ -702,4 +753,11 @@ export default {
 .jmMaskOpacity {
   opacity: 0.8 !important;
 }
+.top{
+        padding: 10px;
+        background: rgba(0, 153, 229, .7);
+        color: #fff;
+        text-align: center;
+        border-radius: 2px;
+    }
 </style>

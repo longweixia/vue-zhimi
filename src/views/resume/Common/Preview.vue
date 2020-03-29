@@ -1,7 +1,6 @@
 <template>
 
   <div>
- 12
  <img class="jm-upload-img" :src="dataUrl" />
   </div>
 </template>

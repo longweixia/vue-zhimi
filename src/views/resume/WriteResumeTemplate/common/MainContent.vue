@@ -139,21 +139,29 @@
         </div>
       </rightContent1>
     </vuedraggable>
+    <div v-if="showFind!=='true'">
+      <FindResumeModal :modal2="modal2" :modal_loading="modal_loading"></FindResumeModal>
+      </div>
   </div>
 </template>
 <script>
 import vuedraggable from "vuedraggable";
 import rightContent1 from "./RightContent1";
 import Bus from "@/assets/event-bus.js";
+import FindResumeModal from "./FindResumeModal";
 export default {
   name: "mainContent",
   components: {
     vuedraggable,
-    rightContent1
+    rightContent1,
+    FindResumeModal
   },
-  props: ["formData"],
+  props:["formData","showFind"],
+ 
   data() {
     return {
+      modal2: false,
+      modal_loading: false,
       jobThemeList: {}, //求职意向主题数据
       eduThemeList: {}, //教育背景主题数据
       workThemeList: {}, //工作主题数据
@@ -204,6 +212,7 @@ export default {
        settingObj: {
         isShowJobTime: true
       }, //设置数据
+      // nameId:0,//模板id
     };
   },
   watch: {},
@@ -274,13 +283,11 @@ export default {
       });
     },
      // 点击保存按钮，提交填写好的简历
-     saveContentss(){
-        Bus.$on("saveContents", () => {
+     saveContent(nameId){
        console.log(this.formData, "====");
+      //  拿到了父组件的id，拿到模板的dom
         let doms = document.getElementById("code")
        this.common.transformImage(doms).then(dataUrl=>{
-              //  this.formData.ImgBase64 = this.ImgBase64
-              let nameId= this.$route.query.id
       // 组装要提交的信息
       var content = {
         userName: localStorage.getItem("userName"), //简历名称
@@ -309,24 +316,30 @@ export default {
       this.axios
         .post("resumeTemplates/resumeTemplates", { 
           content: content,
-          TemplateId:this.$route.query.id
+          TemplateId:nameId
            })
         .then(res => {
           if (res.data.status == "0") {
-            this.$Message.success("保存成功");
+            // this.$Message.success("保存成功");
+            Bus.$emit("showMoreResume")
           }
         })
         .catch(err => {
           console.log("err", err);
         });
       })
-    
-    });
+
+     },
+    //  点击IDE上方的保存按钮
+     saveContentss(){
+        Bus.$on("saveContents", () => {
+          this.saveContent(this.$route.query.id)
+        })
+       
      },
      // 获取简历信息
     // 调用接口，判断获取该模板中是否已经填写过内容，如果是，直接将数据回填
     getTemplatesResume(){
-      console.log(this.$route.query.id,"11111")
       this.axios
         .get("resumeTemplates/getTemplatesResume", {
           params: {
@@ -336,6 +349,8 @@ export default {
         })
         .then(res => {
           if (res.data.status == "0") {
+            this.modal_loading = false;
+            this.modal2 = false;
            var result = res.data.result;
           //  如果获取不到数据，就不执行，防止后面获取属性值：null.xxx报错
            if(!result){
@@ -402,14 +417,47 @@ export default {
       this.selfEvaluation = content.selfEvaluation;
  
     },
+    // 查询是否有该简历
+      findHasResume() {
+      this.axios
+        .get("resumeTemplates/findHasResume", {
+          params: {
+            userName: localStorage.getItem("userName"), //暂时写死，到时候用vuex
+            TemplateId: this.$route.query.id
+          }
+        })
+        .then(res => {
+          if (res.data.status == "0") {
+            this.modal2 = true;
+          }
+        })
+        .catch(err => {
+          this.modal2 = false;
+        });
+    }
   },
   mounted(){
-    // 获取简历信息
+        this.findHasResume()
+        Bus.$on("showFindModal",data=>{
+      this.modal2 = false
+    })
+   
+    Bus.$on("getResumes",()=>{
+      // 查询该模板下是否已有保存过的简历
     this.getTemplatesResume();
+    })
+    // 获取简历信息
+    // this.getTemplatesResume();
         // 点击主题的保存，传递过来主题数据
    this.saveThemes();
    this.getSetting();
    this.saveContentss();
+  //  点击简历推荐的保存
+     Bus.$on("saveRecommend",(id)=>{
+     if(id==4){
+       this.saveContent(4)
+     }
+   })
   },
    // 解决$on接收多次的问题
   beforeDestroy(){

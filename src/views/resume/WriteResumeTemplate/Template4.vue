@@ -84,6 +84,7 @@
       v-on:changeSkillModel="changeSkillModel"
       v-on:saveBaseInfo="saveBaseInfo"
     />
+    
   </div>
 </template>
 
@@ -155,10 +156,19 @@ export default {
   
   watch: {},
   methods: {
+      transformImage(){
+      let doms = document.getElementById("code")
+      this.common.transformImage(doms).then(dataUrl=>{
+                   this.$router.push(
+              { name: 'preview', 
+              params: { dataUrl: dataUrl }
+              }
+            )
+      })
+    },
     // 基本信息相关
     // 关闭基本信息弹窗
     changeSkillModel(data) {
-      // this.modalSkill = false;
       this.modalBaseInfo = false;
     },
     // 弹出基本信息框
@@ -198,10 +208,6 @@ export default {
         this.formData = data;
       }
     },
-    // // 确定日期
-    // confirmDate() {
-    //   this.jmDate = "jm-date";
-    // },
     // 鼠标悬浮头像
     enterBase(name) {
       this.isBaseLine = name;
@@ -243,7 +249,9 @@ export default {
       this.baseObjC=data[2]
     });
 
- 
+  Bus.$on("previews",() => {
+         this.transformImage();
+       })
   },
   //  // 解决$on接收多次的问题
   // beforeDestroy(){
@@ -257,6 +265,8 @@ export default {
   resize: none;
 }
 .jm-template {
+  width: 814px;
+  margin: 0 auto;
   position: relative;
   margin-bottom: 40px;
   background: #fff;
@@ -361,7 +371,7 @@ export default {
 // 头像
 .jm-head-pic {
   position: absolute;
-  z-index: 100;
+  // z-index: 100;
   right: 10px;
   top: 10px;
 }

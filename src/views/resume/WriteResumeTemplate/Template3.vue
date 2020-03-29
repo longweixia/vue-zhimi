@@ -1,6 +1,5 @@
 <template>
   <div class="jm-template">
-    
     <Row id="code">
       <!-- {{modalSkill}} -->
       <!-- 左侧区域 -->
@@ -18,8 +17,11 @@
         v-on:saveBaseInfo="saveBaseInfo"
       />
       <div class="resume-left">
-         <!-- 头像 -->
-         <headContent :formData="formData" :showHeadImg="showHeadImg"></headContent>
+        <!-- 头像 -->
+        <headContent
+          :formData="formData"
+          :showHeadImg="showHeadImg"
+        ></headContent>
         <!-- 基本信息 -->
         <Row>
           <div
@@ -94,7 +96,8 @@
             class="jm-defult-line"
             :class="isBaseLine ? 'jm-base-linehover0' : ''"
             @mouseenter="enter('baseRight')"
-            @mouseleave="leave('baseRight')">
+            @mouseleave="leave('baseRight')"
+          >
             <Icon
               v-show="isBaseLine"
               @click="displayModelBase('base')"
@@ -242,7 +245,7 @@
                 </div>
               </rightContent>
               <!-- 自我评价 -->
-              <rightContent 
+              <rightContent
                 :themeList="ThemeAppraiseList"
                 themeFlag="appraise"
                 key="4"
@@ -269,6 +272,33 @@
         </Row>
       </div>
     </Row>
+    <!-- 如果该模板之前就有保存过简历的话，就弹出提示框 -->
+    <!-- <Modal
+      class="warn-has-resume"
+      v-model="modal2"
+      width="360"
+      :mask-closable="false"
+    >
+      <p slot="header" style="color:#2db7f5;text-align:center">
+        <Icon type="ios-information-circle"></Icon>
+        <span>提示</span>
+      </p>
+      <div style="text-align:center">
+        <p>您已保存过该模板简历</p>
+        <p>是否在此基础上进行修改？</p>
+      </div>
+      <div slot="footer">
+        <Button type="info" size="large" @click="cancle">取消</Button>
+        <Button
+          type="info"
+          size="large"
+          :loading="modal_loading"
+          @click="getTemplatesResume"
+          >确定</Button
+        >
+      </div>
+    </Modal> -->
+    <findResumeModal :modal2="modal2" :modal_loading="modal_loading"></findResumeModal>
   </div>
 </template>
 
@@ -277,11 +307,12 @@ import jmUploadImg from "@/components/UploadImg";
 import skillModal from "./SkillModal";
 import baseInfoModel from "./BaseInfoModel";
 import rightContent from "./common/RightContent";
+import findResumeModal from "./common/FindResumeModal";
 import Bus from "@/assets/event-bus.js";
 import vuedraggable from "vuedraggable";
 import headContent from "@/components/HeadContent";
 // import html2canvas from "html2canvas";
-import domtoimage from 'dom-to-image';
+import domtoimage from "dom-to-image";
 export default {
   name: "Template3",
   components: {
@@ -290,10 +321,13 @@ export default {
     baseInfoModel,
     rightContent,
     vuedraggable,
-    headContent
+    headContent,
+    findResumeModal
   },
   data() {
     return {
+      modal2: false,
+      modal_loading: false,
       // contentHight:"",//内容高度
       showHeadImg: true, //是否显示头像
       // showSetting: false, //是否显示头像的设置面板
@@ -318,7 +352,7 @@ export default {
         showDescribe: true //默认显示描述
       }, //基本信息弹窗传过来的数据
       hasSkillList: [], //传过来的技能数组
-      ImgBase64:"",//头像数据
+      ImgBase64: "", //头像数据
       baseInfoList: [
         //基本信息
         {
@@ -390,12 +424,17 @@ export default {
   watch: {
     contentHight: {
       handler(newVal, oldVal) {
-       if (newVal !== oldVal) { console.log(newVal)}
-    },
+        if (newVal !== oldVal) {
+          console.log(newVal);
+        }
+      },
       deep: true
     }
   },
   methods: {
+    // cancle() {
+    //   this.modal2 = false;
+    // },
     // // 将文档转换成图片
     // domToImg(){
     //    let doms = document.getElementById("code")
@@ -403,41 +442,39 @@ export default {
     //           this.resumeUrl = dataUrl
     //   })
     // },
-    transformImage(){
-      let doms = document.getElementById("code")
-      this.common.transformImage(doms).then(dataUrl=>{
-                   this.$router.push(
-              { name: 'preview', 
-              params: { dataUrl: dataUrl }
-              }
-            )
-      })
+    transformImage() {
+      let doms = document.getElementById("code");
+      this.common.transformImage(doms).then(dataUrl => {
+        this.$router.push({ name: "preview", params: { dataUrl: dataUrl } });
+      });
     },
-     // 获取简历信息
+    // 获取简历信息
     // 调用接口，判断获取该模板中是否已经填写过内容，如果是，直接将数据回填
-    getTemplatesResume(){
+    getTemplatesResume() {
+      this.modal_loading = true;
       this.axios
         .get("resumeTemplates/getTemplatesResume", {
           params: {
-         userName: localStorage.getItem("userName"), //暂时写死，到时候用vuex
-         TemplateId:this.$route.query.id
-        }
+            userName: localStorage.getItem("userName"), //暂时写死，到时候用vuex
+            TemplateId: this.$route.query.id
+          }
         })
         .then(res => {
           if (res.data.status == "0") {
-           var resumeTemplateObj = res.data.result.resumeContent;
-          //  如果获取不到数据，就不执行，防止后面获取属性值：null.xxx报错
-           if(!resumeTemplateObj){
-             return
-           }
-           this.getTemplatesResumes(resumeTemplateObj)
+            this.modal_loading = false;
+            this.modal2 = false;
+            var resumeTemplateObj = res.data.result.resumeContent;
+            //  如果获取不到数据，就不执行，防止后面获取属性值：null.xxx报错
+            if (!resumeTemplateObj) {
+              return;
+            }
+            this.getTemplatesResumes(resumeTemplateObj);
           }
         })
         .catch(err => {});
     },
     // 获取简历信息
-    getTemplatesResumes(resumeTemplateObj){
-      
+    getTemplatesResumes(resumeTemplateObj) {
       // var resumeTemplateObj = resumeTemplateObj.resumeTemplate[0].resumeContent;
       if (resumeTemplateObj.baseInfoList.headPic == "显示") {
         this.showHeadImg = true;
@@ -488,70 +525,73 @@ export default {
       this.experienceList = resumeTemplateObj.experienceList;
       this.selfEvaluation = resumeTemplateObj.selfEvaluation;
     },
-     // 点击保存按钮，提交填写好的简历
-     saveContentss(){
-        Bus.$on("saveContents", () => {
-       console.log(this.formData, "====");
-        let doms = document.getElementById("code")
-       this.common.transformImage(doms).then(dataUrl=>{
-              //  this.formData.ImgBase64 = this.ImgBase64
-              let nameId= this.$route.query.id
-      // 组装要提交的信息
-      var content = {
-        userName: localStorage.getItem("userName"), //简历名称
-        hasCommonResume: false, //是否有基础简历的信息
-        
-        resumeTemplate: [
-          //模板简历
-          {
-            TemplateId: nameId, //模板ID
-            img:{
-              url:dataUrl,
-              name:nameId
-            },
-            resumeContent: {
-              //简历内容
-              baseInfoList: this.formData, //基本信息
-              SkillList: this.hasSkillList, //技能特长
-              jobIntentionList: this.jobIntentionList, //求职意向
-              eduList: this.eduList, //教育背景
-              experienceList: this.experienceList, //工作经验
-              selfEvaluation: this.selfEvaluation //自我评价
+    // 点击保存按钮，提交填写好的简历
+    saveContent(nameId) {
+      let doms = document.getElementById("code");
+      this.common.transformImage(doms).then(dataUrl => {
+        // 组装要提交的信息
+        var content = {
+          userName: localStorage.getItem("userName"), //简历名称
+          hasCommonResume: false, //是否有基础简历的信息
+
+          resumeTemplate: [
+            //模板简历
+            {
+              TemplateId: nameId, //模板ID
+              img: {
+                url: dataUrl,
+                name: nameId
+              },
+              resumeContent: {
+                //简历内容
+                baseInfoList: this.formData, //基本信息
+                SkillList: this.hasSkillList, //技能特长
+                jobIntentionList: this.jobIntentionList, //求职意向
+                eduList: this.eduList, //教育背景
+                experienceList: this.experienceList, //工作经验
+                selfEvaluation: this.selfEvaluation //自我评价
+              }
             }
-          }
-        ]
-      };
-      this.axios
-        .post("resumeTemplates/resumeTemplates", { content: content,TemplateId:this.$route.query.id })
-        .then(res => {
-          if (res.data.status == "0") {
-            this.$Message.success("保存成功");
-          }
-        })
-        .catch(err => {
-          console.log("err", err);
-        });
-      })
-    
-    });
-     },
-      // 解决父组件多次传值的问题
+          ]
+        };
+        this.axios
+          .post("resumeTemplates/resumeTemplates", {
+            content: content,
+            TemplateId: nameId
+          })
+          .then(res => {
+            if (res.data.status == "0") {
+              // this.$Message.success("保存成功");
+              Bus.$emit("showMoreResume");
+            }
+          })
+          .catch(err => {
+            console.log("err", err);
+          });
+      });
+    },
+    saveContentss() {
+      Bus.$on("saveContents", () => {
+        this.saveContent(this.$route.query.id);
+      });
+    },
+    // 解决父组件多次传值的问题
     // Bus.$off("saveTheme")
     // 点击主题的保存，传递过来主题数据
-    saveThemes(){
-       Bus.$on("saveTheme", themeList => {
-      var flags = themeList[1]; //判断是哪项的标识
-      console.log(themeList, "子");
-      if (flags == "jobIntention") {
-        this.jobThemeList = themeList[0];
-      } else if (flags == "edu") {
-        this.eduThemeList = themeList[0];
-      } else if (flags == "work") {
-        this.workThemeList = themeList[0];
-      } else if (flags == "appraise") {
-        this.ThemeAppraiseList = themeList[0];
-      }
-    });
+    saveThemes() {
+      Bus.$on("saveTheme", themeList => {
+        var flags = themeList[1]; //判断是哪项的标识
+        console.log(themeList, "子");
+        if (flags == "jobIntention") {
+          this.jobThemeList = themeList[0];
+        } else if (flags == "edu") {
+          this.eduThemeList = themeList[0];
+        } else if (flags == "work") {
+          this.workThemeList = themeList[0];
+        } else if (flags == "appraise") {
+          this.ThemeAppraiseList = themeList[0];
+        }
+      });
     },
     // 获取设置数据
     getSetting() {
@@ -561,7 +601,6 @@ export default {
     },
     // 鼠标悬浮
     enter(flag) {
-     
       switch (flag) {
         case "base":
           this.isBase = true;
@@ -577,7 +616,6 @@ export default {
     //鼠标离开
     leave(flag) {
       switch (flag) {
-    
         case "base":
           this.isBase = false;
           break;
@@ -674,42 +712,79 @@ export default {
         };
         this.experienceList.push(objExperience);
       }
+    },
+    // 查询是否有该简历
+    findHasResume() {
+      this.axios
+        .get("resumeTemplates/findHasResume", {
+          params: {
+            userName: localStorage.getItem("userName"), //暂时写死，到时候用vuex
+            TemplateId: this.$route.query.id
+          }
+        })
+        .then(res => {
+          if (res.data.status == "0") {
+            this.modal2 = true;
+          }
+        })
+        .catch(err => {
+          this.modal2 = false;
+        });
     }
   },
   mounted() {
-    Bus.$on("getShowHeadImg",value=>{
-   if ( value== "显示") {
-          this.showHeadImg = true;
-        } else if (value == "隐藏") {
-          this.showHeadImg = false;
-        }
-})
-     // 获取头像的数据
-      Bus.$on("postPhotoBase64", (ImgBase64) => {
-        this.formData.ImgBase64 = ImgBase64
-      })
-      Bus.$on("previews",() => {
-         this.transformImage();
-       })
+     this.findHasResume()
+    Bus.$on("getShowHeadImg", value => {
+      if (value == "显示") {
+        this.showHeadImg = true;
+      } else if (value == "隐藏") {
+        this.showHeadImg = false;
+      }
+    });
+    // 获取头像的数据
+    Bus.$on("postPhotoBase64", ImgBase64 => {
+      this.formData.ImgBase64 = ImgBase64;
+    });
+    Bus.$on("previews", () => {
+      this.transformImage();
+    });
     // 绑定内容高度，然后监听
     this.contentHight = this.$refs.rightContent.offsetHeight;
-    console.log(this.contentHight)
+    console.log(this.contentHight);
     this.getSetting();
-    // 获取简历信息
-   this.getTemplatesResume();
+    //   // 获取简历信息
+    //  this.getTemplatesResume();
     // 点击保存按钮，提交填写好的简历
-   this.saveContentss();
+    this.saveContentss();
     // 解决父组件多次传值的问题
     // Bus.$off("saveTheme")
     // 点击主题的保存，传递过来主题数据
-   this.saveThemes();
+    this.saveThemes();
+    Bus.$on("saveRecommend", id => {
+      if (id == 3) {
+        this.saveContent(3);
+      }
+    });
+    Bus.$on("saveRecommend", id => {
+      if (id == 3) {
+        this.saveContent(3);
+      }
+    });
+    
+    Bus.$on("showFindModal",data=>{
+      this.modal2 = false
+    })
    
+    Bus.$on("getResumes",()=>{
+      // 查询该模板下是否已有保存过的简历
+    this.getTemplatesResume();
+    })
   },
   // 解决$on接收多次的问题
-  beforeDestroy(){
-    Bus.$off("saveContentss")
+  beforeDestroy() {
+    Bus.$off("saveContentss");
   }
-  }
+};
 </script>
 
 
@@ -763,12 +838,13 @@ body {
   min-width: 1240px;
 }
 .jm-template {
-  width: 820px;
+  margin: 0 auto;
+  width: 814px;
   min-height: 1160px;
   .resume-left {
     float: left;
     height: 1160px;
-    width: 270px;
+    width: 264px;
     background: #254665;
     padding: 20px 30px 40px 30px;
   }
@@ -903,5 +979,10 @@ body {
 }
 .bg-head-icon {
   background: #00c091;
+}
+.warn-has-resume {
+  /deep/ .ivu-modal-footer {
+    text-align: center;
+  }
 }
 </style>
