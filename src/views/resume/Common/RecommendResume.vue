@@ -21,7 +21,7 @@
            <div @click="saveTemplate(3)" class="jm-save-btn">保存为简历</div>
            <div @click="gotoResumeTemplate(index)" class="jm-save-btn jm-router"
           >进入此模板</div>
-          <Template3 showFind="false" class="jm-content"></Template3>
+          <Template3 showFind="1" class="jm-content"></Template3>
         </div>
 
         <div class="jm-border"></div>
@@ -31,7 +31,7 @@
            <div @click="saveTemplate(4)" class="jm-save-btn">保存为简历</div>
            <div @click="gotoResumeTemplate(index)" class="jm-save-btn jm-router"
           >进入此模板</div>
-          <Template4 showFind="false" class="jm-content"  ></Template4>
+          <Template4 showFind="1" class="jm-content"  ></Template4>
         </div>
         <!-- <div>点击生成更多主题简历</div> -->
       </div>

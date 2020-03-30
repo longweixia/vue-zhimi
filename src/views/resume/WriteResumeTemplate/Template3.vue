@@ -298,8 +298,10 @@
         >
       </div>
     </Modal> -->
+    <div v-if="showFind!=='1'">
     <findResumeModal :modal2="modal2" :modal_loading="modal_loading"></findResumeModal>
   </div>
+   </div>
 </template>
 
 <script>
@@ -421,6 +423,7 @@ export default {
       selfEvaluation: ""
     };
   },
+    props:["showFind"],
   watch: {
     contentHight: {
       handler(newVal, oldVal) {
@@ -733,7 +736,11 @@ export default {
     }
   },
   mounted() {
-     this.findHasResume()
+ if(this.showFind==="1"){
+      this.getTemplatesResume()
+    }else{
+      this.findHasResume()
+    }
     Bus.$on("getShowHeadImg", value => {
       if (value == "显示") {
         this.showHeadImg = true;

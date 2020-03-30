@@ -74,7 +74,7 @@
     </div>
     <!-- 求职意向，教育背景等模块 -->
     <div>
-      <mainContent :formData="formData"></mainContent>
+      <mainContent :showFind="showFind" :formData="formData"></mainContent>
     </div>
     <!-- 弹窗区域 -->
     <baseInfoModel
@@ -153,7 +153,7 @@ export default {
       
     };
   },
-  
+  props:["showFind"],
   watch: {},
   methods: {
       transformImage(){

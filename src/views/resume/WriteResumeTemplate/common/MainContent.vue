@@ -139,7 +139,8 @@
         </div>
       </rightContent1>
     </vuedraggable>
-    <div v-if="showFind!=='true'">
+    <!-- showFind!=='1'表示是通过路由打开的，需要查询是否存在简历，然后给出提示 -->
+    <div v-if="showFind!=='1'">
       <FindResumeModal :modal2="modal2" :modal_loading="modal_loading"></FindResumeModal>
       </div>
   </div>
@@ -437,6 +438,13 @@ export default {
     }
   },
   mounted(){
+    // 这一步是判断组件是通过路由打开，还是通过推荐简历模块引入
+    // 如果是推荐简历模块引入，那么初始化不进行弹窗提示
+    if(this.showFind==="1"){
+      this.getTemplatesResume()
+    }else{
+      this.findHasResume()
+    }
         this.findHasResume()
         Bus.$on("showFindModal",data=>{
       this.modal2 = false
