@@ -189,32 +189,53 @@ export default {
           console.log("err", err);
         });
     },
+    // // 上传方式1开始，将图片的base64数据保存在数据库中
+    // handleUpload(file) {
+    //   // 需要传给后台的file文件
+    //   this.file = file;
+    //   // FileReader api 为用户提供了方法去读取一个文件或者一个二进制大对象，
+    //   // 并且提供了事件模型让用户可以操作读取后的结果
+    //   const reader = new FileReader();
+    //   // readAsDataURL：读取为base64格式
+    //   reader.readAsDataURL(file);
+    //   // onload 在文件读取成功时触发
+    //   reader.onload = () => {
+    //     // 拿到图片的base64数据
+    //     this.postImage(reader.result);
+    //   };
+    //   return false;
+    // },
+    // postImage(data) {
+    //   this.axios.post("malls/uploadImg", {
+    //     imgUrl:data,
+    //     mallId:0
+    //   }).then(res => {
+    //      this.$Message.info(res.data.msg);
+    //     })
+    //     .catch(err => {
+    //       console.log("err", err);
+    //     });
+    // },
+    // // 上传方式1结束
+    // 上传方式2开始，上传一个图片文件保存在后台项目目录上，并且把文件的路径保存在数据库中
     handleUpload(file) {
       // 需要传给后台的file文件
       this.file = file;
-      // FileReader api 为用户提供了方法去读取一个文件或者一个二进制大对象，
-      // 并且提供了事件模型让用户可以操作读取后的结果
-      const reader = new FileReader();
-      // readAsDataURL：读取为base64格式
-      reader.readAsDataURL(file);
-      // onload 在文件读取成功时触发
-      reader.onload = () => {
-        // 拿到图片的base64数据
-        this.postImage(reader.result);
-      };
-      return false;
-    },
-    postImage(data) {
-      this.axios.post("malls/uploadImg", {
-        imgUrl:data,
-        mallId:0
+      let data = new FormData();
+      data.append("file", file, file.name); //很重要 data.append("file", file);不成功
+      data.append("mallId", 112);
+      console.log(data.get("file"));
+      this.axios.post("malls/uploadImg", data, {
+        headers: { "content-type": "multipart/form-data" }
       }).then(res => {
          this.$Message.info(res.data.msg);
         })
         .catch(err => {
           console.log("err", err);
-        });
+        });;
+      return false;
     },
+    // 上传方式2结束
     // 改变页码
     changePageNumber(data){
       console.log(data)

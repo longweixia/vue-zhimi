@@ -3,7 +3,7 @@
   <div>
      <NavHeader></NavHeader>
     
-   <!-- 面包屑 -->
+<!-- 
    <div class="jm-bread">
         <Breadcrumb>
                 <BreadcrumbItem>
@@ -13,10 +13,13 @@
                   <Icon type="logo-buffer"></Icon> {{bread}}
                 </BreadcrumbItem>
               </Breadcrumb>
+   </div> -->
+
+   <!-- <router-view>
+   </router-view> -->
+   <div>
+     23
    </div>
-   <!-- 点击页面标签，在当前页面内更新内容，不刷新页面 -->
-   <router-view>
-   </router-view>
   </div>
 </template>
 
@@ -34,14 +37,33 @@ export default {
     };
   },
   methods: {
-    changeMenu(i){
-        console.log(i)
-         Bus.$emit("postOpenNames",i+"")
+    // 获取图片列表
+    getClubList() {
+      this.axios
+        .get("clubs/getClubList", { 
+          params:{
+          pageSize: this.pageSize||1,
+          currentPage:this.currentPage||1,
+          userName: localStorage.getItem("userName")
+          }
+          })
+        .then(res => {
+          // this.imgList = res.data.result.list;
+          // // this.imgList.forEach((val,item)=>{
+          // //   val.collectText="收藏"
+          // // })
+          // this.totalPage = res.data.result.totol;
+        })
+        .catch(err => {
+          console.log("err", err);
+        });
     }
   },
   watch: {},
 
-  mounted() {},
+  mounted() {
+    this.getClubList()
+  },
   created() {}
 };
 </script>

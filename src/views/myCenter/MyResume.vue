@@ -47,7 +47,7 @@
               >删除简历</Button
             >
             <Button
-              @click="share(index,item.name)"
+              @click="share(index,item.name,item.url)"
               class="jm-btn jm-btn-share"
               shape="circle"
               icon="ios-share-alt"
@@ -99,10 +99,11 @@ export default {
     NavFooter,
   },
   methods: {
-    share(index,name){
+    share(index,name,url){
        this.axios
         .post("clubs/share", {
           Templated: name,
+          img:url,
           userName:localStorage.getItem("userName")
         })
         .then(res => {
