@@ -26,6 +26,9 @@ module.exports = {
       },
       '/collections/**':{
         target:'http://localhost:3000'
+      },
+      '/clubs/**':{
+        target:'http://localhost:3000'
       }
     },
 

@@ -3,6 +3,12 @@
     <!-- <NavHeader></NavHeader> -->
     <myCenter :bread="breadText" :openNames="openNames"></myCenter>
     <div class="center-right">
+      <div>
+        <div class="top-tip">
+          <Icon type="ios-information-circle-outline" />
+          您可以分享简历到简秘社区，我们将为您隐藏掉通讯信息和头像。
+        </div>
+      </div>
       <ul v-if="!showMsg" class="jm-ul">
       
         <li class="jm-li" v-for="(item, index) in imgList" :key="index">
@@ -39,6 +45,13 @@
               shape="circle"
               icon="ios-trash"
               >删除简历</Button
+            >
+            <Button
+              @click="share(index,item.name)"
+              class="jm-btn jm-btn-share"
+              shape="circle"
+              icon="ios-share-alt"
+              >{{item.share}}</Button
             >
           </div>
           <div class="jm-preview" v-show="currentIcon == index">
@@ -86,6 +99,19 @@ export default {
     NavFooter,
   },
   methods: {
+    share(index,name){
+       this.axios
+        .post("clubs/share", {
+          Templated: name,
+          userName:localStorage.getItem("userName")
+        })
+        .then(res => {
+          if (res.data.status == "0") {
+          }
+          
+        })
+        .catch(err => {});
+    },
     //删除简历
     deleteResume(index,name) {
       this.axios
@@ -190,6 +216,11 @@ export default {
   top: 80px;
   left: 240px;
   margin: 10px;
+  .top-tip{
+    font-size: 16px;
+    color: #666;
+    margin: 13px;
+  }
   .jm-ul {
     margin-top: 20px;
     .jm-li {
@@ -274,5 +305,9 @@ export default {
   .jm-btn-delete{
     margin-top: 10px;
     color: red;
+  }
+  .jm-btn-share{
+    margin-top: 10px;
+    color: #57a3f3;
   }
 </style>
