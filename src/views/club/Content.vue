@@ -18,7 +18,7 @@
    <!-- <router-view>
    </router-view> -->
    <div>
-     23
+     <ClubCard></ClubCard>
    </div>
   </div>
 </template>
@@ -26,10 +26,12 @@
 <script>
 import NavHeader from "@/components/NavHeader";
 import Bus from "@/assets/event-bus.js";
+import ClubCard from "./Card";
 export default {
   name: "clubContent",
   components:{
-   NavHeader
+   NavHeader,
+   ClubCard
   },
   props:["bread","openNames"],
   data() {
@@ -38,31 +40,31 @@ export default {
   },
   methods: {
     // 获取图片列表
-    getClubList() {
-      this.axios
-        .get("clubs/getClubList", { 
-          params:{
-          pageSize: this.pageSize||1,
-          currentPage:this.currentPage||1,
-          userName: localStorage.getItem("userName")
-          }
-          })
-        .then(res => {
-          // this.imgList = res.data.result.list;
-          // // this.imgList.forEach((val,item)=>{
-          // //   val.collectText="收藏"
-          // // })
-          // this.totalPage = res.data.result.totol;
-        })
-        .catch(err => {
-          console.log("err", err);
-        });
-    }
+    // getClubList() {
+    //   this.axios
+    //     .get("clubs/getClubList", { 
+    //       params:{
+    //       pageSize: this.pageSize||1,
+    //       currentPage:this.currentPage||1,
+    //       userName: localStorage.getItem("userName")
+    //       }
+    //       })
+    //     .then(res => {
+    //       // this.imgList = res.data.result.list;
+    //       // // this.imgList.forEach((val,item)=>{
+    //       // //   val.collectText="收藏"
+    //       // // })
+    //       // this.totalPage = res.data.result.totol;
+    //     })
+    //     .catch(err => {
+    //       console.log("err", err);
+    //     });
+    // }
   },
   watch: {},
 
   mounted() {
-    this.getClubList()
+    // this.getClubList()
   },
   created() {}
 };

@@ -107,7 +107,24 @@ export default {
           userName:localStorage.getItem("userName")
         })
         .then(res => {
-          if (res.data.status == "0") {
+          let resStatus = res.data.status;
+          // this.imgList.forEach((item1,index1)=>{
+          //   if()
+          // })
+          this.imgList.forEach((item2,index2)=>{
+            item2.share="分享到社区"
+          })
+          if (resStatus == "0") {
+             this.$Message.success("分享成功");
+             this.imgList[index].share = "取消分享"
+          }else if(resStatus == "1"){
+            this.$Message.error("分享失败");
+          }
+          else if(resStatus == "2"){
+             this.$Message.error("取消分享失败");
+          }else{
+             this.$Message.success("取消分享成功");
+             this.imgList[index].share = "分享到社区"
           }
           
         })

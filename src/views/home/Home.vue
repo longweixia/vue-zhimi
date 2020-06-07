@@ -6,8 +6,8 @@
         <!-- <Header class="zm-header"> -->
         <NavHeader></NavHeader>
         <!-- <Chart/> -->
-
-        <!-- <div @click="joinGroupChart">加入群聊</div>
+<div @click="joinGroupChart">加入群聊</div>
+        <!-- 
         <ul v-for="(item, index) in resulist" :key="index" style="float:left">
           <li @click="gotoResume(item-1)">简历{{ item }}</li>
         </ul>
