@@ -1,0 +1,77 @@
+{ 
+    "_id" : ObjectId("5ed8ed2fed3e9e23d0f8cfd7"), 
+    "imgUrl" : "http://localhost:3000/images/mall/homeList1.png", 
+    "mallId" : NumberInt(1), 
+    "indexs" : NumberInt(1), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5ed8ed31ed3e9e23d0f8cfd8"), 
+    "imgUrl" : "http://localhost:3000/images/mall/homeList2.png", 
+    "mallId" : NumberInt(2), 
+    "indexs" : NumberInt(2), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5ed8ed34ed3e9e23d0f8cfd9"), 
+    "imgUrl" : "http://localhost:3000/images/mall/homeList3.png", 
+    "mallId" : NumberInt(3), 
+    "indexs" : NumberInt(3), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5ed8ed35ed3e9e23d0f8cfda"), 
+    "imgUrl" : "http://localhost:3000/images/mall/homeList4.png", 
+    "mallId" : NumberInt(4), 
+    "indexs" : NumberInt(4), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5ed8ed38ed3e9e23d0f8cfdb"), 
+    "imgUrl" : "http://localhost:3000/images/mall/homeList5.png", 
+    "mallId" : NumberInt(5), 
+    "indexs" : NumberInt(5), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5ed8ed39ed3e9e23d0f8cfdc"), 
+    "imgUrl" : "http://localhost:3000/images/mall/模板2 - 副本.jpg", 
+    "mallId" : NumberInt(6), 
+    "indexs" : NumberInt(6), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5ed8ed3ced3e9e23d0f8cfdd"), 
+    "imgUrl" : "http://localhost:3000/images/mall/模板3 - 副本.jpg", 
+    "mallId" : NumberInt(7), 
+    "indexs" : NumberInt(7), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5ed8ed3eed3e9e23d0f8cfde"), 
+    "imgUrl" : "http://localhost:3000/images/mall/模板4 - 副本.png", 
+    "mallId" : NumberInt(8), 
+    "indexs" : NumberInt(8), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5ed8ed41ed3e9e23d0f8cfdf"), 
+    "imgUrl" : "http://localhost:3000/images/mall/模板4.png", 
+    "mallId" : NumberInt(9), 
+    "indexs" : NumberInt(9), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5ed8ed43ed3e9e23d0f8cfe0"), 
+    "imgUrl" : "http://localhost:3000/images/mall/模板5 - 副本.jpg", 
+    "mallId" : NumberInt(10), 
+    "indexs" : NumberInt(10), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5ed8ed45ed3e9e23d0f8cfe1"), 
+    "imgUrl" : "http://localhost:3000/images/mall/模板5.jpg", 
+    "mallId" : NumberInt(11), 
+    "indexs" : NumberInt(112), 
+    "__v" : NumberInt(0)
+}

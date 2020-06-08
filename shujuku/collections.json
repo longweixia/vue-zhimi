@@ -1,0 +1,16 @@
+{ 
+    "_id" : ObjectId("5e7cb733e6608f186081b2c7"), 
+    "resumeList" : [
+        {
+            "mallId" : NumberInt(8)
+        }, 
+        {
+            "mallId" : NumberInt(2)
+        }, 
+        {
+            "mallId" : NumberInt(1)
+        }
+    ], 
+    "userName" : "long", 
+    "__v" : NumberInt(8)
+}

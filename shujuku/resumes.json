@@ -1,0 +1,74 @@
+{ 
+    "_id" : ObjectId("5da7317d12b0d61d88485554"), 
+    "resumeContent" : {
+        "base" : [
+            {
+                "name" : "龙伟"
+            }, 
+            {
+                "tel" : "17620894422"
+            }, 
+            {
+                "Email" : "17629673@qq.com"
+            }, 
+            {
+                "edu" : "shenzhen"
+            }, 
+            {
+                "address" : "深圳龙华"
+            }, 
+            {
+                "salary" : "16k"
+            }, 
+            {
+                "position" : "web前端"
+            }
+        ], 
+        "major" : [
+            "web前端开发", 
+            "html", 
+            "node"
+        ], 
+        "work" : [
+            {
+                "company" : "深圳软通动力有限公司", 
+                "time" : "2019/04/01-2019/07/10", 
+                "technologyStack" : "js  css vue", 
+                "projectName" : "项目名", 
+                "content" : "abc"
+            }
+        ], 
+        "project" : [
+            {
+                "projectName" : "掘金", 
+                "content" : "www.baodu,com"
+            }, 
+            {
+                "projectName" : "简历网", 
+                "content" : "www.jianli.com"
+            }
+        ], 
+        "education" : [
+            {
+                "time" : "大学", 
+                "type" : "湖南科技学院"
+            }, 
+            {
+                "time" : "高中", 
+                "type" : "正源学校"
+            }
+        ], 
+        "evaluate" : [
+            "优秀", 
+            "热爱新知识", 
+            "喜欢学新动向"
+        ]
+    }, 
+    "userName" : "long", 
+    "creatTime" : "Wed Oct 16 2019 23:04:29 GMT+0800 (中国标准时间)", 
+    "hasCommonResume" : true, 
+    "resumeTemplate" : [
+
+    ], 
+    "__v" : NumberInt(0)
+}
