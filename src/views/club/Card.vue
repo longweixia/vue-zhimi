@@ -29,7 +29,7 @@
                 <span>深圳</span>
               </div> -->
             </div>
-             <div @click="joinGroupChart" class="msg-bottom">
+             <div @click="joinGroupChart(index)" class="msg-bottom">
                聊一下
              </div>
           </div>

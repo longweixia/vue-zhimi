@@ -3,7 +3,12 @@
 
     <Layout class="layout zm">
       <!-- 左侧群，联系列表信息 -->
-      <Sider hide-trigger class="zm-left-side">Sider</Sider>
+      <Sider hide-trigger class="zm-left-side">Sider
+        <!-- 个人聊天列表 -->
+        <div v-for="(item,index) in chartList" :key="index">
+          {{item.name}}
+        </div>
+      </Sider>
       <!-- 聊天主页面 -->
       <Layout class="zm-center">
         <Header class="zm-right-header">
@@ -98,6 +103,7 @@ export default {
   name: "GroupChart",
   data() {
     return {
+      chartList:[],//联系人列表
       msgLeft: true, //左边消息，即他人的消息，用来展示作为左边样式类的判断
       msgList: [
         // {
@@ -202,6 +208,7 @@ export default {
 }
 // 左侧群，联系列表信息
 .zm-left-side{
+  color: #fff;
     width: 200px;
     // display: flex;
     // flex-direction: column;
