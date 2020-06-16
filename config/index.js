@@ -29,6 +29,9 @@ module.exports = {
       },
       '/clubs/**':{
         target:'http://localhost:3000'
+      },
+      '/charts/**':{
+        target:'http://localhost:3000'
       }
     },
 

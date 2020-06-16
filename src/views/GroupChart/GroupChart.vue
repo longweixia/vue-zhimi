@@ -1,99 +1,146 @@
 <template>
-  <div>
-
-    <Layout class="layout zm">
-      <!-- 左侧群，联系列表信息 -->
-      <Sider hide-trigger class="zm-left-side">Sider
-        <!-- 个人聊天列表 -->
-        <div v-for="(item,index) in chartList" :key="index">
-          {{item.name}}
+  <div class="container">
+    <div class="user-panel">
+      <!-- 注册模块 -->
+      <div id="login-wrap">
+        <input class="user-name contenteditable" placeholder="请输入用户名" />
+        <div class="user-portrait">
+          <span class="tips">请选择一张图片作为头像</span>
+          <img class="my-por" style="width: 60px;height: 60px;" />
         </div>
-      </Sider>
-      <!-- 聊天主页面 -->
-      <Layout class="zm-center">
-        <Header class="zm-right-header">
-          <div class="zm-top">
-            <div class="zm-icon">
-              <img src="static/image/user1.jpg" />
-            </div>
-            <div class="zm-user">
-              <div>龙伟</div>
-              <div>online</div>
-            </div>
-          </div>
+        <!-- 头像备选区 -->
+        <div class="select" id="portrait"></div>
+        <button class="chat-btn">开始聊天</button>
+      </div>
 
-        </Header>
-        <!-- 聊天消息区 -->
-        <Content class="zm-right-content">
-          <div class="zm-top">以前或者更早以前</div>
-          <ul class="zm-msg">
-            <li
-              v-for="(item,index) in msgList"
-              :key="index"
-              :class="item.round=='left'?'zm-msg-detail':'right'"
+      <div class="user-list-wrap">
+        <div class="my-info"></div>
+        <div class="tab">
+          <div class="friend-tab-box tab-box">
+            <div
+              class="friend-tab tab-item"
+              style="color: #308e56;"
+              @click="changeTab('message-wrap', 'friends-info', 0)"
             >
-              <img
-                :src="item.img"
-                class="zm-msg-log"
-              />
-              <div class="zm-log-user">
-              <span>{{item.name}}</span>
-              <span class="zm-log-time">2019/08/13 22:56</span>
-               </div>
-              <div :class="item.round=='left'?'zm-left-bg':'zm-right-bg'">
-                {{item.msg}}
-                </div>
-          
-            </li>
-            <!-- 提示有用户进来了 -->
+              我的好友
+            </div>
+            <div class="circle me-friend-tab" style="display: none;">0</div>
+          </div>
+          <div class="group-chat-tab-box tab-box">
+            <div
+              class="group-chat-tab tab-item"
+              @click="changeTab('group-chat-wrap', 'group-chat-info', 1)"
+            >
+              我的群聊
+            </div>
+            <div class="circle me-group-chat-tab" style="display: none;">0</div>
+          </div>
+        </div>
+        <div class="friends-info info-wrapper">
           <div
-            class='system'
-            v-if="systemNews"
+            v-for="(item, index) in userList"
+            :key="index"
+            class="user-item friend-item"
+            @click="changeChat(item)"
           >
-            <div>{{chartDeta}}</div>
-            <div>{{chartName}} {{chartStatus}}了聊天室</div>
+            <img :src="item.userImg" style="width: 60px;height: 60px;" />
+            <span>{{ item.userName }}----{{ item.id }}</span>
+            <!-- <input type="hidden" value="${item.id}" /> -->
+               <input type="hidden" v-model="item.id" />
+            <div :class="['circle', 'me_' + item.id]" style="display: none;">
+              0
+            </div>
           </div>
-          </ul>
-          
-         
-           <Footer class="zm-footer">
-          <div>
-            <Input
-              v-model="inputMsg"
-              placeholder="Enter something..."
-              class="zm-input" 
-            />
-            <Icon
-              size="35"
-              type="ios-send" @click="postMsg"
-            />
+        </div>
+        <div class="group-chat-info info-wrapper">
+          <span>群聊室</span>
+          <button onclick="createChatGroup()">创建群聊</button>
+          <div class="select-chat-group"></div>
+          <div class="now-select">
+            <div>当前选择：</div>
           </div>
-        </Footer>
-        </Content>
-        <!-- 输入框 -->
-      
-      </Layout>
-         <!-- 右侧群信息 -->
-      <Sider hide-trigger class="zm-right-side">
-         <!-- 显示群聊信息 -->
-          <div class="zm-group-content">
-            <div class="zm-grounp-msg">群友信息</div>
-            <ul class="zm-msg">
-              <li
-                v-for="(item,index) in userList"
-                :key="index"
-                class="zm-msg-detail"
-              >
-                <img
-                  :src="item.img"
-                  class="zm-msg-log"
-                />
-                <span>{{item.userName}}</span>
-              </li>
-            </ul>
+          <div class="create-group hidden">
+            <input class="chatGroupNameInput" placeholder="群聊名称" />
+            <button onclick="confirmChatGroup()">确认创建</button>
           </div>
-      </Sider>
-    </Layout>
+          <div class="chat-group-list"></div>
+        </div>
+      </div>
+    </div>
+    <!-- 私聊 -->
+    <div class="chat-panel hidden">
+      <div class="message-wrap">
+        <div class="default-bg message-default">
+          <span>点击好友开始聊天吧！</span>
+        </div>
+        <div class="message-wrapper wrap-box hidden">
+          <!-- 联系人信息 -->
+          <div class="friend name-info">
+            {{chartnamepeople}}
+          </div>
+          <div class="message-box box"></div>
+          <div class="input-box">
+            <div class="send-img-box">
+              <img
+                class="emoji-icon"
+                src="static/emoji.png"
+                onclick="showEmojiBox()"
+              />
+              <img
+                class="emoji-icon imgBox"
+                src="static/emoji1.png"
+                onclick="showEmotBox()"
+              />
+            </div>
+            <div
+              class="inp inp-box"
+              contenteditable="true"
+              placeholder="在此输入消息..."
+            ></div>
+            <div class="btn">
+              <span>按下Enter发送消息</span>
+              <button class="send-message">发 送</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 群聊 -->
+      <div class="group-chat-wrap">
+        <div class="default-bg group-chat-default">
+          <span>选择群聊开始聊天吧！</span>
+        </div>
+        <div class="group-chat-group-box wrap-box hidden">
+          <div class="chatGroupName name-info"></div>
+          <div class="group-chat-box box"></div>
+          <div class="input-box">
+            <div class="send-img-box">
+              <img
+                class="emoji-icon"
+                src="static/emoji.png"
+                onclick="showEmojiBox()"
+              />
+              <img
+                class="emoji-icon imgBox"
+                src="static/emoji1.png"
+                onclick="showEmotBox()"
+              />
+            </div>
+            <div
+              class="group-chat-inp inp-box"
+              contenteditable="true"
+              placeholder="在此输入消息..."
+            ></div>
+            <div class="btn">
+              <span>按下Enter发送消息</span>
+              <button class="send-message-group-chat">发 送</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="emoji"></div>
+      <div class="emot"></div>
+      <div class="mask" onclick="hiddenBox()"></div>
+    </div>
   </div>
 </template>
 
@@ -101,296 +148,596 @@
 import io from "socket.io-client";
 export default {
   name: "GroupChart",
+  props: ["intoName"],
   data() {
     return {
-      chartList:[],//联系人列表
-      msgLeft: true, //左边消息，即他人的消息，用来展示作为左边样式类的判断
-      msgList: [
-        // {
-        //   img: "static/image/user1.jpg",
-        //   msg:
-        //     "我已经更新了网站内容，菲奥娜，希望一切都好吗？请告诉我还有什么变化",
-        //   type: "left"
-        // },
-        // {
-        //   img: "static/image/user2.jpg",
-        //   msg: "啊！太好了。我现在得走了，明天我会赶上你的。",
-        //   type: "right"
-        // },
-        // {
-        //   img: "static/image/user1.jpg",
-        //   msg: "不用担心，我很高兴你快乐！",
-        //   type: "left"
-        // },
-        // {
-        //   img: "static/image/user2.jpg",
-        //   msg: "你能帮我检查一下照片吗？",
-        //   type: "right"
-        // }
-      ], //消息列表
-      inputMsg: "", //输入内容
-      userList: [
-        { userName: "long", img: "static/image/user1.jpg" },
-        { userName: "wei", img: "static/image/user2.jpg" }
-      ],
-      // 系统通知
-      chartDeta: "", //用户进入聊天室的时间
-      chartStatus: "", //用户进入聊天室的状态
-      systemNews: false, //是否显示用户进入聊天室的提示,
-      chartName:"",//进入聊天室的用户名
+      userName: "", // 当前登录用户名;
+      userImg: "", // 用户头像
+      id: "", // 用户socketId
+      userList: [], // 好友列表
+      chatGroupList: [], // 群聊列表
+      sendFriend: "", // 当前聊天好友的用户socketId
+      sendChatGroup: "", // 当前聊天的群聊的roomId
+      messageJson: {}, // 好友消息列表
+      msgGroupJson: {}, // 群聊消息列表
+      tag: 0, // 0 我的好友面板  1 群聊面板
+      chartnamepeople:"",//当前联系人
     };
   },
+
   methods: {
-    // 发送消息
-    postMsg() {
-      if (this.inputMsg == "") {
-        alert("请输入内容！");
-        return false;
+    // ----------1----挂载$
+    getStyle() {
+      window.$ = (tag, all) => {
+        if (!tag) {
+          console.warn("请检查传入的css选择器是否正确");
+          return null;
+        }
+        if (!document.querySelector) {
+          console.warn("浏览器不支持querySelector");
+          return null;
+        }
+        if (all) {
+          return document.querySelectorAll(tag);
+        } else {
+          return document.querySelector(tag);
+        }
+      };
+    },
+    //-----------2----初始化执行
+    init() {
+      this.userName = localStorage.getItem("userName");
+      this.userImg = localStorage.getItem("userImg");
+      // ------3-----
+      this.selectClick();
+      // -------4-------
+      this.setAllPorarait();
+      // 如果本地保存了用户的头像和名字，隐藏注册模块
+      if (this.userName && this.userImg) {
+        $("#login-wrap").style.display = "none";
+        // --------5--------
+        this.login(this.userName, this.userImg);
+      } else {
+        // 一开始点击一次，不然不会往本地存数据，点击开始聊天
+        $(".chat-btn").onclick = () => {
+          let userName = $(".user-name").value; //输入用户名框的值
+          let userImg = $(".my-por").getAttribute("src"); //选择的头像的值
+          // --------5-------
+          this.login(userName, userImg);
+        };
       }
+    },
+    // --------3-----选择头像
+    selectClick() {
+      $(".group-chat-wrap").style.display = "none";
+      // 点击选择头像
+      $(".select").onclick = function(e) {
+        $(".my-por").setAttribute("src", e.target.getAttribute("src"));
+      };
+      // 私聊的回车
+      $(".inp").onkeydown = e => {
+        // 回车事件
+        if (e.code === "Enter") {
+          e.preventDefault ? e.preventDefault() : (e.returnValue = false);
+          // -------11--------发送消息
+          this.sendMessage();
+        }
+      };
+      // 点击私聊的发送
+      $(".send-message").onclick = () => {
+        this.sendMessage();
+      };
+      // 点击群聊的发送
+      $(".send-message-group-chat").onclick = () => {
+        this.sendMessageGroup();
+      };
+      // 群聊的回车
+      $(".group-chat-inp").onkeydown = e => {
+        // 回车事件
+        if (e.code === "Enter") {
+          e.preventDefault ? e.preventDefault() : (e.returnValue = false);
+          this.sendMessageGroup();
+        }
+      };
 
-      // 传递--> 用户发送消息
-      this.socket.emit("sendMsg", {
-        msg: this.inputMsg,
+      $(".emoji").onclick = e => {
+        this.chooseEmoji(e);
+      };
 
+      $(".emot").onclick = e => {
+        this.chooseEmot(e);
+      };
+    },
+    // ---------4-------获取头像等数据
+    setAllPorarait() {
+      this.axios
+        .get("charts/getChatEmo", {})
+        .then(res => {
+          if (res.data.status == "0") {
+            let datas = res.data.result;
+            let emoji = datas.emoji;
+            let portrait = datas.portrait;
+            let emot = datas.emot;
+            let str = "";
+            portrait.forEach(item => {
+              str += `<img style="width: 60px;height: 60px;" src="http://localhost:3000/static/portrait/${item}" />`;
+            });
+            document.getElementById("portrait").innerHTML = str;
+
+            str = "";
+            emoji.forEach(item => {
+              str += `<img style="width: 30px;height: 30px;" src="static/emoticon/emoji/${item}" />`;
+            });
+            $(".emoji").innerHTML = str;
+
+            str = "";
+            emot.forEach(item => {
+              str += `<img style="width: 70px;height: 70px;" src="static/emoticon/emot/${item}" />`;
+            });
+            $(".emot").innerHTML = str;
+          }
+        })
+        .catch(err => {
+          console.log("err", err);
+        });
+    },
+    // ----------5-------登录
+    login(userName, userImg) {
+      if (userName && userImg) {
+        // login
+        // --------6--------
+        this.initSocket(userName, userImg);
+      }
+    },
+    // ---------6--------初始化连接sokect
+    initSocket(userName, userImg) {
+      // this.socket = io();
+      this.socket = io.connect("http://localhost:3000");
+      this.socket.on("connect", () => {
+        // 隐藏注册模块
+        $("#login-wrap").style.display = "none";
+        // 打开聊天面板
+        $(".chat-panel").style.display = "block";
+        this.userName = userName;
+        this.userImg = userImg;
+        this.id = this.socket.id;
+        let userInfo = {
+          id: this.socket.id,
+          userName: userName,
+          userImg: userImg
+        };
+        localStorage.setItem("userName", userName);
+        localStorage.setItem("userImg", userImg);
+        this.socket.emit("login", userInfo);
+        //---------7------设置个人信息
+        this.setMyInfo();
       });
-      this.inputMsg = "";
+      this.socket.on("userList", userList => {
+        this.userList = userList;
+        // ------8-------绘制用户列表
+        this.drawUserList();
+      });
 
-      return false;
+      this.socket.on("quit", id => {
+        this.userList = this.userList.filter(item => item.id != id);
+        this.drawUserList();
+      });
+      this.socket.on("receiveMsg", data => {
+        // --------12--------设置数据
+        this.setMessageJson(data);
+        if (this.tag) {
+          // 当前在群聊面板收到了单人聊天消息
+          $(".me-friend-tab").innerHTML =
+            parseInt($(".me-friend-tab").innerHTML) + 1;
+          $(".me-friend-tab").style.display = "block";
+
+          // 好友列表中对应好友提示新消息
+          $(".me_" + data.sendId).innerHTML =
+            parseInt($(".me_" + data.sendId).innerHTML) + 1;
+          $(".me_" + data.sendId).style.display = "block";
+        } else {
+          if (data.sendId === this.sendFriend) {
+            this.drawMessageList();
+          } else {
+            $(".me_" + data.sendId).innerHTML =
+              parseInt($(".me_" + data.sendId).innerHTML) + 1;
+            $(".me_" + data.sendId).style.display = "block";
+          }
+        }
+      });
+
+      this.socket.on("receiveMsgGroup", data => {
+        // 当前在群聊面板
+        this.setMsgGroupJson(data);
+        if (this.tag) {
+          // 判断收到的是不是当前群聊的，不是就标记红点，是就绘制聊天内容
+          if (data.roomId === this.sendChatGroup) {
+            this.drawChatGroupMsgList();
+          } else {
+            $(".me_" + data.roomId).innerHTML =
+              parseInt($(".me_" + data.roomId).innerHTML) + 1;
+            $(".me_" + data.roomId).style.display = "block";
+          }
+        } else {
+          // 当前在个人聊天页面，群聊提示新消息  并且群聊列表中对应群聊提示新消息
+          $(".me-group-chat-tab").innerHTML =
+            parseInt($(".me-group-chat-tab").innerHTML) + 1;
+          $(".me-group-chat-tab").style.display = "block";
+
+          $(".me_" + data.roomId).innerHTML =
+            parseInt($(".me_" + data.roomId).innerHTML) + 1;
+          $(".me_" + data.roomId).style.display = "block";
+        }
+      });
+
+      this.socket.on("chatGroupList", chatGroup => {
+        this.chatGroupList.push(chatGroup);
+        this.drawChatGroupList();
+      });
+
+      this.socket.on("createChatGroup", data => {
+        socket.emit("joinChatGroup", {
+          id: this.id,
+          userName: this.userName,
+          info: data
+        });
+      });
+      this.socket.on("chatGrSystemNotice", data => {
+        this.setMsgGroupJson(data);
+        if (this.tag) {
+          $(".me_" + data.roomId).innerHTML =
+            parseInt($(".me_" + data.roomId).innerHTML) + 1;
+          $(".me_" + data.roomId).style.display = "block";
+          this.drawChatGroupMsgList();
+        } else {
+          $(".me-group-chat-tab").innerHTML =
+            parseInt($(".me-group-chat-tab").innerHTML) + 1;
+          $(".me-group-chat-tab").style.display = "block";
+
+          $(".me_" + data.roomId).innerHTML =
+            parseInt($(".me_" + data.roomId).innerHTML) + 1;
+          $(".me_" + data.roomId).style.display = "block";
+        }
+      });
+
+      this.socket.on("leaveChatGroup", data => {
+        // 当前客户端退出群聊
+        if (data.id === this.id) {
+          this.chatGroupList = this.chatGroupList.filter(
+            item => item.roomId !== data.roomId
+          );
+          this.drawChatGroupList();
+        } else {
+          this.setMsgGroupJson(data);
+          if (this.tag) {
+            $(".me_" + data.roomId).innerHTML =
+              parseInt($(".me_" + data.roomId).innerHTML) + 1;
+            $(".me_" + data.roomId).style.display = "block";
+            this.drawChatGroupMsgList();
+          } else {
+            $(".me-group-chat-tab").innerHTML =
+              parseInt($(".me-group-chat-tab").innerHTML) + 1;
+            $(".me-group-chat-tab").style.display = "block";
+
+            $(".me_" + data.roomId).innerHTML =
+              parseInt($(".me_" + data.roomId).innerHTML) + 1;
+            $(".me_" + data.roomId).style.display = "block";
+          }
+        }
+      });
+    },
+    // --------7------设置个人信息
+    setMyInfo() {
+      $(
+        ".my-info"
+      ).innerHTML = `<div class="user-item" style="border-bottom: 1px solid #eee;margin-bottom: 30px;">
+                            <img src="${
+                              this.userImg
+                            }"  style="width: 60px;height: 60px;">
+                            <span>${this.userName}</span>
+                        </div>`;
+    },
+    // -----------8-------绘制个人列表
+    drawUserList() {
+      let str = "";
+      this.userList.forEach((item, index) => {
+        if (item.id == this.id) {
+          this.userList.splice(index, 1);
+          // str += `<div class="user-item friend-item" @click="changeChat(this)">
+          //                   <img src="${
+          //                     item.userImg
+          //                   }"  style="width: 60px;height: 60px;">
+          //                   <span>${item.userName}${item.id}</span>
+          //                   <input type="hidden" value="${item.id}">
+          //                   <div class="circle me_${
+          //                     item.id
+          //                   }" style="display: none;">0</div>
+          //               </div>`;
+        }
+      });
+      $(".friends-info").innerHTML = str;
+    },
+    // --------9-------选择好友
+    changeChat(item) {
+      $(".message-default").style.display = "none";
+      // 打开私聊面板
+      $(".message-wrapper").style.display = "block";
+      //关联联系人信息
+      this.chartnamepeople=item.userName+item.id
+      // $(".friend").innerHTML = e.children[1].innerHTML;
+      $(".inp").focus();
+
+      if (item.id !== this.sendFriend) {
+        $(".message-box").innerHTML = "";
+        $(".message-box").scrollTop = 0;
+        // this.sendFriend = e.children[2].value;
+        this.sendFriend = item.id;
+// --------10-------绘制聊天消息列表
+        this.drawMessageList();
+        $(".me_" + this.sendFriend).innerHTML = 0;
+        $(".me_" + this.sendFriend).style.display = "none";
+      }
+    },
+    // -------10-------
+       drawMessageList() {
+        let msg = '';
+        //如果消息列表不存在该用户，直接return
+        if (!this.messageJson[this.sendFriend]) return;
+        // 遍历消息列表
+        this.messageJson[this.sendFriend].forEach(item => {
+          // 将消息展示
+            if (item.sendId === this.id) {
+                msg += `<div class="msg-box right">
+                            <div class="msg">${item.msg}</div>
+                            <img src="${item.img}"  style="width: 60px;height: 60px;">
+                        </div>`
+            } else {
+                msg += `<div class="msg-box left">
+                            <img src="${item.img}"  style="width: 60px;height: 60px;">
+                            <div class="msg">${item.msg}</div>
+                        </div>`
+            }
+        })
+        $('.message-box').innerHTML = msg;
+        $('.message-box').scrollTop = $('.message-box').scrollHeight;
+        $('.inp').innerHTML = '';
+        $('.inp').focus();
+    },
+    // -----------11-------发送消息
+    sendMessage() {
+        if (!this.sendFriend) {
+            alert('请选择好友！');
+        } else {
+            let info = {
+                sendId: this.id, // 发送者id
+                id: this.sendFriend, // 接收者id
+                userName: this.userName,
+                img: this.userImg, // 发送者头像
+                msg: $('.inp').innerHTML // 发送内容
+            }
+            this.socket.emit('sendMsg', info)
+            // 设置聊天消息列表数据
+            if (this.messageJson[this.sendFriend]) {
+                this.messageJson[this.sendFriend].push(info)
+            } else {
+                this.messageJson[this.sendFriend] = [info];
+            }
+            // 页面绘制聊天消息
+            this.drawMessageList();
+        }
+    },
+    // ----------12---------设置数据
+        setMessageJson(data) {
+        if (this.messageJson[data.sendId]) {
+            this.messageJson[data.sendId].push(data)
+        } else {
+            this.messageJson[data.sendId] = [data];
+        }
+    },
+    changeTab(cls, listCls, tag) {
+    this.tag = tag;
+    if (tag) {
+        $('.friends-info').style.display = 'none';
+        $('.message-wrap').style.display = 'none';
+
+        $('.group-chat-info').style.display = 'block';
+        $('.group-chat-wrap').style.display = 'block';
+
+        $('.me-group-chat-tab').innerHTML = 0;
+        $('.me-group-chat-tab').style.display = 'none';
+
+        $('.friend-tab').style.color = '#000';
+        $('.group-chat-tab').style.color = '#308e56';
+    } else {
+        $('.friends-info').style.display = 'block';
+        $('.message-wrap').style.display = 'block';
+
+        $('.group-chat-info').style.display = 'none';
+        $('.group-chat-wrap').style.display = 'none';
+
+        $('.me-friend-tab').innerHTML = 0;
+        $('.me-friend-tab').style.display = 'none';
+
+        $('.group-chat-tab').style.color = '#000';
+        $('.friend-tab').style.color = '#308e56';
+
     }
+}
   },
-  // 页面一进来就要连接socketio了
   mounted() {
-    // 连接服务端
-    this.socket = io.connect("http://localhost:3000");
-    //  头像先采用本地随机图片，后期改为可以用户自己上传
-    // 若用户没有上传头像，就随机分配头像
-    let headIcon = Math.floor(Math.random() * 4) + 1;
-
-    //传递-->  发送进入聊天室的用户信息
-    this.socket.emit("postUser", {
-      userName: localStorage.getItem("userName"),
-      img: "static/image/user" + headIcon + ".jpg"
-    }); // 触发登录事件
-
-
-  // 接收--> 接收系统通知，哪个用户进入了聊天室
-    //聊天窗口下的系统提示消息
-    this.socket.on("system", systemInfo => {
-      console.log(systemInfo)
-      this.chartDeta = new Date().toTimeString().slice(0, 9);
-      this.chartStatus = systemInfo.status;
-      this.chartName = systemInfo.userName;
-      this.systemNews = true;
-      // 进来后窗口需要抖动一下，日后补齐吧
-    });
-
-
-    //接收--> 进入聊天室的用户信息
-    this.socket.on("onlineUser", usersList => {
-      this.userList = usersList;
-    });
-
-    //接收--> 用户发送的消息
-    this.socket.on("receiveMsg", usersList => {
-      this.msgList.push(usersList);
-    });
-
-  
+    this.getStyle();
+    this.init();
   }
 };
 </script>
 
 <style lang="less" scoped>
-.zm{
-  padding:20px;
-  width:100%;
-  height: 500px;
+.container {
+  display: flex;
 }
-// 左侧群，联系列表信息
-.zm-left-side{
-  color: #fff;
-    width: 200px;
-    // display: flex;
-    // flex-direction: column;
+.user-panel {
+  width: 240px;
 }
-
-
-// 右侧群信息
-.zm-right-side{
-  width: 200px;
-    height: 460px;
-    
-    background: #fff;
-  // 显示群聊相关信息
-  .zm-group-content {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    right: 0;
-    .zm-grounp-msg{
-      height: 20px;
-    }
-    
-    .zm-msg {
-      width: 100%;
-      overflow-y: scroll;
-      height: 420px;
-      list-style: none;
-      .zm-msg-detail {
-        background: #fff;
-        .zm-msg-log{
-          width: 30px;
-          height: 30px;
-          border-radius: 15px;
-        }
-      }
-    }
-  }
-}
-
-
-// 聊天区顶部
-.ivu-layout-header {
-  background: #fff;
-  line-height: 20px;
-}
-// 中间聊天区
-.zm-center{
-    width: calc(100% - 400px);
-}
-.zm-right-header {
-  height: 50px;
-  border-top: 1px solid #ddd;
-  .zm-top {
-    .zm-icon {
-      display: inline-block;
-      img {
-        display: inline-block;
-        width: 39px;
-        height: 39px;
-      }
-    }
-    .zm-user {
-      display: inline-block;
-    }
-  }
-}
-// 聊天消息区
-.zm-right-content {
+.chat-panel {
+  width: 600px;
+  border: 1px solid #eee;
   position: relative;
-  // height:400px;
-  .zm-top {
-    text-align: center;
-  }
-  .zm-msg {
-      // height:400px;
-    list-style: none;
-    position: relative;
-    // margin-right: 200px;
-
-    // 消息在左侧的样式
-    .zm-msg-detail {
-      margin: 20px;
-      margin-bottom: 40px;
-       position: relative;
-        // margin-right: 20px;
-      .zm-msg-log {
-        width: 30px;
-        height: 30px;
-        position: absolute;
-        top:0;
-      }
-      .zm-log-user{
-        display: inline-block;
-        position: absolute;
-        span{
-          margin-left: 40px;
-        }
-        .zm-log-time{
-          margin-left:10px;
-        }
-      }
-    }
-    // -------------------------
-    // 消息在右侧的样式
-    .right {
-      
-      margin: 20px;
-      margin-bottom: 40px;
-       position: relative;
-       text-align: right;
-        // margin-right: 20px;
-      .zm-msg-log {
-        width: 30px;
-        height: 30px;
-        position: absolute;
-        top:0;
-        right:0;
-      }
-      .zm-log-user{
-        display: inline-block;
-        position: absolute;
-        right:40px;
-        span{
-          margin-left: 40px;
-        }
-        .zm-log-time{
-          margin-left:10px;
-        }
-      }
-  }
-    
-  }
-  
 }
-
-// .left{
-//   background: #fff;
-// }
-.zm-left-bg {
-  word-wrap:break-word; 
-  display: inline-block;
+.select {
+  display: flex;
+  display: -webkit-flex;
+  justify-content: space-between;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 300px;
+}
+.user-list-wrap {
+  width: 100%;
+}
+.chat-group-list {
+  margin-top: 15px;
+}
+.user-item,
+.chat-group-item {
+  width: 100%;
   position: relative;
-  top: 20px;
-  max-width: calc(100% - 40px);
-  padding: 5px;
-  left: 40px;
-  background: #fff;
-  border-radius: 5px;
-  // border-radius: 10px 0px 10px 10px;
-  // color: #000;
 }
-.zm-right-bg {
-  word-wrap:break-word; 
-  display: inline-block;
-  position: relative;
-   max-width: calc(100% - 40px);
-    top: 20px;
-    padding: 5px;
-    right: 40px;
-    text-align: left;
-   
-    background: #01e777;
-    border-radius: 5px;
-    color: #fff;
-    // border-radius: 10px 0px 10px 10px;
+.chat-group-item {
+  display: flex;
+  justify-content: space-between;
 }
-// 底部的输入框
-.zm-footer {
-  top: 420px;
-  width: calc(100% - 400px);
-  position: fixed;
-  height: 60px;
-  background: #fff;
-  .zm-input {
-    width: 70%;
-  }
-}
-
-// 系统提示消息
-.system {
- 
+.circle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
   text-align: center;
+  font-size: 12px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  background-color: red;
+  color: #fff;
+}
+.wrap-box {
+  height: 100%;
+}
+.wrap-box .name-info {
+  min-height: 30px;
+  font-size: 18px;
+  padding-left: 15px;
+}
+.message-box,
+.group-chat-box {
+  background-color: rgb(245, 245, 245);
+}
+.box {
+  width: 600px;
+  height: 260px;
+  border: 1px solid #eee;
+  overflow-y: scroll;
+  text-align: center;
+}
+.default-bg {
+  background-color: #eee;
+  font-size: 14px;
+  text-align: center;
+  height: 350px;
+  line-height: 350px;
+  color: #908d8d;
+}
+.inp-box {
+  width: 600px;
+  height: 50px;
+  outline: none;
+}
+.btn {
+  float: right;
+}
+.msg-box {
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+}
+.msg {
+  background-color: #fff;
+  padding: 5px;
+  max-width: 220px;
+  text-align: left;
+}
+.msg-box.right .msg {
+  margin-right: 10px;
+}
+.msg-box.left .msg {
+  margin-left: 10px;
+}
+.right {
+  justify-content: flex-end;
+}
+
+.tab {
+  display: flex;
+  margin-bottom: 15px;
+}
+.tab-box {
+  position: relative;
+}
+.tab-item {
+  width: 80px;
+  padding-left: 20px;
+  position: relative;
+  cursor: default;
+}
+.group-chat-info {
+  display: none;
+}
+.emoji-icon {
+  width: 25px;
+  height: 25px;
+}
+.emoji {
+  display: none;
+  position: absolute;
+  width: 600px;
+  bottom: 100px;
+  background-color: #fff;
+  padding: 15px;
+  z-index: 2;
+  box-sizing: border-box;
+}
+.emot {
+  display: none;
+  position: absolute;
+  width: 600px;
+  bottom: 100px;
+  background-color: #fff;
+  padding: 15px;
+  z-index: 2;
+  box-sizing: border-box;
+}
+.mask {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  display: none;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.system {
+  font-size: 12px;
+  transform: scale(0.9);
+  display: inline-block;
+  color: #fff;
+  background-color: rgb(218, 218, 218);
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  border-radius: 15px;
+  padding: 0 5px;
+}
+.hidden {
+  display: none;
 }
 </style>

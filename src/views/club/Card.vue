@@ -29,25 +29,32 @@
                 <span>深圳</span>
               </div> -->
             </div>
-             <div @click="joinGroupChart(index)" class="msg-bottom">
+             <div @click="joinGroupChart(item.name)" class="msg-bottom">
                聊一下
              </div>
           </div>
         </div>
       </div>
     </Card>
+    <div>
+    <GroupChart :intoName="intoName"></GroupChart>
+    </div>
   </div>
 </template>
 
 <script>
 import Bus from "@/assets/event-bus.js";
+import GroupChart from "../GroupChart/GroupChart";
 export default {
   name: "clubCard",
-  components: {},
+  components: {
+    GroupChart
+  },
   props: [],
   data() {
     return {
-      shareList: []
+      shareList: [],
+      intoName:""
     };
   },
   methods: {
@@ -72,10 +79,11 @@ export default {
         });
     },
      // 进入群聊
-    joinGroupChart() {
-      this.$router.push({
-        name: "groupChart"
-      });
+    joinGroupChart(name) {
+      this.intoName = name
+      // this.$router.push({
+      //   name: "groupChart"
+      // });
     },
   },
   watch: {},
