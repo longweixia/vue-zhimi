@@ -96,6 +96,13 @@
         placeholder="Enter name"
         style="width: auto"
       />
+      <div>密码1：</div>
+      <Input
+        v-model="userImg"
+        prefix="ios-contact"
+        placeholder="Enter name"
+        style="width: auto"
+      />
       <div>
         <Button type="primary" @click="register">注册</Button>
       </div>
@@ -112,7 +119,8 @@ export default {
       registerModal: false, //默认不显示注册框
       isLogin: false, //默认未登录
       userName: "", //用户名
-      userPwd: "" //密码
+      userPwd: "", //密码
+      userImg:"",//用户头像
     };
   },
   methods: {
@@ -170,6 +178,9 @@ export default {
             // 本地存储token
             localStorage.setItem("token-zhimi", res.data.result);
             localStorage.setItem("userName", this.userName);
+             localStorage.setItem("userImg", res.data.userImg);
+            localStorage.setItem("userId", res.data.userId);
+            
             // 关闭登录窗口
             this.loginModal = false;
             this.isLogin = true;
@@ -207,6 +218,7 @@ export default {
         .then(res => {
           if (res.data.status == "0") {
             localStorage.removeItem("token-zhimi");
+       
             this.isLogin = false;
           }
         })
@@ -220,13 +232,16 @@ export default {
       this.axios
         .post("users/register", {
           userName: this.userName,
-          userPwd: this.userPwd
+          userPwd: this.userPwd,
+          userImg:this.userImg
         })
         .then(res => {
           if (res.data.status == "0") {
             // 本地存储token
             localStorage.setItem("token-zhimi", res.data.result);
             localStorage.setItem("userName", this.userName);
+            localStorage.setItem("userImg", res.data.userImg);
+            localStorage.setItem("userId", res.data.userId);
             // 关闭登录窗口
             this.registerModal = false;
             this.isLogin = true;
