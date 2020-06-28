@@ -29,7 +29,7 @@
                 <span>深圳</span>
               </div> -->
             </div>
-             <div @click="joinGroupChart(item.name)" class="msg-bottom">
+             <div @click="joinGroupChart(item.userName,item.userId,item.userImg)" class="msg-bottom">
                聊一下
              </div>
           </div>
@@ -37,7 +37,7 @@
       </div>
     </Card>
     <div>
-    <GroupChart :intoName="intoName"></GroupChart>
+    <GroupChart ref="sonChat" :chartName="chartName" :shareId="shareId"></GroupChart>
     </div>
   </div>
 </template>
@@ -54,7 +54,8 @@ export default {
   data() {
     return {
       shareList: [],
-      intoName:""
+      chartName:"",
+      shareId:""
     };
   },
   methods: {
@@ -70,8 +71,13 @@ export default {
         })
         .then(res => {
           if(res.data.status=='0'){
+
             this.shareList = res.data.result
-            console.log(this.shareList)
+            this.shareList.forEach((item,index)=>{
+              if(item.userId == localStorage.getItem("userId")){
+                this.shareId = item.Templated
+              }
+            })
           }
         })
         .catch(err => {
@@ -79,12 +85,18 @@ export default {
         });
     },
      // 进入群聊
-    joinGroupChart(name) {
-      this.intoName = name
-      // this.$router.push({
-      //   name: "groupChart"
-      // });
-    },
+    joinGroupChart(userName,userId,userImg) {
+      if(!localStorage.getItem("userName")){
+          this.$Message.Warning("请登录")
+          return false
+      }
+      if(userName == localStorage.getItem("userName")){
+        this.$Message.Warning("您不能跟自己聊天")
+          return false
+      }
+      this.$refs.sonChat.$emit("bridge",[userName,userId,userImg])
+           
+    }
   },
   watch: {},
 

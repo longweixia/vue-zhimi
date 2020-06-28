@@ -2,22 +2,21 @@
   <div class="container">
     <div class="user-panel">
       <div class="user-list-wrap">
-        <div class="my-info">
-          <div
-            class="user-item"
-            style="border-bottom: 1px solid #eee;margin-bottom: 30px;"
-          >
-            <img :src="userImg" style="width: 60px;height: 60px;" />
-            <span>{{ userName }}</span>
-          </div>
+        <div id="my-info" class="name-info user-item">
+            <img class="panel-top-icon block-in" :src="userImg" />
+            <div class="panel-top-name">{{userName}}
+              <span class="chat-id">{{userId.subString(userId.length-4)}}</span>
+            </div>
+            <div class="panel-online">在线</div>
         </div>
-        <div class="tab">
+      </div>
+        
+      <div class="tab">
           <div class="friend-tab-box tab-box">
             <div
               class="friend-tab tab-item"
               style="color: #308e56;"
-              @click="changeTab('message-wrap', 'friends-info', 0)"
-            >
+              @click="changeTab('message-wrap', 'friends-info', 0)">
               我的好友
             </div>
             <div v-if="showTip" class="circle me-friend-tab">
@@ -35,20 +34,18 @@
           </div>
         </div>
         <div v-if="showFriends" class="friends-info info-wrapper">
-          <div
-            v-for="(item, index) in userList"
-            :key="index"
-            class="user-item friend-item"
-            @click="changeChat(item)"
-          >
-            <img :src="item.userImg" style="width: 60px;height: 60px;" />
-            <span>{{ item.userName }}----{{ item.id }}</span>
-            <!-- <input type="hidden" value="${item.id}" /> -->
-            <input type="hidden" v-model="item.id" />
-            <div :class="['circle', 'me_' + item.id]">
-              {{ item.siLiaoNum }}
+        <div v-for="(item, index) in oneChatList" :key="index" class="user-item friend-item" @click="changeChat(item)">
+          <Badge :count="item.siLiaoNum">
+            <img :src="item.chartNameHead" style="width: 60px;height: 60px;" />
+          </Badge>
+          <div class="panel-top-text block-in">
+
+            <div class="panel-top-name">{{item.chartName}}
+              <span class="chat-id">{{item.chatId.subString(item.chatId.length-4)}}</span>
             </div>
+            <div class="panel-online">在线</div>
           </div>
+      
         </div>
         <div v-if="showGroupFriends" class="group-chat-info info-wrapper">
           <span>群聊室</span>
@@ -66,58 +63,82 @@
       </div>
     </div>
     <!-- 私聊 -->
-    <div v-if="chantPanel" class="chat-panel hidden">
+    <div v-if="chatPanel" class="chat-panel hidden">
       <div v-if="showChatPanel" class="message-wrap">
         <div v-if="messageDefault" class="default-bg message-default">
           <span>点击好友开始聊天吧！</span>
         </div>
         <div v-if="messageWrapper" class="message-wrapper wrap-box">
           <!-- 联系人信息 -->
-          <div class="friend name-info">
-            名字：{{ chartnamepeople }} ID：{{ chartnamepeopleId }}
+          <div class="name-info">
+            <img class="panel-top-icon block-in" :src="chartNameHead" />
+            <div class="panel-top-text block-in">
+             <div class="panel-online">在线</div>
+             <div class="panel-top-name">{{chartnamepeople}}</div>
+             <span class="chat-id">
+               {{chartnamepeopleId.subString(chartnamepeopleId.length-4)}}
+             </span>
+            </div>
           </div>
-          <div v-if="messagebox" class="message-box box">
+
+          <div class="message-box box">
+            <!-- 聊天消息区 -->
             <div
               v-for="(item, index) in messageArry"
               :key="index"
               :class="item.round"
-              class="msg-box "
+              class="msg-box"
             >
-              
-                <div v-if="item.round == 'right'" class="msg">{{ item.msg }}</div>
-                <img  v-if="item.round == 'right'" :src="item.img" style="width:60px;height:60px" />
-           
-         <img v-if="item.round == 'left'" :src="item.img" style="width:60px;height:60px" />
-                <div v-if="item.round == 'left'" class="msg">{{ item.msg }}</div>
+                 <img class="head-icon" v-if="item.round == 'left'" :src="item.img" />
+                   <div v-if="item.round == 'left'" class="triangle-left"></div>
+                <div @click="getItemDetail($event)" v-if="item.round == 'left'" class="msg" v-html="item.msg"></div>
+
+             
+               
+                <div @click="getItemDetail($event)" v-if="item.round == 'right'" class="msg" v-html="item.msg"></div>
+               <div v-if="item.round == 'right'" class="triangle-right"></div>
+            <img class="head-icon" v-if="item.round == 'right'" :src="item.img" />
+      
                
   
-            </div>
+            
           </div>
           <div class="input-box">
+            <!-- 输入框的菜单按钮栏 -->
             <div class="send-img-box">
               <img
                 class="emoji-icon"
-                src="static/emoji.png"
-                onclick="showEmojiBox()"
+                src="./static/emoji.png"
+                @click="showEmojiBox('emoji')"
               />
               <img
                 class="emoji-icon imgBox"
-                src="static/emoji1.png"
-                onclick="showEmotBox()"
+                src="./static/emoji1.png"
+                @click="showEmojiBox('emot')"
               />
+              <Button type="info" class="show-resume-icon"  @click="showEmojiBox('resume')">show简历</Button>
             </div>
-            <input
-              v-model="contentInpu"
+            <!-- 输入文字区 -->
+            <div
               class="inp inp-box"
               contenteditable="true"
               placeholder="在此输入消息..."
-            />
+            ></div>
           </div>
-
-          <div class="btn">
-            <span>按下Enter发送消息</span>
+          </div>
+          <div class="btn" v-if="messageWrapper">
+            <span>可按下Enter发送消息</span>
             <button @click="sendMessage" class="send-message">发 送</button>
           </div>
+          <div class="emoji" v-if="showEmoji[0]">
+          <!-- 表情包选择区 -->
+          <img @click="chooseEmoji(item,'emoji')" v-for="(item,index) in emoji" :key="index" style="width:30px;height:30px" />
+        </div>
+          <div class="emot" v-if="showEmoji[1]">
+          <!-- 斗图选择区 -->
+          <img @click="chooseEmoji(item,'emot')" v-for="(item,index) in emot" :key="index" style="width:60px;height:60px" />
+        </div>
+        <div class="mask" v-if="showEmoji[2]" @click="showEmojiBox('mask')"></div>
         </div>
       </div>
     </div>
@@ -131,7 +152,7 @@
         <div class="group-chat-box box"></div>
         <div class="input-box">
           <div class="send-img-box">
-            <img
+            <!-- <img
               class="emoji-icon"
               src="static/emoji.png"
               onclick="showEmojiBox()"
@@ -140,7 +161,7 @@
               class="emoji-icon imgBox"
               src="static/emoji1.png"
               onclick="showEmotBox()"
-            />
+            /> -->
           </div>
           <div
             class="group-chat-inp inp-box"
@@ -154,9 +175,17 @@
         </div>
       </div>
     </div>
-    <div class="emoji"></div>
-    <div class="emot"></div>
-    <div class="mask" onclick="hiddenBox()"></div>
+
+    <!-- 简历确定弹窗 -->
+    <Modal v-model="modalResume" title="提示..."  @on-ok="ok" @on-cancel="cancel">
+      <p>您发送的简历将会展示全部信息</p>
+      <p>包括您的电话,邮箱,住址等</p>
+      <p>点击确定发送</p>
+    </Modal>
+    <!-- 消息记录中点击图片的弹窗 -->
+    <Modal width="1100px" v-model="showBigImg" class-name="vertical-center-modal">
+   <img :src="bigImgSrc" />
+    </Modal>
   </div>
 </template>
 
@@ -164,13 +193,13 @@
 import io from "socket.io-client";
 export default {
   name: "GroupChart",
-  props: ["chatrName", "tochatIcon"],
+  props: ["chatrName", "shareId"],
   data() {
     return {
       userId: "", //登录用户ID
       userName: "", // 当前登录用户名;
       userImg: "", // 用户头像
-      id: "", // 用户socketId
+      socketid: "", // 用户socketId
       userList: [], // 好友列表
       chatGroupList: [], // 群聊列表
       sendFriend: "", // 当前聊天好友的用户socketId
@@ -192,12 +221,31 @@ export default {
       messageWrapper: false, //显示私聊面板
       messageDefault: true, //显示聊天面板提示信息\
       contentInpu: "", //输入框内容
-      chantPanel: true, //私聊面板
-      messagebox: true //
+      chatPanel: true, //私聊面板
+      messagebox: true, //
+      chatId: "", //聊天对象id
+      reluserList: [], //实际联系人列表
+      oneChatList: [], //存在数据库的用户联系表
+      chartNameHead: "", //联系人么头像
+      emoji: [], //表情包列表
+      emot: [], //斗图包列表
+      modal3: false,
+      showEmoji: [false, false, false], //显示表情包，斗图，遮罩层
+      inputArry: [], //发送的内容数组
+      modalResume: false, //
+      resumeUrl: "", //发送的简历url
+      showBigImg: false,
+      bigImgSrc: "", //点击消息的图片显示大图
+      receiveData: "" //接收的消息
     };
   },
 
   methods: {
+    unique(arr){
+      const res = new Map();
+      return arr.filter(arr=>
+        !res.has(arr.userId) && res.set(arr.userId,0))
+    },
     // ----------1----挂载$
     getStyle() {
       window.$ = (tag, all) => {
@@ -221,8 +269,7 @@ export default {
       this.userName = localStorage.getItem("userName");
       this.userImg = localStorage.getItem("userImg");
       this.userId = localStorage.getItem("userId");
-      // ------3-----
-      this.selectClick();
+      this.showGroupPanel = false;
       // -------4-------
       this.setAllPorarait();
       // 如果本地保存了用户的头像和名字，隐藏注册模块
@@ -233,25 +280,16 @@ export default {
         this.$Message.warning("请登录");
       }
     },
-    // --------3-----选择头像
-    selectClick() {
-      this.showGroupPanel = false;
 
-      $(".emoji").onclick = e => {
-        this.chooseEmoji(e);
-      };
-
-      $(".emot").onclick = e => {
-        this.chooseEmot(e);
-      };
-    },
     // ---------4-------获取头像等数据
     setAllPorarait() {
       this.axios
-        .get("charts/getChatEmo", {})
+        .get("charts/getChatImgList", {})
         .then(res => {
           if (res.data.status == "0") {
-            // let datas = res.data.result;
+            let datas = res.data.result;
+            this.emoji = datas.emoji
+            this.emot = datas.emot
             // let emoji = datas.emoji;
             // let portrait = datas.portrait;
             // let emot = datas.emot;
@@ -289,9 +327,10 @@ export default {
         $(".chat-panel").style.display = "block";
         // this.userName = userName;
         // this.userImg = userImg;
-        this.id = this.socket.id;
+        this.socketid = this.socket.id;
         let userInfo = {
-          id: this.socket.id,
+          socketid: this.socket.id,
+          userId:this.userId,
           userName: userName,
           userImg: userImg
         };
@@ -302,35 +341,44 @@ export default {
         this.setMyInfo();
       });
       this.socket.on("userList", userList => {
+
         this.userList = userList;
-        this.userList.forEach((item, index) => {
-          item.siLiaoNum = 0;
-        });
-        // ------8-------绘制用户列表
-        this.drawUserList();
+      
       });
 
       this.socket.on("quit", id => {
         this.userList = this.userList.filter(item => item.id != id);
-        this.drawUserList();
+        // this.drawUserList();
       });
       this.socket.on("receiveMsg", data => {
+          var flags = false
+        // 默认发送消息的用户不存在联系列表里
+        // 接收消息的时候，如果是新用户联系自己，将新用户添加到自己的联系表里
+
+        this.oneChatList.forEach((item,index)=>{
+          if(item.chatId == data.sendId){
+          flags = true
+          }
+        })
+        if(!flags){
+          this.postoneCharts(data.userName,data.sendId,data.img)
+        }
+        
+      
+
         // --------12--------设置数据
         this.setMessageJson(data);
-        if (this.tag) {
-          this.tipNumber++;
-          this.showTip = true;
-        } else {
+
           if (data.sendId === this.sendFriend) {
             this.drawMessageList();
           } else {
-            this.userList.forEach((item, index) => {
-              if (item.id == data.sendFriend) {
-                this.userList[index].siLiaoNum++;
+            for(var i=0;i<this.oneChatList.length;i++){
+              if(this.oneChatList[i].chartId == data.sendId){
+                this.oneChatList[i].siLiaoNum = this.oneChatList[i].siLiaoNum+1
               }
-            });
+            }
           }
-        }
+        
       });
 
       this.socket.on("receiveMsgGroup", data => {
@@ -417,32 +465,35 @@ export default {
     setMyInfo() {},
     // -----------8-------绘制个人列表
     drawUserList() {
-      this.userList.forEach((item, index) => {
-        if (item.id == this.id) {
-          this.userList.splice(index, 1);
-        }
-      });
-      // $(".friends-info").innerHTML = str;
+
     },
     // --------9-------选择好友
     changeChat(item) {
       this.messageDefault = false;
       this.showGroupPanel = false;
       this.messageWrapper = true;
-      this.chartnamepeople = item.userName;
-      this.chartnamepeopleId = item.id;
 
-      if (item.id !== this.sendFriend) {
+      this.chartnamepeople = item.userName;
+      this.chartnamepeopleId = item.chatId;
+      this.chartNameHead = item.chartNameHead
+
+      if (item.chatId !== this.sendFriend) {
+        this.messagebox = false
         // this.messagebox = false;
-        this.sendFriend = item.id;
+        this.sendFriend = item.chatId;
         // --------10-------绘制聊天消息列表
         this.drawMessageList();
-        $(".me_" + this.sendFriend).innerHTML = 0;
-        $(".me_" + this.sendFriend).style.display = "none";
+ 
       }
+      this.oneChatList.forEach((item1,index)=>{
+        if(item1.chatId == item.chatId){
+          this.oneChatList[index].siLiaoNum = 0
+        }
+      })
     },
     // -------10-------
     drawMessageList() {
+      
       //如果消息列表不存在该用户，直接return
       if (!this.messageJson[this.sendFriend]) {
         this.messageArry = [];
@@ -451,26 +502,33 @@ export default {
       // 遍历消息列表
       this.messageJson[this.sendFriend].forEach(item => {
         // 将消息展示
-        if (item.sendId === this.id) {
+        if (item.sendId === this.userId) {
           item.round = "right";
         } else {
           item.round = "left";
         }
       });
       this.messageArry = this.messageJson[this.sendFriend];
-      this.contentInpu = "";
+      // this.contentInpu = "";
+      if($(".inp")){
+        $(".inp").innerHTML = ""
+      }
     },
     // -----------11-------发送消息
     sendMessage() {
+      if(!$("inp").innerHTML){
+        this.$Message.Warning("消息不能为空")
+        return false
+      }
       if (!this.sendFriend) {
         alert("请选择好友！");
       } else {
         let info = {
-          sendId: this.id, // 发送者id
+          sendId: this.userId, // 发送者id
           id: this.sendFriend, // 接收者id
           userName: this.userName,
           img: this.userImg, // 发送者头像
-          msg: this.contentInpu // 发送内容
+          msg: $("inp").innerHTML// 发送内容
         };
         this.socket.emit("sendMsg", info);
         // 设置聊天消息列表数据
@@ -498,20 +556,25 @@ export default {
         this.showChatPanel = false;
         this.showGroupFriends = true;
         this.showGroupPanel = true;
-        this.chantPanel = false;
+        this.chatPanel = false;
       } else {
         this.showFriends = true;
         this.showChatPanel = true;
         this.showGroupFriends = false;
         this.showGroupPanel = false;
-        this.chantPanel = true;
+        this.chatPanel = true;
         this.tipNumber = 0;
         this.showTip = false;
       }
     }
   },
   mounted() {
+    // 子组件监听父组件的事件
+    this.$on("bridge",([userNames,userIds,userImgs])=>{
+      this.postoneCharts(userNames,userIds,userImgs,"postChat")
+    })
     this.getStyle();
+    this.getoneChates("First")
     this.init();
   }
 };

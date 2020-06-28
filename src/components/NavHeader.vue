@@ -98,7 +98,7 @@
       />
       <div>密码1：</div>
       <Input
-        v-model="userImg"
+        v-model="userIcon"
         prefix="ios-contact"
         placeholder="Enter name"
         style="width: auto"
@@ -120,7 +120,7 @@ export default {
       isLogin: false, //默认未登录
       userName: "", //用户名
       userPwd: "", //密码
-      userImg:"",//用户头像
+      userIcon:"",//用户头像
     };
   },
   methods: {
@@ -233,14 +233,14 @@ export default {
         .post("users/register", {
           userName: this.userName,
           userPwd: this.userPwd,
-          userImg:this.userImg
+          userImg:this.userIcon
         })
         .then(res => {
           if (res.data.status == "0") {
             // 本地存储token
             localStorage.setItem("token-zhimi", res.data.result);
             localStorage.setItem("userName", this.userName);
-            localStorage.setItem("userImg", res.data.userImg);
+            localStorage.setItem("userImg", this.userIcon);
             localStorage.setItem("userId", res.data.userId);
             // 关闭登录窗口
             this.registerModal = false;
