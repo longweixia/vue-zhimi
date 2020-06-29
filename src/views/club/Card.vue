@@ -1,27 +1,36 @@
 <template>
   <!-- 社区中心-个人简历卡片 -->
+  <div class="layout">
   <div class="jm-card">
-    <Card style="width:450px;display:inline-block;margin:10px" v-for="(item,index) in shareList" :key="index">
+    <Card
+      style="width:450px;display:inline-block;margin:10px"
+      v-for="(item, index) in shareList"
+      :key="index"
+    >
       <div class="jm-content" style="position:relative">
         <img class="img-head" :src="item.ImgBase64" />
         <div class="card-text">
-          <div class="card-items"><Icon type="md-contact" size="16" />{{item.name}}</div>
-          <div class="one-description">{{item.wordDescribe}}</div>
+          <div class="card-items">
+            <Icon type="md-contact" size="16" />{{ item.name }}
+          </div>
+          <div class="one-description">{{ item.wordDescribe }}</div>
           <div class="card-bottom">
             <img src="@/assets/demo.jpg" />
             <div class="msg-right">
               <!-- 基本信息 -->
               <div class="msg-item">
-                 <h5>小信息：</h5>
-                <span>{{item.age}}岁</span>
-                <span>{{item.work}}</span>
-                
+                <h5>小信息：</h5>
+                <span>{{ item.age }}岁</span>
+                <span>{{ item.work }}</span>
+
                 <span>本科</span>
                 <span>湖南科技学院</span>
               </div>
               <div class="msg-item">
                 <h5>技术：</h5>
-                <span v-for="(item1,index1) in item.SkillList[0]" :key="index1">{{item1.name}}:{{item1.skillNumber}}</span>
+                <span v-for="(item1, index1) in item.SkillList[0]" :key="index1"
+                  >{{ item1.name }}:{{ item1.skillNumber }}</span
+                >
               </div>
               <!-- <div class="msg-item">
                 <h5>期望：</h5>
@@ -29,15 +38,22 @@
                 <span>深圳</span>
               </div> -->
             </div>
-             <div @click="joinGroupChart(item.userName,item.userId,item.userImg)" class="msg-bottom">
-               聊一下
-             </div>
+            <div
+              @click="joinGroupChart(item.userName, item.userId, item.userImg)"
+              class="msg-bottom"
+            >
+              聊一下
+            </div>
           </div>
         </div>
       </div>
     </Card>
-    <div>
-    <GroupChart ref="sonChat" :chartName="chartName" :shareId="shareId"></GroupChart>
+   
+      <GroupChart
+        ref="sonChat"
+        :chartName="chartName"
+        :shareId="shareId"
+      ></GroupChart>
     </div>
   </div>
 </template>
@@ -54,8 +70,8 @@ export default {
   data() {
     return {
       shareList: [],
-      chartName:"",
-      shareId:""
+      chartName: "",
+      shareId: ""
     };
   },
   methods: {
@@ -70,32 +86,30 @@ export default {
           // }
         })
         .then(res => {
-          if(res.data.status=='0'){
-
-            this.shareList = res.data.result
-            this.shareList.forEach((item,index)=>{
-              if(item.userId == localStorage.getItem("userId")){
-                this.shareId = item.Templated
+          if (res.data.status == "0") {
+            this.shareList = res.data.result;
+            this.shareList.forEach((item, index) => {
+              if (item.userId == localStorage.getItem("userId")) {
+                this.shareId = item.Templated;
               }
-            })
+            });
           }
         })
         .catch(err => {
           console.log("err", err);
         });
     },
-     // 进入群聊
-    joinGroupChart(userName,userId,userImg) {
-      if(!localStorage.getItem("userName")){
-          this.$Message.Warning("请登录")
-          return false
+    // 进入群聊
+    joinGroupChart(userName, userId, userImg) {
+      if (!localStorage.getItem("userName")) {
+        this.$Message.Warning("请登录");
+        return false;
       }
-      if(userName == localStorage.getItem("userName")){
-        this.$Message.Warning("您不能跟自己聊天")
-          return false
+      if (userName == localStorage.getItem("userName")) {
+        this.$Message.Warning("您不能跟自己聊天");
+        return false;
       }
-      this.$refs.sonChat.$emit("bridge",[userName,userId,userImg])
-           
+      this.$refs.sonChat.$emit("bridge", [userName, userId, userImg]);
     }
   },
   watch: {},
@@ -108,7 +122,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.jm-card{
+.jm-card {
   margin: 30px;
 }
 .jm-content {
@@ -149,12 +163,12 @@ export default {
         .msg-item {
           margin-left: 10px;
           margin-bottom: 5px;
-          span{
+          span {
             margin: 5px;
           }
         }
       }
-      .msg-bottom{
+      .msg-bottom {
         text-align: left;
       }
     }

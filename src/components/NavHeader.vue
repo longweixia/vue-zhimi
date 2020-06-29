@@ -233,7 +233,7 @@ export default {
         .post("users/register", {
           userName: this.userName,
           userPwd: this.userPwd,
-          userImg:this.userIcon
+          userIcon:this.userIcon
         })
         .then(res => {
           if (res.data.status == "0") {

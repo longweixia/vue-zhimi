@@ -1,12 +1,14 @@
 <template>
+<div>
   <div class="container">
     <div class="user-panel">
       <div class="user-list-wrap">
         <div id="my-info" class="name-info user-item">
-            <img class="panel-top-icon block-in" :src="userImg" />
-            <div class="panel-top-name">{{userName}}
-              <span class="chat-id">{{userId.subString(userId.length-4)}}</span>
-            </div>
+            <img  class="panel-top-icon block-in" :src="userImg" />
+               <div class="panel-top-text block-in">
+                <div class="panel-top-name">{{userName}}2
+                <span class="chat-id">{{userId.substring(userId.length-4)}}</span>
+              </div>
             <div class="panel-online">在线</div>
         </div>
       </div>
@@ -34,18 +36,18 @@
           </div>
         </div>
         <div v-if="showFriends" class="friends-info info-wrapper">
-        <div v-for="(item, index) in oneChatList" :key="index" class="user-item friend-item" @click="changeChat(item)">
+          <div v-for="(item, index) in oneChartList" :key="index" class="user-item friend-item" @click="changeChat(item)">
           <Badge :count="item.siLiaoNum">
-            <img :src="item.chartNameHead" style="width: 60px;height: 60px;" />
+            <img :src="item.chartNameHead" />
           </Badge>
           <div class="panel-top-text block-in">
 
             <div class="panel-top-name">{{item.chartName}}
-              <span class="chat-id">{{item.chatId.subString(item.chatId.length-4)}}</span>
+              <span class="chat-id">{{item.chatId.substring(item.chatId.length-4)}}</span>
             </div>
             <div class="panel-online">在线</div>
           </div>
-      
+        </div>
         </div>
         <div v-if="showGroupFriends" class="group-chat-info info-wrapper">
           <span>群聊室</span>
@@ -61,7 +63,7 @@
           <div class="chat-group-list"></div>
         </div>
       </div>
-    </div>
+    
     <!-- 私聊 -->
     <div v-if="chatPanel" class="chat-panel hidden">
       <div v-if="showChatPanel" class="message-wrap">
@@ -76,11 +78,12 @@
              <div class="panel-online">在线</div>
              <div class="panel-top-name">{{chartnamepeople}}</div>
              <span class="chat-id">
-               {{chartnamepeopleId.subString(chartnamepeopleId.length-4)}}
+               {{chartnamepeopleId.substring(chartnamepeopleId.length-4)}}
              </span>
             </div>
           </div>
-
+        </div>
+     
           <div class="message-box box">
             <!-- 聊天消息区 -->
             <div
@@ -101,7 +104,7 @@
       
                
   
-            
+            </div>
           </div>
           <div class="input-box">
             <!-- 输入框的菜单按钮栏 -->
@@ -126,22 +129,23 @@
             ></div>
           </div>
           </div>
+    </div>
           <div class="btn" v-if="messageWrapper">
             <span>可按下Enter发送消息</span>
             <button @click="sendMessage" class="send-message">发 送</button>
           </div>
           <div class="emoji" v-if="showEmoji[0]">
           <!-- 表情包选择区 -->
-          <img @click="chooseEmoji(item,'emoji')" v-for="(item,index) in emoji" :key="index" style="width:30px;height:30px" />
+          <img :src="'http://localhost:3000/static/emoticon/emoji/'+item" @click="chooseEmoji(item,'emoji')" v-for="(item,index) in emoji" :key="index" style="width:30px;height:30px" />
         </div>
           <div class="emot" v-if="showEmoji[1]">
           <!-- 斗图选择区 -->
-          <img @click="chooseEmoji(item,'emot')" v-for="(item,index) in emot" :key="index" style="width:60px;height:60px" />
+          <img :src="'http://localhost:3000/static/emoticon/emot/'+item" @click="chooseEmoji(item,'emot')" v-for="(item,index) in emot" :key="index" style="width:60px;height:60px" />
         </div>
         <div class="mask" v-if="showEmoji[2]" @click="showEmojiBox('mask')"></div>
         </div>
       </div>
-    </div>
+  
     <!-- 群聊 -->
     <div v-if="showGroupPanel" class="group-chat-wrap">
       <div class="default-bg group-chat-default">
@@ -152,16 +156,6 @@
         <div class="group-chat-box box"></div>
         <div class="input-box">
           <div class="send-img-box">
-            <!-- <img
-              class="emoji-icon"
-              src="static/emoji.png"
-              onclick="showEmojiBox()"
-            />
-            <img
-              class="emoji-icon imgBox"
-              src="static/emoji1.png"
-              onclick="showEmotBox()"
-            /> -->
           </div>
           <div
             class="group-chat-inp inp-box"
@@ -184,16 +178,17 @@
     </Modal>
     <!-- 消息记录中点击图片的弹窗 -->
     <Modal width="1100px" v-model="showBigImg" class-name="vertical-center-modal">
-   <img :src="bigImgSrc" />
+      <img :src="bigImgSrc" />
     </Modal>
-  </div>
+</div>
+  
 </template>
 
 <script>
 import io from "socket.io-client";
 export default {
   name: "GroupChart",
-  props: ["chatrName", "shareId"],
+  props: ["chartName", "shareId"],
   data() {
     return {
       userId: "", //登录用户ID
@@ -236,15 +231,15 @@ export default {
       resumeUrl: "", //发送的简历url
       showBigImg: false,
       bigImgSrc: "", //点击消息的图片显示大图
-      receiveData: "" //接收的消息
+      receiveData: "", //接收的消息
+      oneChartList:[]
     };
   },
 
   methods: {
-    unique(arr){
+    unique(arr) {
       const res = new Map();
-      return arr.filter(arr=>
-        !res.has(arr.userId) && res.set(arr.userId,0))
+      return arr.filter(arr => !res.has(arr.userId) && res.set(arr.userId, 1));
     },
     // ----------1----挂载$
     getStyle() {
@@ -281,6 +276,20 @@ export default {
       }
     },
 
+    chooseEmoji(name, data) {
+      if (data == "emoji") {
+        $(".inp").innerHTML +=
+          "<img style='width:30px;height:30px' src='http://localhost:3000/static/emoticon/emoji/${name}' />";
+      } else if (data == "emot") {
+        $(".inp").innerHTML +=
+          "<img style='width:30px;height:30px' src='http://localhost:3000/static/emoticon/emot/${name}' />";
+      } else if (data == "resume") {
+        $(".inp").innerHTML +=
+          "<img style='width:30px;height:30px' src='${name}' />";
+      }
+      this.showEmojiBox("mask");
+    },
+
     // ---------4-------获取头像等数据
     setAllPorarait() {
       this.axios
@@ -288,8 +297,8 @@ export default {
         .then(res => {
           if (res.data.status == "0") {
             let datas = res.data.result;
-            this.emoji = datas.emoji
-            this.emot = datas.emot
+            this.emoji = datas.emoji;
+            this.emot = datas.emot;
             // let emoji = datas.emoji;
             // let portrait = datas.portrait;
             // let emot = datas.emot;
@@ -325,12 +334,12 @@ export default {
       this.socket.on("connect", () => {
         // 打开聊天面板
         $(".chat-panel").style.display = "block";
-        // this.userName = userName;
-        // this.userImg = userImg;
+        this.userName = userName;
+        this.userImg = userImg;
         this.socketid = this.socket.id;
         let userInfo = {
           socketid: this.socket.id,
-          userId:this.userId,
+          userId: this.userId,
           userName: userName,
           userImg: userImg
         };
@@ -341,9 +350,7 @@ export default {
         this.setMyInfo();
       });
       this.socket.on("userList", userList => {
-
         this.userList = userList;
-      
       });
 
       this.socket.on("quit", id => {
@@ -351,34 +358,32 @@ export default {
         // this.drawUserList();
       });
       this.socket.on("receiveMsg", data => {
-          var flags = false
+        var flags = false;
         // 默认发送消息的用户不存在联系列表里
         // 接收消息的时候，如果是新用户联系自己，将新用户添加到自己的联系表里
 
-        this.oneChatList.forEach((item,index)=>{
-          if(item.chatId == data.sendId){
-          flags = true
+        this.oneChartList.forEach((item, index) => {
+          if (item.chatId == data.sendId) {
+            flags = true;
           }
-        })
-        if(!flags){
-          this.postoneCharts(data.userName,data.sendId,data.img)
+        });
+        if (!flags) {
+          this.postOneCharts(data.userName, data.sendId, data.img);
         }
-        
-      
 
         // --------12--------设置数据
         this.setMessageJson(data);
 
-          if (data.sendId === this.sendFriend) {
-            this.drawMessageList();
-          } else {
-            for(var i=0;i<this.oneChatList.length;i++){
-              if(this.oneChatList[i].chartId == data.sendId){
-                this.oneChatList[i].siLiaoNum = this.oneChatList[i].siLiaoNum+1
-              }
+        if (data.sendId === this.sendFriend) {
+          this.drawMessageList();
+        } else {
+          for (var i = 0; i < this.oneChartList.length; i++) {
+            if (this.oneChartList[i].chatId == data.sendId) {
+              this.oneChartList[i].siLiaoNum =
+                this.oneChartList[i].siLiaoNum + 1;
             }
           }
-        
+        }
       });
 
       this.socket.on("receiveMsgGroup", data => {
@@ -465,7 +470,7 @@ export default {
     setMyInfo() {},
     // -----------8-------绘制个人列表
     drawUserList() {
-
+      // this.chartnamepeople =
     },
     // --------9-------选择好友
     changeChat(item) {
@@ -473,27 +478,25 @@ export default {
       this.showGroupPanel = false;
       this.messageWrapper = true;
 
-      this.chartnamepeople = item.userName;
+      this.chartnamepeople = item.chartName;
       this.chartnamepeopleId = item.chatId;
-      this.chartNameHead = item.chartNameHead
+      this.chartNameHead = item.chartNameHead;
 
       if (item.chatId !== this.sendFriend) {
-        this.messagebox = false
+        this.messagebox = false;
         // this.messagebox = false;
         this.sendFriend = item.chatId;
         // --------10-------绘制聊天消息列表
         this.drawMessageList();
- 
       }
-      this.oneChatList.forEach((item1,index)=>{
-        if(item1.chatId == item.chatId){
-          this.oneChatList[index].siLiaoNum = 0
+      this.oneChartList.forEach((item1, index) => {
+        if (item1.chatId == item.chatId) {
+          this.oneChatList[index].siLiaoNum = 0;
         }
-      })
+      });
     },
     // -------10-------
     drawMessageList() {
-      
       //如果消息列表不存在该用户，直接return
       if (!this.messageJson[this.sendFriend]) {
         this.messageArry = [];
@@ -510,15 +513,15 @@ export default {
       });
       this.messageArry = this.messageJson[this.sendFriend];
       // this.contentInpu = "";
-      if($(".inp")){
-        $(".inp").innerHTML = ""
+      if ($(".inp")) {
+        $(".inp").innerHTML = "";
       }
     },
     // -----------11-------发送消息
     sendMessage() {
-      if(!$("inp").innerHTML){
-        this.$Message.Warning("消息不能为空")
-        return false
+      if (!$(".inp").innerHTML) {
+        this.$Message.Warning("消息不能为空");
+        return false;
       }
       if (!this.sendFriend) {
         alert("请选择好友！");
@@ -528,7 +531,7 @@ export default {
           id: this.sendFriend, // 接收者id
           userName: this.userName,
           img: this.userImg, // 发送者头像
-          msg: $("inp").innerHTML// 发送内容
+          msg: $(".inp").innerHTML // 发送内容
         };
         this.socket.emit("sendMsg", info);
         // 设置聊天消息列表数据
@@ -566,16 +569,94 @@ export default {
         this.tipNumber = 0;
         this.showTip = false;
       }
+    },
+    getOneCharts(name) {
+      this.axios
+        .get("charts/getOneCharts", {
+          params: {
+            userId: localStorage.getItem("userId")
+          }
+        })
+        .then(res => {
+          if (res.data.status == "0") {
+            this.oneChartList = res.data.result;
+            this.init();
+          }
+        });
+    },
+    postOneCharts(a, b, c, d) {
+      this.axios
+        .post("charts/postOneCharts", {
+          data: {
+            userName: this.userName,
+            chartName: a,
+            userId: localStorage.getItem("userId"),
+            chartId: b,
+            chartNameHead: c,
+            flag: d
+          }
+        })
+        .then(res => {
+          if (res.data.status == "0") {
+            this.getOneCharts("noFirst");
+          }
+        })
+        .catch(err => {});
+    },
+    showEmojiBox(data) {
+      if (data == "emoji") {
+        this.showEmoji = [true, false, true];
+      } else if (data == "emot") {
+        this.showEmoji = [false, true, true];
+      }
+      if (data == "mask") {
+        this.showEmoji = [false, false, false];
+      }
+      if (data == "resume") {
+        this.modalResume = true;
+      }
+    },
+    ok() {
+      this.$Message.info("ok");
+      this.getImgList();
+    },
+    cancel() {
+      this.$Message.info("cancel");
+    },
+    getImgList() {
+      this.axios
+        .get("resumeTemplates/getMyResume", {
+          params: {
+            userName: localStorage.getItem("userName")
+          }
+        })
+        .then(res => {
+          if (res.data.status == "0") {
+            var imgList = res.data.result;
+            imgList.forEach((item, index) => {
+              if (item.name == this.shareId) {
+                this.chooseEmoji(item.url, "resume");
+              }
+            });
+          }
+        })
+        .catch(err => {});
+    },
+    // 笔记
+    getItemDetail(e) {
+      if (e.target.currentSrc) {
+        this.showBigImg = true;
+        this.BigImgSrc = e.target.currentSrc;
+      }
     }
   },
   mounted() {
     // 子组件监听父组件的事件
-    this.$on("bridge",([userNames,userIds,userImgs])=>{
-      this.postoneCharts(userNames,userIds,userImgs,"postChat")
-    })
+    this.$on("bridge", ([userNames, userIds, userImgs]) => {
+      this.postOneCharts(userNames, userIds, userImgs, "postChat");
+    });
     this.getStyle();
-    this.getoneChates("First")
-    this.init();
+    this.getOneCharts("First");
   }
 };
 </script>
@@ -751,6 +832,10 @@ export default {
   -moz-border-radius: 15px;
   border-radius: 15px;
   padding: 0 5px;
+}
+.panel-top-icon{
+  width:40px;
+  height: 40px;
 }
 .hidden {
   display: none;
