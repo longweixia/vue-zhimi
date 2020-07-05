@@ -104,7 +104,10 @@ export default {
         .post("clubs/share", {
           Templated: name,
           img:url,
-          userName:localStorage.getItem("userName")
+          userName:localStorage.getItem("userName"),
+          userId:localStorage.getItem("userId"),
+          userImg:localStorage.getItem("userImg")
+
         })
         .then(res => {
           let resStatus = res.data.status;

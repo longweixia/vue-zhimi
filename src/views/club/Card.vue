@@ -11,11 +11,11 @@
         <img class="img-head" :src="item.ImgBase64" />
         <div class="card-text">
           <div class="card-items">
-            <Icon type="md-contact" size="16" />{{ item.name }}
+            <Icon type="md-contact" size="16" />{{ item.userName }}
           </div>
           <div class="one-description">{{ item.wordDescribe }}</div>
           <div class="card-bottom">
-            <img src="@/assets/demo.jpg" />
+            <img :src="item.userImg" />
             <div class="msg-right">
               <!-- 基本信息 -->
               <div class="msg-item">
@@ -38,12 +38,9 @@
                 <span>深圳</span>
               </div> -->
             </div>
-            <div
-              @click="joinGroupChart(item.userName, item.userId, item.userImg)"
-              class="msg-bottom"
-            >
+            <Button @click="joinGroupChart(item.userName, item.userId, item.userImg)" class="msg-bottom">
               聊一下
-            </div>
+            </Button>
           </div>
         </div>
       </div>
@@ -106,7 +103,7 @@ export default {
         return false;
       }
       if (userName == localStorage.getItem("userName")) {
-        this.$Message.Warning("您不能跟自己聊天");
+        this.$Message.warning("您不能跟自己聊天");
         return false;
       }
       this.$refs.sonChat.$emit("bridge", [userName, userId, userImg]);
@@ -153,6 +150,8 @@ export default {
       position: relative;
       img {
         display: inline-block;
+        width: 40px;
+        height: 40px;
       }
       .msg-right {
         position: absolute;
@@ -170,6 +169,7 @@ export default {
       }
       .msg-bottom {
         text-align: left;
+        margin-top: 60px;
       }
     }
   }

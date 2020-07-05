@@ -3,18 +3,8 @@
   <div class="zm">
     <div class="layout">
       <Layout>
-        <!-- <Header class="zm-header"> -->
         <NavHeader></NavHeader>
-        <!-- <Chart/> -->
-<div @click="joinGroupChart">加入群聊</div>
-        <!-- 
-        <ul v-for="(item, index) in resulist" :key="index" style="float:left">
-          <li @click="gotoResume(item-1)">简历{{ item }}</li>
-        </ul>
-        <ResumeTemplate1 v-if="resumeIndex[0].ry" />
-        <ResumeTemplate2 v-if="resumeIndex[1].ry" /> -->
         <Content class="jm-content">
-          <!-- banner -->
           <div class="zm-banner">
             <div class="swiper-container">
               <div class="swiper-wrapper">
